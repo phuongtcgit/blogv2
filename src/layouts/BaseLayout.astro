@@ -1,0 +1,91 @@
+---
+import { SITE } from '../site.config';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Đường dẫn ảnh cover của bài viết (VD: /images/ten-bai/cover.png) — dùng cho OG + hero */
+  image?: string;
+  /** Trang bài viết → og:type article */
+  isArticle?: boolean;
+}
+
+const { title, description, image, isArticle = false } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url);
+
+// Ảnh OG: ưu tiên ảnh của bài, fallback ảnh mặc định của site
+const ogImage = new URL(image ?? SITE.ogImage, Astro.site ?? SITE.url);
+
+const socialLinks = Object.entries(SITE.social).filter(
+  ([, url]) => url !== ''
+);
+---
+
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.author} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={SITE.title}
+      href={new URL('/rss.xml', Astro.site ?? SITE.url)}
+    />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Open Graph / Twitter Card (đã bao gồm ảnh OG 1200×630) -->
+    <meta property="og:type" content={isArticle ? 'article' : 'website'} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="site-header">
+        <a class="brand" href="/">{SITE.title}</a>
+        <nav class="site-nav" aria-label="Điều hướng chính">
+          <a href="/blog">Blog</a>
+          <a href="/about">Giới thiệu</a>
+        </nav>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="site-footer">
+        <p>
+          © {new Date().getFullYear()}
+          {SITE.author} ·
+          <a href="/rss.xml">RSS</a>
+          {
+            socialLinks.map(([key, url]) => (
+              <>
+                {' · '}
+                <a href={url} rel="me noopener" target="_blank">
+                  {key}
+                </a>
+              </>
+            ))
+          }
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

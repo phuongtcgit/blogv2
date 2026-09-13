@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../site.config';
+---
+
+<BaseLayout title="Giới thiệu" description={`Về ${SITE.author}`}>
+  <h1 class="page-title">Giới thiệu</h1>
+  <div class="prose" style="margin-top: 1.5rem">
+    <p>
+      Xin chào, tôi là <strong>{SITE.author}</strong>.
+    </p>
+    <p>
+      {/* ✏️ CẦN ĐIỀN: viết phần giới thiệu của bạn tại đây. */}
+      Đây là trang giới thiệu. Hãy mở
+      <code>src/pages/about.astro</code> và thay nội dung này bằng vài dòng về
+      bản thân — bạn làm gì, viết về điều gì, và cách liên hệ với bạn.
+    </p>
+  </div>
+</BaseLayout>

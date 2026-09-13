@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../site.config';
+import { formatDate, postUrl } from '../lib/utils';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const recent = allPosts.slice(0, SITE.recentPosts);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <h1>{SITE.title}</h1>
+    <p>{SITE.description}</p>
+  </section>
+
+  <section aria-labelledby="recent-posts">
+    <h2 class="section-title" id="recent-posts">Bài viết mới</h2>
+    <ul class="post-list">
+      {
+        recent.map((post) => (
+          <li>
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            <a class="post-link" href={postUrl(post.id)}>
+              {post.data.title}
+            </a>
+            {post.data.description && (
+              <p class="post-excerpt">{post.data.description}</p>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <p style="margin-top: 1.5rem">
+      <a href="/blog">Xem tất cả bài viết →</a>
+    </p>
+  </section>
+</BaseLayout>
