@@ -4,16 +4,16 @@
 export const SITE = {
   // ✏️ CẦN ĐIỀN: URL chính thức của blog (Cloudflare Pages domain hoặc custom domain).
   // Không có dấu "/" ở cuối. Ví dụ: 'https://blogv2.pages.dev' hoặc 'https://yourdomain.com'
-  url: 'https://YOUR-SITE.pages.dev',
+  url: 'https://blog.phuongtc.com',
 
   // ✏️ CẦN ĐIỀN: Tên blog của bạn
-  title: 'Blog của tôi',
+  title: 'Blog của Phương',
 
   // ✏️ CẦN ĐIỀN: Mô tả ngắn (hiện ở trang chủ, RSS, meta description)
   description: 'Suy nghĩ, ghi chép và những điều học được.',
 
   // ✏️ CẦN ĐIỀN: Tên bạn
-  author: 'Tên của bạn',
+  author: 'Chân Phương',
 
   // Ảnh OG mặc định 1200×630 (dùng khi bài viết không có ảnh riêng).
   // Đặt trong public/ — có thể thay bằng file tự thiết kế cùng tên.

@@ -8,12 +8,12 @@
 # ✏️ CẦN ĐIỀN (2 chỗ): site_url và backend.repo
 # ==========================================================================
 
-site_url: https://YOUR-SITE.pages.dev
+site_url: https://blog.phuongtc.com
 
 backend:
   name: github
   # ✏️ CẦN ĐIỀN: repo GitHub của bạn, dạng "owner/repo"
-  repo: GITHUB_OWNER/GITHUB_REPO
+  repo: phuongtcgit/blogv2
   branch: main
   # (Tùy chọn) Đăng nhập bằng OAuth một cú click qua Cloudflare Worker —
   # xem README mục "Sveltia CMS". Nếu bỏ qua, dùng "Sign In with Token".
