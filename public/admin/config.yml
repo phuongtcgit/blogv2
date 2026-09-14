@@ -23,6 +23,11 @@ backend:
 # (khớp quy ước ảnh trong README mục 5)
 media_folder: public/images
 public_folder: /images
+# Cấu hình toàn cục cho Slug
+slug:
+  encoding: "ascii"         # Chuyển đổi toàn bộ ký tự sang bảng mã ASCII
+  clean_accents: true       # Xóa bỏ các dấu thanh, dấu phụ của tiếng Việt
+  sanitize_replacement: "-" # Thay thế các khoảng trắng và ký tự lạ bằng dấu gạch ngang
 
 collections:
   - name: posts
