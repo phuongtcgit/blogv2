@@ -23,10 +23,11 @@ git, deploy tự động lên **Cloudflare Pages**.
 6. [Hình ảnh — quy ước](#6-hình-ảnh--quy-ước)
 7. [Ảnh chia sẻ (OG image)](#7-ảnh-chia-sẻ-og-image)
 8. [Frontmatter — các field của bài viết](#8-frontmatter--các-field-của-bài-viết)
-9. [Deploy lên Cloudflare Pages](#9-deploy-lên-cloudflare-pages)
-10. [Cấu trúc project](#10-cấu-trúc-project)
-11. [Nâng cấp sau này](#11-nâng-cấp-sau-này)
-12. [Lệnh thường dùng](#12-lệnh-thường-dùng)
+9. [Giao diện sáng/tối & màu code](#9-giao-diện-sángtối--màu-code)
+10. [Deploy lên Cloudflare Pages](#10-deploy-lên-cloudflare-pages)
+11. [Cấu trúc project](#11-cấu-trúc-project)
+12. [Nâng cấp sau này](#12-nâng-cấp-sau-này)
+13. [Lệnh thường dùng](#13-lệnh-thường-dùng)
 
 ---
 
@@ -49,7 +50,7 @@ npm run dev      # blog tại http://127.0.0.1:4321, admin tại /keystatic
 | 2 | `src/site.config.ts` | `title`, `description`, `author` |
 | 3 | `src/site.config.ts` | `social` — điền URL từng mạng hoặc để `''` để ẩn |
 | 4 | `src/site.config.ts` | `ogImage` — mặc định `/og-default.png`; muốn khác thì thay file trong `public/` |
-| 5 | `keystatic.config.ts` | `repo: 'GITHUB_OWNER/GITHUB_REPO'` — chỉ cần khi nâng cấp admin production (mục 11), có thể điền sau |
+| 5 | `keystatic.config.ts` | `repo: 'GITHUB_OWNER/GITHUB_REPO'` — chỉ cần khi nâng cấp admin production (mục 12), có thể điền sau |
 | 6 | `public/admin/config.yml` | `site_url` — URL blog (giống mục 1); `backend.repo` — dạng `owner/repo`. **Bắt buộc** để Sveltia chạy |
 | 7 | `public/favicon.svg` | đang là chữ "B" — thay bằng logo của bạn nếu muốn |
 | 8 | `public/og-default.png` | ảnh chia sẻ mặc định 1200×630 — hiện là placeholder, xem [mục 7](#7-ảnh-chia-sẻ-og-image) |
@@ -163,7 +164,7 @@ Tên file **chính là URL** bài viết: `bai-viet-mau-dau-tien.mdx` →
   ```
 
 - Ảnh trong `public/` được phục vụ nguyên bản. Khi cần tối ưu (WebP/AVIF, tự
-  resize), chuyển sang `astro:assets` — xem [mục 11](#11-nâng-cấp-sau-này).
+  resize), chuyển sang `astro:assets` — xem [mục 12](#12-nâng-cấp-sau-này).
 
 Nên nén ảnh trước khi commit (Squoosh.app hoặc `npx sharp-cli resize`). Ảnh
 nặng làm chậm bài viết với người dùng mạng yếu.
@@ -206,7 +207,49 @@ hoặc Sharing Debugger của Facebook.
 > `keystatic.config.ts` (form local), `public/admin/config.yml` (Sveltia) và
 > `src/content.config.ts` (validation khi build). Sửa một nơi = sửa cả ba.
 
-## 9. Deploy lên Cloudflare Pages
+## 9. Giao diện sáng/tối & màu code
+
+Blog có **3 chế độ hiển thị**, chuyển bằng nút tròn ở góc phải header:
+
+- **Tự động** (mặc định): theo setting sáng/tối của hệ điều hành
+- **Sáng** / **Tối**: cố định, ghi nhớ trong `localStorage` của trình duyệt
+
+Vì sao làm vậy: khách vào lần đầu thấy giao diện khớp với máy họ (tự động);
+ai muốn cố định thì bấm một lần, blog nhớ mãi. Người dùng tắt JavaScript
+thì nút tự ẩn, blog vẫn chạy chế độ tự động bình thường.
+
+Kiến trúc (để hiểu khi chỉnh màu):
+
+- Biến màu nằm ở `src/styles/global.css` — khối `:root` (sáng) và khối
+  `:root[data-theme='dark']` / `@media (prefers-color-scheme: dark)` (tối,
+  giá trị giống nhau nên luôn đồng bộ). Muốn đổi bảng màu: sửa các biến
+  `--bg`, `--text`, `--text-soft`, `--border`, `--accent`, `--code-bg`
+  ở **cả hai khối**.
+- Nút và logic chuyển nằm trong `src/layouts/BaseLayout.astro` (script
+  `is:inline` chạy trước render để không nháy trắng/đen khi tải trang).
+
+### Màu code block
+
+Màu cú pháp dùng Shiki với 2 theme song song: sáng + tối xuất cùng lúc trong
+HTML, CSS chọn theme phù hợp theo chế độ hiện tại (kể cả chế độ "tự động").
+Đổi cặp theme trong `astro.config.mjs`:
+
+```js
+shikiConfig: {
+  themes: {
+    light: 'github-light',   // ← theme khi blog ở chế độ sáng
+    dark: 'github-dark',     // ← theme khi blog ở chế độ tối
+  },
+},
+```
+
+Danh sách theme: [shiki.style/themes](https://shiki.style/themes) — một số
+bộ hay dùng: `one-dark-pro`, `catppuccin-latte`/`catppuccin-mocha`,
+`min-light`/`min-dark`, `vitesse-light`/`vitesse-dark`. Nên chọn cùng "họ"
+sáng/tối cho đồng bộ. Nền block code lấy từ biến `--code-bg` (không lấy nền
+của theme Shiki) nên màu code luôn khớp với tổng thể blog.
+
+## 10. Deploy lên Cloudflare Pages
 
 Trong dashboard Cloudflare Pages (bạn đã biết thao tác):
 
@@ -219,7 +262,7 @@ Sau khi có domain (VD `xxx.pages.dev` hoặc custom domain), quay lại **mục
 của checklist** điền `url` (site.config) và `site_url` (admin/config.yml),
 commit + push lần nữa để RSS/sitemap/OG sinh link đúng.
 
-## 10. Cấu trúc project
+## 11. Cấu trúc project
 
 ```
 src/
@@ -250,7 +293,7 @@ keystatic.config.ts     ← cấu hình CMS local (collection, các field)
 astro.config.mjs        ← cấu hình Astro; Keystatic chỉ bật khi `astro dev`
 ```
 
-## 11. Nâng cấp sau này
+## 12. Nâng cấp sau này
 
 **Admin Keystatic ngay trên production:** hiện `/keystatic` chỉ chạy khi
 `npm run dev` vì blog build tĩnh. Để bật trên Cloudflare:
@@ -279,7 +322,7 @@ luận (GitHub Discussions) → tìm kiếm pagefind. Đề xuất của ngườ
 lâu năm": **đừng thêm gì cho tới khi thiếu thật sự** — blog mới chết vì
 infrastructure nhiều hơn vì thiếu tính năng.
 
-## 12. Lệnh thường dùng
+## 13. Lệnh thường dùng
 
 ```bash
 npm run dev        # chạy local + admin Keystatic (localhost:4321/keystatic)

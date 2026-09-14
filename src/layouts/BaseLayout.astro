@@ -41,6 +41,19 @@ const socialLinks = Object.entries(SITE.social).filter(
     />
     <meta name="generator" content={Astro.generator} />
 
+    <!-- Đặt theme từ localStorage TRƯỚC khi render để không bị nháy sáng/tối.
+         'auto' (mặc định) không đặt thuộc tính → CSS tự theo hệ điều hành. -->
+    <script is:inline>
+      (() => {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'light' || t === 'dark') {
+            document.documentElement.dataset.theme = t;
+          }
+        } catch {}
+      })();
+    </script>
+
     <!-- Open Graph / Twitter Card (đã bao gồm ảnh OG 1200×630) -->
     <meta property="og:type" content={isArticle ? 'article' : 'website'} />
     <meta property="og:site_name" content={SITE.title} />
@@ -63,6 +76,53 @@ const socialLinks = Object.entries(SITE.social).filter(
           <a href="/blog">Blog</a>
           <a href="/about">Giới thiệu</a>
         </nav>
+        <button
+          class="theme-toggle"
+          id="theme-toggle"
+          type="button"
+          data-state="auto"
+          aria-label="Chế độ giao diện: Tự động theo hệ điều hành"
+          title="Tự động → Sáng → Tối"
+        >
+          <svg
+            class="theme-icon theme-icon-auto"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"></path>
+          </svg>
+          <svg
+            class="theme-icon theme-icon-light"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <path
+              d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+            ></path>
+          </svg>
+          <svg
+            class="theme-icon theme-icon-dark"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
       </header>
 
       <main>
@@ -87,5 +147,52 @@ const socialLinks = Object.entries(SITE.social).filter(
         </p>
       </footer>
     </div>
+
+    <noscript>
+      <style>
+        .theme-toggle {
+          display: none !important;
+        }
+      </style>
+    </noscript>
+
+    <!-- Vòng lặp theme: Tự động → Sáng → Tối, ghi nhớ trong localStorage -->
+    <script is:inline>
+      (() => {
+        const KEY = 'theme';
+        const ORDER = ['auto', 'light', 'dark'];
+        const NAMES = {
+          auto: 'Tự động theo hệ điều hành',
+          light: 'Sáng',
+          dark: 'Tối',
+        };
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+
+        const current = () => {
+          const t = localStorage.getItem(KEY);
+          return ORDER.includes(t) ? t : 'auto';
+        };
+
+        const apply = (t) => {
+          if (t === 'auto') {
+            delete document.documentElement.dataset.theme;
+          } else {
+            document.documentElement.dataset.theme = t;
+          }
+          try {
+            localStorage.setItem(KEY, t);
+          } catch {}
+          btn.dataset.state = t;
+          btn.setAttribute('aria-label', 'Chế độ giao diện: ' + NAMES[t]);
+        };
+
+        btn.addEventListener('click', () => {
+          apply(ORDER[(ORDER.indexOf(current()) + 1) % ORDER.length]);
+        });
+
+        btn.dataset.state = current();
+      })();
+    </script>
   </body>
 </html>
