@@ -8,8 +8,13 @@ const posts = defineCollection({
     title: z.string(),
     // Bắt buộc để SEO + preview khi share link (khuyến nghị 1–2 câu)
     description: z.string().min(1),
-    // Ảnh cover (public/images/...) — OG image của bài + hero đầu bài
-    image: z.string().optional(),
+    // Ảnh cover (public/images/...) — OG image của bài + hero đầu bài.
+    // Sveltia ghi image: '' khi không có ảnh → chuyển thành undefined để
+    // layout dùng ảnh OG mặc định của site.
+    image: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
     pubDate: z.coerce.date(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
