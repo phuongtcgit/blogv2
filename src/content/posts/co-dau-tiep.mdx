@@ -3,7 +3,8 @@ title: Có dấu tiếp
 description: lưu ý trong file cấu hình
 image: ''
 pubDate: 2026-09-14
-tags: []
+tags:
+  - thừ 1
 draft: false
 ---
 
@@ -36,7 +37,6 @@ collections:
         widget: string
         hint: Tiếng Việt có dấu sẽ tự động được chuyển thành slug không dấu chuẩn SEO.
       # Các trường bên dưới giữ nguyên...
-
 ```
 
 Sau khi sửa lại thành `slug: "{{title}}"`, cấu hình toàn cục bên trên kết hợp với bộ lọc ASCII sẽ hoạt động chính xác đúng ý bạn: khi bạn gõ tiêu đề tiếng Việt có dấu, Sveltia CMS sẽ tự động băm và làm sạch thành URL không dấu, viết thường, ngăn cách bằng dấu gạch ngang.
