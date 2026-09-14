@@ -1,0 +1,71 @@
+# ==========================================================================
+# Sveltia CMS — admin viết bài trên web (dùng được cả điện thoại)
+# Trang admin: https://<your-site>/admin/
+#
+# ⚠️ BỘ FIELD NÀY PHẢI KHỚP với keystatic.config.ts (form local) và
+#    src/content.config.ts (validation khi build). Sửa một nơi = sửa cả ba.
+#
+# ✏️ CẦN ĐIỀN (2 chỗ): site_url và backend.repo
+# ==========================================================================
+
+site_url: https://YOUR-SITE.pages.dev
+
+backend:
+  name: github
+  # ✏️ CẦN ĐIỀN: repo GitHub của bạn, dạng "owner/repo"
+  repo: GITHUB_OWNER/GITHUB_REPO
+  branch: main
+  # (Tùy chọn) Đăng nhập bằng OAuth một cú click qua Cloudflare Worker —
+  # xem README mục "Sveltia CMS". Nếu bỏ qua, dùng "Sign In with Token".
+  # base_url: https://sveltia-cms-auth.<SUBDOMAIN>.workers.dev
+
+# Ảnh upload qua admin sẽ ghi vào public/images/, chèn vào bài dạng /images/...
+# (khớp quy ước ảnh trong README mục 5)
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: posts
+    label: Bài viết
+    label_singular: Bài viết
+    folder: src/content/posts
+    create: true
+    extension: mdx
+    format: frontmatter
+    slug: '{{slug}}'
+    sortable_fields: [pubDate, title]
+    summary: '{{title}} — {{pubDate}}'
+    fields:
+      - label: Tiêu đề
+        name: title
+        widget: string
+        hint: Tên file = slug URL. Tiếng Việt nên đặt slug không dấu (sửa ở ô tên bài sau khi lưu lần đầu).
+      - label: Mô tả ngắn (1–2 câu, dùng cho SEO + preview khi share)
+        name: description
+        widget: text
+        required: true
+      - label: Ảnh cover (tùy chọn)
+        name: image
+        widget: image
+        required: false
+        hint: Khuyến nghị 1200×630. Được dùng làm ảnh OG khi share + hiện đầu bài.
+      - label: Ngày đăng
+        name: pubDate
+        widget: datetime
+        format: 'YYYY-MM-DD'
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        required: true
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        default: []
+      - label: Bản nháp (ẩn khỏi blog)
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+      - label: Nội dung
+        name: body
+        widget: markdown
