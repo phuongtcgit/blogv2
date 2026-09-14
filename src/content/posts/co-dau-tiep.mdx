@@ -1,0 +1,42 @@
+---
+title: Có dấu tiếp
+description: lưu ý trong file cấu hình
+image: ''
+pubDate: 2026-09-14
+tags: []
+draft: false
+---
+
+Có một điểm cần lưu ý trong file cấu hình của bạn khiến mục đích chưa đạt được hoàn toàn: dòng khai báo `slug: "{{slug}}"` bên trong collection `posts`.
+
+Cụ thể vấn đề và cách khắc phục như sau:
+
+- **Vấn đề:** Trong phần `fields` của bạn, trường tiêu đề có `name: title`. Tuy nhiên, trong collection bạn lại đang định nghĩa `slug: "{{slug}}"`. Sveltia CMS (và Decap CMS) mặc định sử dụng trường `title` để tự động sinh ra URL (slug). Nếu bạn viết là `{{slug}}`, hệ thống sẽ đi tìm một trường có tên chính xác là `slug` trong danh sách `fields` để làm URL, nhưng trong file của bạn lại không có trường nào tên là `slug` (chỉ có `title`). Do đó, hệ thống sẽ không biết lấy gì để chuyển đổi và có thể sẽ giữ nguyên tiếng Việt có dấu từ tiêu đề.
+- **Cách khắc phục:** Bạn cần sửa lại dòng `slug:` trong collection `posts` thành `{{title}}` (hoặc xóa hẳn dòng đó đi vì Sveltia CMS mặc định lấy `title` làm nguồn sinh slug).
+
+Bạn hãy sửa đoạn collection `posts` trong file thành như sau:
+
+YAML
+
+```plain
+collections:
+  - name: posts
+    label: Bài viết
+    label_singular: Bài viết
+    folder: src/content/posts
+    create: true
+    extension: mdx
+    format: frontmatter
+    slug: "{{title}}" # Đổi từ "{{slug}}" thành "{{title}}" để hệ thống lấy tiêu đề chuyển thành URL không dấu
+    sortable_fields: [pubDate, title]
+    summary: '{{title}} — {{pubDate}}'
+    fields:
+      - label: Tiêu đề
+        name: title
+        widget: string
+        hint: Tiếng Việt có dấu sẽ tự động được chuyển thành slug không dấu chuẩn SEO.
+      # Các trường bên dưới giữ nguyên...
+
+```
+
+Sau khi sửa lại thành `slug: "{{title}}"`, cấu hình toàn cục bên trên kết hợp với bộ lọc ASCII sẽ hoạt động chính xác đúng ý bạn: khi bạn gõ tiêu đề tiếng Việt có dấu, Sveltia CMS sẽ tự động băm và làm sạch thành URL không dấu, viết thường, ngăn cách bằng dấu gạch ngang.
