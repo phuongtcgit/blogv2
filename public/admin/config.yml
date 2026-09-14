@@ -28,6 +28,8 @@ slug:
   encoding: "ascii"         # Chuyển đổi toàn bộ ký tự sang bảng mã ASCII
   clean_accents: true       # Xóa bỏ các dấu thanh, dấu phụ của tiếng Việt
   sanitize_replacement: "-" # Thay thế các khoảng trắng và ký tự lạ bằng dấu gạch ngang
+  trim: true
+  lowercase: true
 
 collections:
   - name: posts
@@ -37,7 +39,7 @@ collections:
     create: true
     extension: mdx
     format: frontmatter
-    slug: '{{slug}}'
+    slug: '{{title}}'
     sortable_fields: [pubDate, title]
     summary: '{{title}} — {{pubDate}}'
     fields:
