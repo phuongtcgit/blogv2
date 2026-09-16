@@ -1,49 +1,51 @@
 /* ==========================================================================
-   Global stylesheet — minimalist
-   Theme: 3 chế độ (tự động / sáng / tối), điều khiển qua thuộc tính
-   data-theme trên <html>: không có thuộc tính hoặc 'auto' = theo hệ điều
-   hành, 'light' = sáng cố định, 'dark' = tối cố định.
+   Global stylesheet — technical / developer aesthetic
+   - Bảng màu theo GitHub (light/dark), bo góc nhỏ, đường kẻ mảnh
+   - Heading, nav, meta, tag dùng monospace; body vẫn sans-serif cho dễ đọc
+   - Theme: 3 chế độ (tự động / sáng / tối) qua data-theme trên <html>
    ========================================================================== */
 
 :root {
   color-scheme: light;
 
-  --bg: #fdfdfc;
-  --text: #1c1c1c;
-  --text-soft: #59595c;
-  --border: #e4e4e1;
-  --accent: #0f62fe;
-  --code-bg: #f3f3f1;
+  --bg: #ffffff;
+  --text: #1f2328;
+  --text-soft: #59636e;
+  --border: #d1d9e0;
+  --accent: #0969da;
+  --code-bg: #f6f8fa;
 
   --max-width: 42rem;
+  --radius: 4px;
   --font-body:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   --font-mono:
-    ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+    ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono', Menlo,
+    Consolas, monospace;
 }
 
 /* Theme tối — dùng chung cho cả "theo hệ điều hành" lẫn "chọn thủ công" */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --bg: #161618;
-    --text: #e8e8e6;
-    --text-soft: #a3a3a0;
-    --border: #2c2c2e;
-    --accent: #6ea8ff;
-    --code-bg: #242427;
+    --bg: #0d1117;
+    --text: #e6edf3;
+    --text-soft: #9198a1;
+    --border: #30363d;
+    --accent: #2f81f7;
+    --code-bg: #161b22;
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #161618;
-  --text: #e8e8e6;
-  --text-soft: #a3a3a0;
-  --border: #2c2c2e;
-  --accent: #6ea8ff;
-  --code-bg: #242427;
+  --bg: #0d1117;
+  --text: #e6edf3;
+  --text-soft: #9198a1;
+  --border: #30363d;
+  --accent: #2f81f7;
+  --code-bg: #161b22;
 }
 
 * {
@@ -64,6 +66,17 @@ body {
   line-height: 1.75;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* Khung nội dung chung: một cột, hẹp, nhiều khoảng trắng */
@@ -93,19 +106,25 @@ a:hover {
 /* ---------- Header / Footer ---------- */
 
 .site-header {
-  padding: 1.5rem 0;
+  padding: 1.25rem 0;
   display: flex;
   align-items: center;
   gap: 1.25rem;
   border-bottom: 1px solid var(--border);
 }
 
+/* Prompt kiểu terminal trước tên blog */
 .site-header .brand {
+  font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: var(--text);
-  letter-spacing: -0.01em;
   margin-right: auto;
+}
+
+.site-header .brand::before {
+  content: '$ ';
+  color: var(--accent);
 }
 
 .site-nav {
@@ -114,15 +133,41 @@ a:hover {
 }
 
 .site-nav a {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
   color: var(--text-soft);
-  font-size: 0.95rem;
+}
+
+.site-nav a::before {
+  content: '/';
+  color: var(--border);
+  margin-right: 0.15rem;
 }
 
 .site-nav a:hover,
 .site-nav a[aria-current='page'] {
-  color: var(--text);
+  color: var(--accent);
   text-decoration: none;
 }
+
+.site-footer {
+  margin-top: 3rem;
+  padding: 1.25rem 0 2.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-soft);
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+}
+
+.site-footer a {
+  color: inherit;
+}
+
+.site-footer a:hover {
+  color: var(--accent);
+}
+
+/* ---------- Nút chuyển theme ---------- */
 
 /* Nút chuyển theme: vòng lặp Tự động → Sáng → Tối (ghi nhớ localStorage) */
 .theme-toggle {
@@ -133,7 +178,7 @@ a:hover {
   height: 2rem;
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: none;
   color: var(--text-soft);
   cursor: pointer;
@@ -141,8 +186,8 @@ a:hover {
 }
 
 .theme-toggle:hover {
-  color: var(--text);
-  border-color: var(--text-soft);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .theme-toggle svg {
@@ -160,33 +205,25 @@ a:hover {
   display: block;
 }
 
-.site-footer {
-  margin-top: 3rem;
-  padding: 1.5rem 0 2.5rem;
-  border-top: 1px solid var(--border);
-  color: var(--text-soft);
-  font-size: 0.875rem;
-}
-
-.site-footer a {
-  color: inherit;
-}
-
-.site-footer a:hover {
-  color: var(--text);
-}
-
 /* ---------- Trang chủ ---------- */
 
 .hero {
-  padding: 4.5rem 0 3rem;
+  padding: 4rem 0 2.5rem;
+  border-bottom: 1px dashed var(--border);
 }
 
 .hero h1 {
-  font-size: 2rem;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   margin: 0 0 0.75rem;
+}
+
+.hero h1::before {
+  content: '// ';
+  color: var(--text-soft);
+  font-weight: 400;
 }
 
 .hero p {
@@ -196,12 +233,18 @@ a:hover {
 }
 
 .section-title {
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
   color: var(--text-soft);
   margin: 2.5rem 0 1rem;
+}
+
+.section-title::before {
+  content: '## ';
+  color: var(--accent);
 }
 
 /* ---------- Danh sách bài viết ---------- */
@@ -219,15 +262,32 @@ a:hover {
 
 .post-list time {
   display: block;
-  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   color: var(--text-soft);
   font-variant-numeric: tabular-nums;
 }
 
+.post-list time::before {
+  content: '[ ';
+  color: var(--border);
+}
+
+.post-list time::after {
+  content: ' ]';
+  color: var(--border);
+}
+
 .post-list a.post-link {
+  font-family: var(--font-mono);
+  font-size: 1.0625rem;
   color: var(--text);
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.5;
+}
+
+.post-list a.post-link:hover {
+  color: var(--accent);
 }
 
 .post-list .post-excerpt {
@@ -236,14 +296,17 @@ a:hover {
   font-size: 0.95rem;
 }
 
+/* Tag kiểu hashtag, không viền */
 .tag {
-  display: inline-block;
-  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
   color: var(--text-soft);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 0.05rem 0.6rem;
-  margin-right: 0.35rem;
+  margin-right: 0.5rem;
+}
+
+.tag::before {
+  content: '#';
+  color: var(--accent);
 }
 
 /* ---------- Trang bài viết ---------- */
@@ -252,7 +315,7 @@ a:hover {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: var(--radius);
   margin-top: 2.5rem;
   border: 1px solid var(--border);
 }
@@ -267,23 +330,50 @@ a:hover {
 }
 
 .post-header h1 {
-  font-size: 2rem;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
   margin: 0 0 0.75rem;
 }
 
 .post-meta {
+  font-family: var(--font-mono);
   color: var(--text-soft);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .prose h2,
 .prose h3,
 .prose h4 {
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+  font-family: var(--font-mono);
+  line-height: 1.4;
   margin: 2.25rem 0 0.75rem;
+}
+
+.prose h2 {
+  font-size: 1.25rem;
+}
+
+.prose h3 {
+  font-size: 1.0625rem;
+}
+
+.prose h2::before,
+.prose h3::before,
+.prose h4::before {
+  content: '## ';
+  color: var(--text-soft);
+  font-weight: 400;
+}
+
+.prose h3::before,
+.prose h4::before {
+  content: '### ';
+}
+
+.prose h4::before {
+  content: '#### ';
 }
 
 .prose p,
@@ -295,27 +385,30 @@ a:hover {
 .prose img {
   max-width: 100%;
   height: auto;
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 
 .prose blockquote {
   margin: 1.5rem 0;
   padding: 0 1rem;
-  border-left: 3px solid var(--border);
+  border-left: 3px solid var(--accent);
   color: var(--text-soft);
+  font-size: 0.95rem;
 }
 
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.875em;
   background: var(--code-bg);
-  border-radius: 4px;
-  padding: 0.15em 0.4em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.1em 0.35em;
 }
 
 .prose pre {
   background: var(--code-bg);
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 1rem 1.25rem;
   overflow-x: auto;
   line-height: 1.6;
@@ -342,13 +435,14 @@ a:hover {
 
 .prose pre code {
   background: none;
+  border: none;
   padding: 0;
   font-size: 0.875rem;
 }
 
 .prose hr {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 1px dashed var(--border);
   margin: 2.5rem 0;
 }
 
@@ -365,19 +459,31 @@ a:hover {
   text-align: left;
 }
 
+.prose th {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
 /* ---------- Trang đơn (About, 404) ---------- */
 
 .page-title {
+  font-family: var(--font-mono);
   padding: 3.5rem 0 0;
-  font-size: 2rem;
-  letter-spacing: -0.02em;
+  font-size: 1.75rem;
   margin: 0;
 }
 
+.page-title::before {
+  content: '// ';
+  color: var(--text-soft);
+  font-weight: 400;
+}
+
 .back-link {
+  font-family: var(--font-mono);
   display: inline-block;
   margin-top: 2.5rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 /* Tôn trọng người dùng giảm chuyển động */

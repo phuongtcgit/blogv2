@@ -9,10 +9,10 @@ from PIL import Image, ImageDraw, ImageFont
 
 W, H = 1200, 630
 
-BG = (22, 22, 24)        # #161618 — trùng nền dark mode của blog
-FG = (232, 232, 230)     # #e8e8e6
-ACCENT = (110, 168, 255) # #6ea8ff — màu accent dark mode
-SOFT = (163, 163, 160)   # #a3a3a0
+BG = (13, 17, 23)        # #0d1117 — nền dark mode (GitHub dark)
+FG = (230, 237, 243)     # #e6edf3
+ACCENT = (47, 129, 247)  # #2f81f7 — màu accent dark mode
+SOFT = (145, 152, 161)   # #9198a1
 
 BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 REG = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
@@ -25,7 +25,7 @@ img = Image.new("RGB", (W, H), BG)
 d = ImageDraw.Draw(img)
 
 # Viền khung mảnh + thanh accent bên trái, phong cách tối giản như blog
-d.rectangle([40, 40, W - 40, H - 40], outline=(44, 44, 46), width=2)
+d.rectangle([40, 40, W - 40, H - 40], outline=(48, 54, 61), width=2)
 d.rectangle([100, 250, 108, 380], fill=ACCENT)
 
 f_title = ImageFont.truetype(BOLD, 72)

@@ -220,11 +220,13 @@ thì nút tự ẩn, blog vẫn chạy chế độ tự động bình thường.
 
 Kiến trúc (để hiểu khi chỉnh màu):
 
+- Giao diện theo phong cách technical: bảng màu GitHub (light/dark), heading
+  và các chi tiết phụ dùng monospace, bo góc nhỏ, viền mảnh.
 - Biến màu nằm ở `src/styles/global.css` — khối `:root` (sáng) và khối
   `:root[data-theme='dark']` / `@media (prefers-color-scheme: dark)` (tối,
   giá trị giống nhau nên luôn đồng bộ). Muốn đổi bảng màu: sửa các biến
   `--bg`, `--text`, `--text-soft`, `--border`, `--accent`, `--code-bg`
-  ở **cả hai khối**.
+  ở **cả hai khối** (và trong `scripts/make-og-image.py` cho ảnh OG khớp).
 - Nút và logic chuyển nằm trong `src/layouts/BaseLayout.astro` (script
   `is:inline` chạy trước render để không nháy trắng/đen khi tải trang).
 
