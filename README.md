@@ -87,6 +87,19 @@ Không cần máy, không cần Node — chỉ cần trình duyệt.
 Tạo file `.md` trong `src/content/posts/`, frontmatter giống bài mẫu,
 rồi commit + push để Cloudflare tự deploy. Astro vẫn hỗ trợ `.mdx` nếu cần JSX.
 
+### Công cụ đọc bài
+
+- Bài có ít nhất hai heading cấp 2–4 (`##`, `###`, `####`) tự có mục lục
+  thu gọn được trước nội dung. Link dùng ID do Astro sinh, kể cả heading trùng.
+- Code block có nút **Sao chép** khi trình duyệt hỗ trợ Clipboard API trên HTTPS.
+  Sao chép giữ nguyên xuống dòng/khoảng trắng; khi bị từ chối, có thông báo để
+  người đọc chọn mã và sao chép thủ công. Không cần cấu hình trong CMS.
+- Cuối bài có tối đa 3 **Bài viết liên quan**: ưu tiên nhiều tag chung hơn,
+  sau đó ngày mới hơn và ID. Loại chính bài đang đọc, bài nháp và bài không
+  chung tag; không hiện khối này nếu không có kết quả.
+- Mục lục/bài liên quan là HTML tĩnh, vẫn hoạt động khi tắt JavaScript.
+  RSS giữ nội dung bài, không thêm các công cụ đọc. Không thêm dependency.
+
 ## 4. Sveltia CMS — setup admin trên web (làm 1 lần)
 
 Sveltia chạy hoàn toàn ở trình duyệt, thao tác trực tiếp với GitHub API —

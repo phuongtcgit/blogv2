@@ -4,17 +4,25 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { formatDate } from '../../lib/utils';
 import { getPostNavigation } from '../../lib/posts';
 import TagList from '../../components/TagList.astro';
+import ArticleToc from '../../components/ArticleToc.astro';
+import CodeCopy from '../../components/CodeCopy.astro';
+import PostList from '../../components/PostList.astro';
+import { getRelatedPosts } from '../../lib/related-posts';
 
 export async function getStaticPaths() {
   const { posts, tagsByPostId } = await getPostNavigation();
   return posts.map((post) => ({
     params: { slug: post.id },
-    props: { post, tags: tagsByPostId.get(post.id) ?? [] },
+    props: {
+      post,
+      tags: tagsByPostId.get(post.id) ?? [],
+      relatedPosts: getRelatedPosts(post.id, tagsByPostId),
+    },
   }));
 }
 
-const { post, tags } = Astro.props;
-const { Content } = await render(post);
+const { post, tags, relatedPosts } = Astro.props;
+const { Content, headings } = await render(post);
 ---
 
 <BaseLayout
@@ -45,6 +53,8 @@ const { Content } = await render(post);
       </p>
     </header>
 
+    <ArticleToc headings={headings} />
+
     <div class="prose">
       <Content />
     </div>
@@ -55,6 +65,14 @@ const { Content } = await render(post);
       </nav>
     )}
 
+    {relatedPosts.length > 0 && (
+      <section class="related-posts" aria-label="Bài viết liên quan">
+        <h2 class="section-title">Bài viết liên quan</h2>
+        <PostList posts={relatedPosts} />
+      </section>
+    )}
+
     <a class="back-link" href="/blog">← Về danh sách bài viết</a>
   </article>
+  <CodeCopy />
 </BaseLayout>

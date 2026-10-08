@@ -20,6 +20,10 @@ for (const file of ['src', 'public', 'astro.config.mjs', 'tsconfig.json', 'packa
   cpSync(join(source, file), join(root, file), { recursive: true });
 }
 symlinkSync(join(source, 'node_modules'), join(root, 'node_modules'), 'dir');
+// The shared dependency symlink must not share Astro's content cache with the
+// real project or other fixture builds running at the same time.
+writeFileSync(join(root, 'fixture.config.mjs'),
+  "import config from './astro.config.mjs';\nexport default { ...config, cacheDir: './.astro-cache/' };\n");
 const content = join(root, 'src/content/posts');
 const dist = join(root, 'dist');
 
@@ -28,13 +32,13 @@ function resetPosts() {
   mkdirSync(content);
 }
 
-function writePost(id, tags, { date = '2026-01-03', draft = false, extension = 'md' } = {}) {
-  const body = extension === 'mdx' ? '<strong>MDX_BODY</strong>' : `Published body for ${id}.`;
+function writePost(id, tags, { date = '2026-01-03', draft = false, extension = 'md', body } = {}) {
+  body ??= extension === 'mdx' ? '<strong>MDX_BODY</strong>' : `Published body for ${id}.`;
   writeFileSync(join(content, `${id}.${extension}`), `---\ntitle: ${JSON.stringify(id)}\ndescription: "Fixture for tag navigation"\npubDate: ${date}\ntags: ${JSON.stringify(tags)}\ndraft: ${draft}\n---\n\n${draft ? 'SECRET_DRAFT_BODY' : body}\n`);
 }
 
 function build() {
-  const result = spawnSync(process.execPath, [astroCli, 'build'], {
+  const result = spawnSync(process.execPath, [astroCli, 'build', '--config', './fixture.config.mjs'], {
     cwd: root,
     env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' },
     encoding: 'utf8',
@@ -53,9 +57,15 @@ function htmlFiles(dir) {
 
 try {
   resetPosts();
-  writePost('alpha', ['Server', 'server ', ' SERVER ', 'Bất động sản', '<img src=x onerror="alert(1)">'], { date: '2026-01-02' });
-  writePost('beta', [' server ', 'Thông báo', 'Đời sống'], { extension: 'mdx' });
-  writePost('gamma', ['server']);
+  writePost('alpha', ['Server', 'server ', ' SERVER ', 'Bất động sản', '<img src=x onerror="alert(1)">'], {
+    date: '2026-01-02',
+    body: "Published body for alpha.\n\n## Cài đặt\n### Docker & Compose\n#### Kiểm tra\n## Cài đặt\n\n```bash\nprintf 'xin chào'\n\tdocker compose up -d\n```\n",
+  });
+  writePost('beta', [' server ', 'Thông báo', 'Đời sống'], {
+    extension: 'mdx',
+    body: '<strong>MDX_BODY</strong>\n\n## MDX heading\n### Nested heading\n\n```js\nconst value = "<&>";\n```\n',
+  });
+  writePost('gamma', ['server'], { body: '## Just one heading\n\nShort article.' });
   writePost('blank', ['', ' ', '\t']);
   writePost('no-tags', []);
   const longTag = 'x'.repeat(120);
@@ -88,6 +98,27 @@ try {
   assert.ok(!rss.includes('SECRET_DRAFT_BODY'));
   assert.ok(!existsSync(join(dist, 'blog/draft/index.html')));
   assert.ok(!existsSync(join(dist, 'tags/draft-only/index.html')));
+  const alpha = readFileSync(join(dist, 'blog/alpha/index.html'), 'utf8');
+  const beta = readFileSync(join(dist, 'blog/beta/index.html'), 'utf8');
+  for (const [html, expectedCount] of [[alpha, 4], [beta, 2]]) {
+    const toc = html.match(/<nav class="article-toc"[\s\S]*?<\/nav>/)?.[0];
+    assert.ok(toc, 'Static TOC missing from Markdown/MDX');
+    const anchors = [...toc.matchAll(/href="#([^"]+)"/g)].map((m) => decodeURIComponent(m[1]));
+    assert.equal(anchors.length, expectedCount);
+    assert.equal(new Set(anchors).size, expectedCount, 'Repeated headings must use distinct anchors');
+    for (const id of anchors) assert.ok(html.includes(`id="${id}"`), `Broken TOC anchor ${id}`);
+    assert.ok(html.indexOf('class="article-toc"') < html.indexOf('class="prose"'));
+  }
+  const related = alpha.match(/<section class="related-posts"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(related);
+  assert.deepEqual([...related.matchAll(/class="post-link" href="([^"]+)"/g)].map((m) => m[1]), ['/blog/beta/', '/blog/gamma/']);
+  for (const id of ['gamma', 'blank', 'no-tags', 'long-tag']) {
+    const html = readFileSync(join(dist, `blog/${id}/index.html`), 'utf8');
+    assert.ok(!html.includes('class="article-toc"'), `Unnecessary TOC for ${id}`);
+    if (id !== 'gamma') assert.ok(!html.includes('class="related-posts"'), `Unrelated recommendations for ${id}`);
+  }
+  assert.ok(!rss.includes('class="article-toc"') && !rss.includes('class="related-posts"') && !rss.includes('class="code-copy"'));
+  console.log('PASS article features: Markdown/MDX TOC anchors, duplicate headings, related links, short/untagged articles and clean RSS');
   cpSync(dist, join(temp, 'positive-dist'), { recursive: true });
   console.log('PASS fixture build: .md/.mdx, distinct counts, date ties, drafts, blank tags, escaped HTML and all tag links');
 

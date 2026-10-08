@@ -1,0 +1,47 @@
+<script>
+  // The code remains selectable when JavaScript or the Clipboard API is absent.
+  if (window.isSecureContext && navigator.clipboard?.writeText) {
+    document.querySelectorAll<HTMLPreElement>('article .prose pre').forEach((pre, index) => {
+      const code = pre.querySelector('code');
+      if (!code?.textContent) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      const toolbar = document.createElement('div');
+      toolbar.className = 'code-toolbar';
+      const status = document.createElement('span');
+      status.className = 'code-copy-status';
+      status.setAttribute('role', 'status');
+      status.setAttribute('aria-atomic', 'true');
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.textContent = 'Sao chép';
+      button.setAttribute('aria-label', `Sao chép đoạn mã ${index + 1}`);
+      toolbar.append(status, button);
+      pre.before(wrapper);
+      wrapper.append(toolbar, pre);
+
+      let copying = false;
+      button.addEventListener('click', async () => {
+        if (copying) return;
+        copying = true;
+        // Keep keyboard focus while preventing overlapping clipboard requests.
+        button.setAttribute('aria-disabled', 'true');
+        button.setAttribute('aria-busy', 'true');
+        status.textContent = 'Đang sao chép…';
+        try {
+          // textContent preserves newlines/tabs and excludes the toolbar labels.
+          await navigator.clipboard.writeText(code.textContent ?? '');
+          status.textContent = 'Đã sao chép.';
+        } catch {
+          status.textContent = 'Không sao chép được. Hãy chọn và sao chép mã thủ công.';
+        } finally {
+          copying = false;
+          button.removeAttribute('aria-disabled');
+          button.removeAttribute('aria-busy');
+        }
+      });
+    });
+  }
+</script>

@@ -1,0 +1,24 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const entries = Astro.props.headings.filter(({ depth }) => depth >= 2 && depth <= 4);
+---
+
+{entries.length >= 2 && (
+  <nav class="article-toc" aria-label="Mục lục bài viết">
+    <details open>
+      <summary>Mục lục</summary>
+      <ol>
+        {entries.map(({ depth, slug, text }) => (
+          <li class={`toc-depth-${depth}`}>
+            <a href={`#${encodeURIComponent(slug)}`}>{text}</a>
+          </li>
+        ))}
+      </ol>
+    </details>
+  </nav>
+)}
