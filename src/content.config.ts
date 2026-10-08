@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 // Bài viết là file markdown/mdx trong src/content/posts/ — Sveltia lưu dạng .md.

@@ -1,11 +1,17 @@
 import assert from 'node:assert/strict';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 
 // Exercise real Astro builds without editing the author's content or dist/.
 const source = process.cwd();
+// Use the package's declared CLI entrypoint instead of Astro's internal file layout.
+const require = createRequire(import.meta.url);
+const astroPackagePath = require.resolve('astro/package.json');
+const astroPackage = JSON.parse(readFileSync(astroPackagePath, 'utf8'));
+const astroCli = resolve(dirname(astroPackagePath), astroPackage.bin.astro);
 const temp = mkdtempSync(join(tmpdir(), 'blogv2-tag-build-'));
 const root = join(temp, 'project');
 const keep = process.argv.includes('--keep');
@@ -28,7 +34,7 @@ function writePost(id, tags, { date = '2026-01-03', draft = false, extension = '
 }
 
 function build() {
-  const result = spawnSync(process.execPath, [resolve(source, 'node_modules/astro/astro.js'), 'build'], {
+  const result = spawnSync(process.execPath, [astroCli, 'build'], {
     cwd: root,
     env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' },
     encoding: 'utf8',

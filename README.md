@@ -4,7 +4,7 @@ Blog tĩnh, tối giản, chuẩn HTML/SEO. Viết bài bằng **Sveltia CMS**
 (trên web, dùng được cả điện thoại), lưu bài dạng `.md` trong
 git, deploy tự động lên **Cloudflare Pages**.
 
-- **Astro 5** — build tĩnh 100%, không cần server
+- **Astro 7** — build tĩnh 100%, không cần server
 - **Sveltia CMS** — admin viết bài ngay trên web đã deploy (`/admin/`)
 - **SEO đầy đủ** — canonical, Open Graph + Twitter Card với ảnh OG riêng cho
   từng bài, sitemap, RSS **đầy đủ nội dung** (đọc trọn bài trong Feedly/Reeder)
@@ -32,7 +32,7 @@ git, deploy tự động lên **Cloudflare Pages**.
 
 ## 1. Yêu cầu & khởi động
 
-- Node.js **22** (repo có sẵn `.nvmrc` — chỉ cần `nvm use`)
+- Node.js **22.12.0 trở lên** (repo có sẵn `.nvmrc` để chọn Node 22)
 - Git + repo GitHub
 
 ```bash
@@ -274,7 +274,7 @@ Trong dashboard Cloudflare Pages (bạn đã biết thao tác):
 
 - **Build command:** `npm run build`
 - **Build output directory:** `dist`
-- **Environment variable:** `NODE_VERSION` = `22` (repo đã có `.nvmrc`, nhưng đặt biến này cho chắc)
+- **Environment variable:** `NODE_VERSION` = `22` (Astro 7 cần Node ≥22.12.0; repo có sẵn `.nvmrc`)
 - Framework preset: **Astro** (nếu có chọn)
 
 Sau khi có domain (VD `xxx.pages.dev` hoặc custom domain), quay lại **mục 2

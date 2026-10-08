@@ -12,6 +12,9 @@ export default defineConfig({
 
   output: 'static',
 
+  // Preserve HTML whitespace between inline elements when upgrading to Astro 7.
+  compressHTML: true,
+
   integrations: [sitemap(), mdx()],
 
   markdown: {
