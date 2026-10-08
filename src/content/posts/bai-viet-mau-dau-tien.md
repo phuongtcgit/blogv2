@@ -13,13 +13,13 @@ Chào mừng bạn đến với blog mới! Đây là bài viết mẫu.
 
 ## Cách viết bài
 
-Có hai cách:
+Có ba cách:
 
-1. **Qua giao diện Keystatic (khuyên dùng):** chạy `npm run dev`, mở [http://127.0.0.1:4321/keystatic](http://127.0.0.1:4321/keystatic), tạo bài mới, rồi commit + push.
-2. **Từ xa (máy khác, điện thoại):** sửa file `.mdx` trực tiếp trên web GitHub (vào `src/content/posts/` → Add file / chỉnh sửa), GitHub có preview markdown, commit là Cloudflare tự deploy.
-3. **Trực tiếp trên máy:** tạo file `.mdx` mới trong `src/content/posts/` với frontmatter giống file này.
+1. **Qua giao diện Sveltia CMS:** mở [trang quản trị](/admin/) trên blog đã deploy, đăng nhập GitHub, tạo bài mới và lưu để Cloudflare tự deploy.
+2. **Từ xa (máy khác, điện thoại):** sửa file `.md` trực tiếp trên web GitHub (vào `src/content/posts/` → Add file / chỉnh sửa), GitHub có preview markdown, commit là Cloudflare tự deploy.
+3. **Trực tiếp trên máy:** tạo file `.md` mới trong `src/content/posts/` với frontmatter giống file này, rồi commit + push.
 
-> **Lưu ý slug:** tên file chính là URL bài viết. Với tiêu đề tiếng Việt, hãy đặt tên file không dấu, chữ thường, cách nhau bằng gạch ngang (VD `dat-ten-file-nhu-the-nay.mdx`) và **không đổi tên file sau khi bài đã đăng**.
+> **Lưu ý slug:** tên file chính là URL bài viết. Với tiêu đề tiếng Việt, hãy đặt tên file không dấu, chữ thường, cách nhau bằng gạch ngang (VD `dat-ten-file-nhu-the-nay.md`) và **không đổi tên file sau khi bài đã đăng**.
 
 ## Định dạng được hỗ trợ
 

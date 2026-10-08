@@ -1,7 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// Bài viết là file markdown/mdx trong src/content/posts/ — đúng chỗ Keystatic ghi.
+// Bài viết là file markdown/mdx trong src/content/posts/ — Sveltia lưu dạng .md.
 const posts = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
   schema: z.object({

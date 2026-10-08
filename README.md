@@ -1,11 +1,10 @@
-# blogv2 — Blog cá nhân Astro + Keystatic + Sveltia
+# blogv2 — Blog cá nhân Astro + Sveltia
 
-Blog tĩnh, tối giản, chuẩn HTML/SEO. Viết bài bằng **Keystatic** (local) hoặc
-**Sveltia CMS** (trên web, dùng được cả điện thoại), lưu bài dạng `.mdx` trong
+Blog tĩnh, tối giản, chuẩn HTML/SEO. Viết bài bằng **Sveltia CMS**
+(trên web, dùng được cả điện thoại), lưu bài dạng `.md` trong
 git, deploy tự động lên **Cloudflare Pages**.
 
 - **Astro 5** — build tĩnh 100%, không cần server
-- **Keystatic** — admin viết bài khi chạy local (`/keystatic`)
 - **Sveltia CMS** — admin viết bài ngay trên web đã deploy (`/admin/`)
 - **SEO đầy đủ** — canonical, Open Graph + Twitter Card với ảnh OG riêng cho
   từng bài, sitemap, RSS **đầy đủ nội dung** (đọc trọn bài trong Feedly/Reeder)
@@ -17,7 +16,7 @@ git, deploy tự động lên **Cloudflare Pages**.
 
 1. [Yêu cầu & khởi động](#1-yêu-cầu--khởi-động)
 2. [✏️ Checklist CẦN ĐIỀN trước khi push](#2-️-checklist-cần-điền-trước-khi-push)
-3. [Viết bài — 4 cách](#3-viết-bài--4-cách)
+3. [Viết bài — 3 cách](#3-viết-bài--3-cách)
 4. [Sveltia CMS — setup admin trên web (làm 1 lần)](#4-sveltia-cms--setup-admin-trên-web-làm-1-lần)
 5. [Quy tắc đặt tên file (slug) — đọc kỹ 1 lần](#5-quy-tắc-đặt-tên-file-slug--đọc-kỹ-1-lần)
 6. [Hình ảnh — quy ước](#6-hình-ảnh--quy-ước)
@@ -39,8 +38,12 @@ git, deploy tự động lên **Cloudflare Pages**.
 ```bash
 nvm use          # chọn Node 22
 npm install
-npm run dev      # blog tại http://127.0.0.1:4321, admin tại /keystatic
+npm run dev      # blog tại http://127.0.0.1:4321
 ```
+
+Sveltia CMS dùng trên site đã deploy tại `/admin/`. Khi chạy dev, file giao
+diện CMS nằm tại `/admin/index.html`; bản build và `npm run preview` phục vụ
+tại `/admin/`. CMS lưu bài vào GitHub theo cấu hình backend.
 
 ## 2. ✏️ Checklist CẦN ĐIỀN trước khi push
 
@@ -50,27 +53,18 @@ npm run dev      # blog tại http://127.0.0.1:4321, admin tại /keystatic
 | 2 | `src/site.config.ts` | `title`, `description`, `author` |
 | 3 | `src/site.config.ts` | `social` — điền URL từng mạng hoặc để `''` để ẩn |
 | 4 | `src/site.config.ts` | `ogImage` — mặc định `/og-default.png`; muốn khác thì thay file trong `public/` |
-| 5 | `keystatic.config.ts` | `repo: 'GITHUB_OWNER/GITHUB_REPO'` — chỉ cần khi nâng cấp admin production (mục 12), có thể điền sau |
-| 6 | `public/admin/config.yml` | `site_url` — URL blog (giống mục 1); `backend.repo` — dạng `owner/repo`. **Bắt buộc** để Sveltia chạy |
-| 7 | `public/favicon.svg` | đang là chữ "B" — thay bằng logo của bạn nếu muốn |
-| 8 | `public/og-default.png` | ảnh chia sẻ mặc định 1200×630 — hiện là placeholder, xem [mục 7](#7-ảnh-chia-sẻ-og-image) |
-| 9 | `src/pages/about.astro` | nội dung trang Giới thiệu |
-| 10 | `src/content/posts/bai-viet-mau-dau-tien.mdx` | bài mẫu — **xoá khi có bài thật** |
+| 5 | `public/admin/config.yml` | `site_url` — URL blog (giống mục 1); `backend.repo` — dạng `owner/repo`. **Bắt buộc** để Sveltia chạy |
+| 6 | `public/favicon.svg` | đang là chữ "B" — thay bằng logo của bạn nếu muốn |
+| 7 | `public/og-default.png` | ảnh chia sẻ mặc định 1200×630 — hiện là placeholder, xem [mục 7](#7-ảnh-chia-sẻ-og-image) |
+| 8 | `src/pages/about.astro` | nội dung trang Giới thiệu |
+| 9 | `src/content/posts/bai-viet-mau-dau-tien.md` | bài mẫu — **xoá khi có bài thật** |
 
-## 3. Viết bài — 4 cách
+## 3. Viết bài — 3 cách
 
-Cả 4 cách đọc/ghi **cùng một bộ file** `src/content/posts/` — chọn theo hoàn
+Cả 3 cách đọc/ghi **cùng một bộ file** `src/content/posts/` — chọn theo hoàn
 cảnh, không lo mất đồng bộ.
 
-### a) Keystatic local (khuyên dùng khi ở nhà)
-
-1. `npm run dev`
-2. Mở **http://127.0.0.1:4321/keystatic**
-3. Tạo/sửa bài bằng editor rich-text; ảnh cover upload trực tiếp trong form
-4. Keystatic ghi file `.mdx` vào `src/content/posts/` + ảnh vào `public/images/`
-5. Commit + push → Cloudflare Pages tự build & deploy (1–2 phút)
-
-### b) Sveltia CMS trên web (khuyên dùng khi đi xa / điện thoại)
+### a) Sveltia CMS trên web (dùng được trên máy tính và điện thoại)
 
 Sau khi làm setup một lần ở [mục 4](#4-sveltia-cms--setup-admin-trên-web-làm-1-lần):
 
@@ -81,16 +75,17 @@ Sau khi làm setup một lần ở [mục 4](#4-sveltia-cms--setup-admin-trên-w
 
 Không cần máy, không cần Node — chỉ cần trình duyệt.
 
-### c) GitHub web (phương án tối giản)
+### b) GitHub web (phương án tối giản)
 
 1. Vào repo trên github.com → thư mục `src/content/posts/`
-2. **Add file → Create new file**, đặt tên `ten-bai.mdx`
+2. **Add file → Create new file**, đặt tên `ten-bai.md`
 3. Dán frontmatter + nội dung (GitHub có preview markdown, bật tab Preview)
 4. Commit → Cloudflare tự deploy
 
-### d) Trực tiếp trên máy
+### c) Trực tiếp trên máy
 
-Tạo file `.mdx` trong `src/content/posts/`, frontmatter giống bài mẫu.
+Tạo file `.md` trong `src/content/posts/`, frontmatter giống bài mẫu,
+rồi commit + push để Cloudflare tự deploy. Astro vẫn hỗ trợ `.mdx` nếu cần JSX.
 
 ## 4. Sveltia CMS — setup admin trên web (làm 1 lần)
 
@@ -136,14 +131,13 @@ này nằm trong free tier của Cloudflare Workers (100.000 request/ngày).
 
 ## 5. Quy tắc đặt tên file (slug) — đọc kỹ 1 lần
 
-Tên file **chính là URL** bài viết: `bai-viet-mau-dau-tien.mdx` →
+Tên file **chính là URL** bài viết: `bai-viet-mau-dau-tien.md` →
 `/blog/bai-viet-mau-dau-tien/`.
 
 - **Chữ thường, không dấu, cách nhau bằng gạch ngang**:
-  `viet-ve-astro.mdx` ✅ — `Viết về Astro.mdx` ❌
-- Keystatic tự sinh slug từ tiêu đề; với tiêu đề tiếng Việt **hãy sửa lại slug
-  cho không dấu** ngay khi tạo bài (ô "slug" trong form Keystatic; Sveltia đặt
-  tên file ở bước tạo mới).
+  `viet-ve-astro.md` ✅ — `Viết về Astro.md` ❌
+- Sveltia tạo slug từ tiêu đề với cấu hình bỏ dấu, chữ thường và gạch ngang.
+  Kiểm tra tên file trước khi đăng, nhất là khi tạo bài trực tiếp trên GitHub.
 - **Tuyệt đối không đổi tên file sau khi bài đã đăng.** Người khác link tới
   bài của bạn; đổi slug là mất link + traffic. Nếu buộc phải đổi, thêm redirect
   vào file `public/_redirects` (Cloudflare Pages đọc tự động):
@@ -155,8 +149,8 @@ Tên file **chính là URL** bài viết: `bai-viet-mau-dau-tien.mdx` →
 ## 6. Hình ảnh — quy ước
 
 - Ảnh của bài viết nằm trong **`public/images/<tên-file-bài>/`** — mỗi bài một
-  thư mục, không dùng chung (dễ xoá bài mà không phá bài khác). Keystatic và
-  Sveltia đều ghi vào đúng thư mục này.
+  thư mục, không dùng chung (dễ xoá bài mà không phá bài khác). Sveltia upload
+  ảnh vào `public/images/` theo cấu hình CMS.
 - Chèn ảnh trong nội dung:
 
   ```markdown
@@ -177,7 +171,7 @@ Khi bạn chia link lên Facebook/X/Zalo/Slack, mạng xã hội đọc thẻ `o
 1. **Mặc định:** mọi trang dùng `public/og-default.png` (1200×630) — cấu hình
    tại `src/site.config.ts` → `ogImage`.
 2. **Riêng từng bài:** đặt field `image` trong frontmatter (hoặc upload qua
-   Keystatic/Sveltia) → bài đó dùng ảnh riêng, hiện thêm ở đầu bài như ảnh cover.
+   Sveltia) → bài đó dùng ảnh riêng, hiện thêm ở đầu bài như ảnh cover.
 
 Khuyến nghị ảnh cover: **1200×630 (tỉ lệ 1.91:1)**, chữ to, ít chi tiết.
 
@@ -197,15 +191,15 @@ hoặc Sharing Debugger của Facebook.
 | Field | Bắt buộc | Ý nghĩa |
 |---|---|---|
 | `title` | ✅ | Tiêu đề bài |
-| `description` | ✅ | 1–2 câu mô tả — hiện ở meta description, preview khi share, RSS. **Bắt buộc ở cả Keystatic, Sveltia và schema build** |
+| `description` | ✅ | 1–2 câu mô tả — hiện ở meta description, preview khi share, RSS. **Bắt buộc ở cả Sveltia và schema build** |
 | `pubDate` | ✅ | Ngày đăng (định dạng `YYYY-MM-DD`) |
 | `image` | — | Ảnh cover/OG của bài, VD `/images/ten-bai/cover.png` |
 | `tags` | — | Mảng tag, hiển thị ở trang danh sách |
 | `draft` | — | `true` = bài nháp, **không được build** ở bất kỳ đâu (kể cả RSS/sitemap) |
 
-> ⚠️ Schema bài viết được khai báo ở **ba nơi** phải khớp nhau:
-> `keystatic.config.ts` (form local), `public/admin/config.yml` (Sveltia) và
-> `src/content.config.ts` (validation khi build). Sửa một nơi = sửa cả ba.
+> ⚠️ Schema bài viết được khai báo ở **hai nơi** phải khớp nhau:
+> `public/admin/config.yml` (Sveltia) và `src/content.config.ts` (validation khi
+> build). Khi thay đổi schema, cập nhật cả hai.
 
 ## 9. Giao diện sáng/tối & màu code
 
@@ -269,8 +263,8 @@ commit + push lần nữa để RSS/sitemap/OG sinh link đúng.
 ```
 src/
   site.config.ts        ← ✏️ cấu hình trung tâm (URL, tên, author, OG mặc định)
-  content.config.ts     ← schema frontmatter (phải khớp keystatic + Sveltia)
-  content/posts/        ← bài viết (.mdx)
+  content.config.ts     ← schema frontmatter (phải khớp Sveltia)
+  content/posts/        ← bài viết (.md; cũng hỗ trợ .mdx)
   layouts/BaseLayout.astro  ← <head> + meta SEO/OG + header/footer
   lib/utils.ts          ← format ngày tiếng Việt, helper URL
   pages/
@@ -291,29 +285,10 @@ public/
   robots.txt
 scripts/
   make-og-image.py      ← script sinh lại ảnh OG mặc định
-keystatic.config.ts     ← cấu hình CMS local (collection, các field)
-astro.config.mjs        ← cấu hình Astro; Keystatic chỉ bật khi `astro dev`
+astro.config.mjs        ← cấu hình Astro, MDX và sitemap
 ```
 
 ## 12. Nâng cấp sau này
-
-**Admin Keystatic ngay trên production:** hiện `/keystatic` chỉ chạy khi
-`npm run dev` vì blog build tĩnh. Để bật trên Cloudflare:
-
-1. Tạo **GitHub OAuth App** (Settings → Developer settings), callback
-   `https://your-domain.com/api/keystatic/login` → lấy `clientId`/`clientSecret`.
-2. Điền `repo` trong `keystatic.config.ts` (đã để placeholder), thêm biến môi
-   trường `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`,
-   `KEYSTATIC_SECRET`.
-3. Thêm adapter: `npm i @astrojs/cloudflare`, thêm `cloudflare()` vào
-   `integrations` trong `astro.config.mjs`, đổi dòng
-   `...(isDev ? [react(), keystatic()] : [])` thành luôn bật
-   `[react(), keystatic()]`.
-4. Deploy lên **Cloudflare Workers** (Static Assets) thay vì Pages.
-
-> Thực tế với Sveltia đã có sẵn ở `/admin/`, bước này **chưa cần làm** —
-> Sveltia đã phủ hết nhu cầu viết bài từ xa. Chỉ quay lại khi muốn editor
-> Keystatic trên production.
 
 **Tối ưu ảnh:** chuyển ảnh bài viết sang `src/assets/` + component `<Image />`
 của `astro:assets` (tự sinh WebP/AVIF, width/height chống layout shift).
@@ -327,7 +302,7 @@ infrastructure nhiều hơn vì thiếu tính năng.
 ## 13. Lệnh thường dùng
 
 ```bash
-npm run dev        # chạy local + admin Keystatic (localhost:4321/keystatic)
+npm run dev        # xem blog khi phát triển (localhost:4321)
 npm run build      # build tĩnh ra dist/
 npm run preview    # xem thử kết quả build
 python3 scripts/make-og-image.py   # sinh lại ảnh OG mặc định (cần Pillow)

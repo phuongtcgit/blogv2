@@ -2,15 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
-import react from '@astrojs/react';
-import keystatic from '@keystatic/astro';
 import { SITE } from './src/site.config';
-
-// `astro dev` → chạy local (có admin Keystatic); `astro build` → build tĩnh.
-// Keystatic cần route SSR nên KHÔNG được đưa vào build tĩnh cho Cloudflare.
-// Khi nâng cấp admin trên production (xem README mục "Nâng cấp sau này"),
-// đổi thành `true` và thêm adapter Cloudflare.
-const isDev = process.argv[2] === 'dev';
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,11 +12,7 @@ export default defineConfig({
 
   output: 'static',
 
-  integrations: [
-    sitemap(),
-    mdx(),
-    ...(isDev ? [react(), keystatic()] : []),
-  ],
+  integrations: [sitemap(), mdx()],
 
   markdown: {
     shikiConfig: {

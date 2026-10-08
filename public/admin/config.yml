@@ -2,8 +2,8 @@
 # Sveltia CMS — admin viết bài trên web (dùng được cả điện thoại)
 # Trang admin: https://<your-site>/admin/
 #
-# ⚠️ BỘ FIELD NÀY PHẢI KHỚP với keystatic.config.ts (form local) và
-#    src/content.config.ts (validation khi build). Sửa một nơi = sửa cả ba.
+# ⚠️ BỘ FIELD NÀY PHẢI KHỚP với src/content.config.ts (validation khi build).
+#    Khi thay đổi schema bài viết, cập nhật cả hai nơi.
 #
 # ✏️ CẦN ĐIỀN (2 chỗ): site_url và backend.repo
 # ==========================================================================
