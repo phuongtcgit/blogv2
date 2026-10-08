@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagList from '../../components/TagList.astro';
+import { getPostNavigation } from '../../lib/posts';
+
+const { tags } = await getPostNavigation();
+---
+
+<BaseLayout title="Chủ đề" description="Khám phá bài viết theo chủ đề trên blog.">
+  <h1 class="page-title">Chủ đề</h1>
+  <p class="topic-note">Khám phá các chủ đề và bài viết đã đăng trên blog.</p>
+
+  <div class="tag-filter" id="tag-filter" hidden>
+    <label for="tag-query">Tìm chủ đề</label>
+    <input id="tag-query" type="search" placeholder="Tìm chủ đề…" autocomplete="off" aria-controls="topic-list" />
+  </div>
+  <div id="topic-list">
+    {tags.length ? <TagList tags={tags} showCounts /> : <p class="topic-note">Chưa có chủ đề nào.</p>}
+  </div>
+  <p class="topic-note" id="tag-filter-empty" role="status" hidden>Không tìm thấy chủ đề phù hợp.</p>
+</BaseLayout>
+
+<script>
+  import { normalizeTagSearch } from '../../lib/tags';
+
+  const controls = document.querySelector<HTMLElement>('#tag-filter');
+  const input = document.querySelector<HTMLInputElement>('#tag-query');
+  const empty = document.querySelector<HTMLElement>('#tag-filter-empty');
+  const entries = [...document.querySelectorAll<HTMLElement>('#topic-list [data-tag-search]')];
+
+  if (controls && input && empty && entries.length) {
+    controls.hidden = false;
+    input.addEventListener('input', () => {
+      const query = normalizeTagSearch(input.value);
+      let matches = 0;
+      for (const entry of entries) {
+        entry.hidden = !entry.dataset.tagSearch!.includes(query);
+        if (!entry.hidden) matches++;
+      }
+      empty.hidden = matches !== 0;
+    });
+  }
+</script>

@@ -1,0 +1,23 @@
+---
+import { normalizeTagSearch, tagUrl, type Tag } from '../lib/tags';
+
+interface Props {
+  tags: Tag[];
+  showCounts?: boolean;
+}
+
+const { tags, showCounts = false } = Astro.props;
+---
+
+<ul class:list={['tag-list', { 'tag-list--counts': showCounts }]}>
+  {tags.map((tag) => (
+    <li data-tag-search={normalizeTagSearch(tag.label)}>
+      <a class="tag" href={tagUrl(tag.slug)}>
+        <span>{tag.label}</span>
+        {showCounts && (
+          <span class="tag-count">{tag.count}<span class="sr-only"> bài viết</span></span>
+        )}
+      </a>
+    </li>
+  ))}
+</ul>

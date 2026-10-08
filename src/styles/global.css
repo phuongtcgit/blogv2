@@ -255,7 +255,7 @@ a:hover {
   padding: 0;
 }
 
-.post-list li {
+.post-list > li {
   padding: 1rem 0;
   border-bottom: 1px solid var(--border);
 }
@@ -307,6 +307,155 @@ a:hover {
 .tag::before {
   content: '#';
   color: var(--accent);
+}
+
+/* ---------- Điều hướng chủ đề ---------- */
+
+.posts-with-sidebar {
+  display: grid;
+  gap: 2rem;
+}
+
+.posts-with-sidebar > * {
+  min-width: 0;
+}
+
+.posts-with-sidebar--blog {
+  margin-top: 1.5rem;
+}
+
+.tag-sidebar {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+.tag-sidebar .section-title {
+  margin: 0 0 1rem;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.tag-list > li {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tag-list .tag {
+  margin-right: 0;
+  overflow-wrap: anywhere;
+}
+
+.tag-list .tag:hover {
+  color: var(--accent);
+}
+
+.tag-list--counts {
+  display: grid;
+}
+
+.tag-list--counts .tag {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.tag-list--counts .tag > span:first-of-type {
+  flex: 1;
+  min-width: 0;
+}
+
+.tag-count {
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.all-topics {
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.article-tags {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.topic-note {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+.topic-title {
+  overflow-wrap: anywhere;
+}
+
+.tag-filter {
+  display: grid;
+  gap: 0.4rem;
+  margin: 1.5rem 0;
+}
+
+.tag-filter[hidden] {
+  display: none;
+}
+
+.tag-filter label {
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.tag-filter input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The DOM stays post-list first; only these two index pages become wider. */
+@media (min-width: 960px) {
+  .wrapper--wide {
+    max-width: 62rem;
+  }
+
+  .posts-with-sidebar {
+    grid-template-columns: minmax(0, 1fr) 15rem;
+  }
+
+  .tag-sidebar {
+    margin-top: 2.5rem;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .posts-with-sidebar--blog .tag-sidebar {
+    margin-top: 1rem;
+  }
 }
 
 /* ---------- Trang bài viết ---------- */
