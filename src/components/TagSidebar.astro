@@ -1,0 +1,13 @@
+---
+import TagList from './TagList.astro';
+import type { Tag } from '../lib/tags';
+
+interface Props { tags: Tag[] }
+const { tags } = Astro.props;
+---
+
+<aside class="tag-sidebar" aria-labelledby="sidebar-topics">
+  <h2 class="section-title" id="sidebar-topics">Chủ đề</h2>
+  {tags.length ? <TagList tags={tags} showCounts /> : <p class="topic-note">Chưa có chủ đề nào.</p>}
+  <a class="all-topics" href="/tags/">Xem tất cả chủ đề →</a>
+</aside>

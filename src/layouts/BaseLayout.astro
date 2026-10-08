@@ -9,9 +9,11 @@ interface Props {
   image?: string;
   /** Trang bài viết → og:type article */
   isArticle?: boolean;
+  /** Chỉ mở rộng các trang danh sách có sidebar. */
+  wide?: boolean;
 }
 
-const { title, description, image, isArticle = false } = Astro.props;
+const { title, description, image, isArticle = false, wide = false } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url);
 
@@ -79,7 +81,7 @@ const socialLinks = Object.entries(SITE.social).filter(
     <meta name="twitter:image" content={ogImage} />
   </head>
   <body>
-    <div class="wrapper">
+    <div class:list={['wrapper', { 'wrapper--wide': wide }]}>
       <header class="site-header">
         <a class="brand" href="/">{SITE.title}</a>
         <nav class="site-nav" aria-label="Điều hướng chính">

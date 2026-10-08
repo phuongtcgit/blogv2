@@ -201,6 +201,29 @@ hoặc Sharing Debugger của Facebook.
 > `public/admin/config.yml` (Sveltia) và `src/content.config.ts` (validation khi
 > build). Khi thay đổi schema, cập nhật cả hai.
 
+### Điều hướng theo chủ đề
+
+Các tag trong frontmatter tự tạo sidebar, danh sách `/tags/` và trang
+`/tags/<slug>/` khi build; không cần đăng ký trang thủ công. Sidebar nằm bên
+phải danh sách bài từ 960px và chuyển xuống dưới trên màn hình nhỏ. Trang bài
+viết hiển thị tag ở cuối nội dung.
+
+- Tag được chuẩn hóa Unicode, bỏ khoảng trắng thừa và gộp khác biệt chữ hoa/
+  thường. Tag trùng trong một bài chỉ tính một lần; bài nháp không được tính.
+- Giữ nhãn có dấu; URL dùng ASCII: `Bất động sản` → `/tags/bat-dong-san/`,
+  `Thông báo` → `/tags/thong-bao/`, `đ` → `d`.
+- Thứ tự: số bài giảm dần, rồi nhãn chuẩn hóa theo thứ tự mã Unicode. Nếu có
+  nhiều cách viết hoa/thường, nhãn hiển thị được chọn theo cùng thứ tự ổn định.
+  Bài viết sắp xếp theo ngày mới nhất, rồi ID nếu cùng ngày.
+- Các chủ đề khác nhau có cùng slug (ví dụ `C#` và `C++`) hoặc tag không tạo
+  được slug ASCII sẽ làm build thất bại với tên tag và bài viết cần sửa.
+- `/tags/` có bộ lọc tên bỏ qua hoa/thường, dấu tiếng Việt và khoảng trắng
+  thừa. Khi tắt JavaScript, toàn bộ danh sách và liên kết vẫn hiển thị.
+
+Chạy `npm test` để kiểm tra quy tắc tag bằng Node.js 22, rồi `npm run build`.
+`npm run test:build` kiểm tra các bản build với dữ liệu biên trong thư mục tạm,
+gồm bài nháp, `.mdx`, tag rỗng, HTML không tin cậy và build lỗi do slug collision.
+
 ## 9. Giao diện sáng/tối & màu code
 
 Blog có **3 chế độ hiển thị**, chuyển bằng nút tròn ở góc phải header:

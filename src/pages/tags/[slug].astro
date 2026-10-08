@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPostNavigation } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const { tags, tagsByPostId } = await getPostNavigation();
+  return tags.map((tag) => ({ params: { slug: tag.slug }, props: { tag, tagsByPostId } }));
+}
+
+const { tag, tagsByPostId } = Astro.props;
+---
+
+<BaseLayout title={`Bài viết về #${tag.label}`} description={`Các bài viết đã đăng về chủ đề ${tag.label}.`}>
+  <h1 class="page-title topic-title">Bài viết về #{tag.label}</h1>
+  <p class="topic-note">{tag.count} bài viết · <a href="/tags/">← Tất cả chủ đề</a></p>
+  <PostList posts={tag.posts} tagsByPostId={tagsByPostId} />
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, postUrl } from '../lib/utils';
+import type { Tag } from '../lib/tags';
+import TagList from './TagList.astro';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+  tagsByPostId?: ReadonlyMap<string, Tag[]>;
+}
+const { posts, tagsByPostId } = Astro.props;
+---
+
+<ul class="post-list">
+  {posts.map((post) => (
+    <li>
+      <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+      <a class="post-link" href={postUrl(post.id)}>{post.data.title}</a>
+      {post.data.description && <p class="post-excerpt">{post.data.description}</p>}
+      {!!tagsByPostId?.get(post.id)?.length && <TagList tags={tagsByPostId.get(post.id)!} />}
+    </li>
+  ))}
+</ul>

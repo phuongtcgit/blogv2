@@ -1,38 +1,19 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate, postUrl } from '../../lib/utils';
+import { getPostNavigation } from '../../lib/posts';
+import PostList from '../../components/PostList.astro';
+import TagSidebar from '../../components/TagSidebar.astro';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const { posts, tags, tagsByPostId } = await getPostNavigation();
 ---
 
-<BaseLayout title="Tất cả bài viết">
+<BaseLayout title="Tất cả bài viết" wide>
   <h1 class="page-title">Tất cả bài viết</h1>
 
-  <ul class="post-list" style="margin-top: 1.5rem">
-    {
-      posts.map((post) => (
-        <li>
-          <time datetime={post.data.pubDate.toISOString()}>
-            {formatDate(post.data.pubDate)}
-          </time>
-          <a class="post-link" href={postUrl(post.id)}>
-            {post.data.title}
-          </a>
-          {post.data.description && (
-            <p class="post-excerpt">{post.data.description}</p>
-          )}
-          {post.data.tags.length > 0 && (
-            <p style="margin: 0.5rem 0 0">
-              {post.data.tags.map((tag) => (
-                <span class="tag">{tag}</span>
-              ))}
-            </p>
-          )}
-        </li>
-      ))
-    }
-  </ul>
+  <div class="posts-with-sidebar posts-with-sidebar--blog">
+    <section aria-label="Danh sách bài viết">
+      <PostList posts={posts} tagsByPostId={tagsByPostId} />
+    </section>
+    <TagSidebar tags={tags} />
+  </div>
 </BaseLayout>
