@@ -52,4 +52,14 @@ docker stop id_docker
 docker start id_docker
 ```
 
-Vào lại trình duyệt và nhập thông tin truy cập đầu tiên của admin.
+Vào lại trình duyệt và tạo lại thông tin truy cập **admin mới.**
+
+Lúc này bạn đã truy cập vào hệ thống bằng account mới được rồi. Tuy nhiên chỉ có 1 user mới tạo. Nếu muốn sử dụng lại các user cũ thì làm như sau đây. Rồi dùng account mới tạo reset pass cho các account cũ (nếu muốn)
+
+```plain
+docker exec -it id_docker sh
+  sqlite3 /data/database.sqlite
+	UPDATE user SET is_deleted=0;
+	.exit 
+  exit
+```
