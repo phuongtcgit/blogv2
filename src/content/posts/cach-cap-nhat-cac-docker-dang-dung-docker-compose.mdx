@@ -10,7 +10,7 @@ draft: false
 
 Để cập nhật các Docker container qua `docker-compose` (hoặc `docker compose`) một cách **an toàn**, quy trình tiêu chuẩn bao gồm: kiểm tra log/sức khỏe, sao lưu dữ liệu, kéo (pull) ảnh mới, khởi chạy thử nghiệm hoặc chuyển đổi mượt mà, và dọn dẹp.
 
-**_Docker trên server nhà làm đa số đang ở /opt/docker_**
+**_Docker trên server nhà làm đa số đang ở /opt/docker._**
 
 Dưới đây là bộ lệnh chuẩn chỉnh từng bước:
 
@@ -48,7 +48,7 @@ Bash
 docker compose up -d
 ```
 
-> **Mẹo nâng cao (Cập nhật Rolling/Từng service):**Nếu hệ thống của bạn có nhiều dịch vụ và bạn muốn cập nhật từng dịch vụ một để kiểm tra rủi ro:Bashdocker compose up -d --no-deps <ten_service>_(Tham số `--no-deps` giúp không khởi động lại các dịch vụ phụ thuộc vào nó)._
+> \*\*Mẹo nâng cao (Cập nhật Rolling/Từng service):\*\*Nếu hệ thống của bạn có nhiều dịch vụ và bạn muốn cập nhật từng dịch vụ một để kiểm tra rủi ro:Bashdocker compose up -d --no-deps <ten_service>_(Tham số `--no-deps` giúp không khởi động lại các dịch vụ phụ thuộc vào nó)._
 
 ### Bước 4: Kiểm tra log và trạng thái sau khi update
 
