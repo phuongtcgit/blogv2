@@ -1,7 +1,7 @@
 ---
 title: Tạo QRCode đơn giản
 description: Cách tạo QRCode đơn giản, trực tiếp chính xác và không dính quảng cáo
-image: ''
+image: /images/dataqr.png
 pubDate: 2026-10-19
 tags:
   - knowledge
