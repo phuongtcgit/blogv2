@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
+import { addEnglishNavigation } from '../src/integrations/english-navigation.mjs';
 
 // Exercise real Astro builds without editing the author's content or dist/.
 const source = process.cwd();
@@ -87,10 +88,15 @@ try {
   assert.ok(!englishIndex.includes('notes.txt'), 'Only list HTML lessons');
   assert.ok(englishIndex.includes('aria-current="page"'), 'Highlight the English navigation');
   for (const [, href] of englishIndex.matchAll(/class="post-link" href="([^"]+)"/g)) {
-    assert.ok(existsSync(join(dist, decodeURIComponent(href))), `Broken English lesson link: ${href}`);
+    const output = join(dist, decodeURIComponent(href));
+    assert.ok(existsSync(output), `Broken English lesson link: ${href}`);
+    const original = readFileSync(join(root, 'public', decodeURIComponent(href)), 'utf8');
+    const built = readFileSync(output, 'utf8');
+    assert.equal(built, addEnglishNavigation(original), `Automatic return navigation missing or lesson HTML changed: ${href}`);
+    assert.equal(addEnglishNavigation(built), built, `Duplicate return links: ${href}`);
   }
-  assert.equal(readFileSync(join(dist, 'english/2026-11-17-words & games.html'), 'utf8'), lesson, 'Keep standalone lesson HTML untouched');
-  console.log('PASS English library: build from another working directory, encoded URLs, escaped titles and unchanged HTML lessons');
+  assert.equal(readFileSync(join(dist, 'english/2026-11-17-words & games.html'), 'utf8'), addEnglishNavigation(lesson), 'Add navigation while preserving the standalone lesson');
+  console.log('PASS English library: discovery from another working directory, safe links, automatic return navigation and preserved lesson content');
   const server = readFileSync(join(dist, 'tags/server/index.html'), 'utf8');
   const links = [...server.matchAll(/class="post-link" href="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(links, ['/blog/beta/', '/blog/gamma/', '/blog/alpha/']);
