@@ -18,7 +18,9 @@ function decodeTitle(value: string): string {
   }).replace(/\s+/g, ' ').trim();
 }
 
-export async function getEnglishLessons(directory = resolve('public/english')): Promise<EnglishLesson[]> {
+// The caller must pass Astro's configured public directory. process.cwd() can
+// differ from the project root in a deployment build.
+export async function getEnglishLessons(directory: string): Promise<EnglishLesson[]> {
   let files;
   try {
     files = await readdir(directory, { withFileTypes: true });

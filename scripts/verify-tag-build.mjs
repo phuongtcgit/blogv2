@@ -37,9 +37,9 @@ function writePost(id, tags, { date = '2026-01-03', draft = false, extension = '
   writeFileSync(join(content, `${id}.${extension}`), `---\ntitle: ${JSON.stringify(id)}\ndescription: "Fixture for tag navigation"\npubDate: ${date}\ntags: ${JSON.stringify(tags)}\ndraft: ${draft}\n---\n\n${draft ? 'SECRET_DRAFT_BODY' : body}\n`);
 }
 
-function build() {
-  const result = spawnSync(process.execPath, [astroCli, 'build', '--config', './fixture.config.mjs'], {
-    cwd: root,
+function build({ callerDir = root } = {}) {
+  const result = spawnSync(process.execPath, [astroCli, 'build', '--root', root, '--config', './fixture.config.mjs'], {
+    cwd: callerDir,
     env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' },
     encoding: 'utf8',
     maxBuffer: 8 * 1024 * 1024,
@@ -76,7 +76,11 @@ try {
   const longTag = 'x'.repeat(120);
   writePost('long-tag', [longTag]);
   writePost('draft', ['server', 'draft-only', 'C++', '💥'], { draft: true, date: '2027-01-01' });
-  const valid = build();
+  // Deployment runners need not launch Astro from the project root. The
+  // previous English loader silently returned [] in this situation.
+  const runner = join(root, 'build-runner');
+  mkdirSync(runner);
+  const valid = build({ callerDir: runner });
   assert.equal(valid.status, 0, valid.output);
   const englishIndex = readFileSync(join(dist, 'english/index.html'), 'utf8');
   assert.ok(englishIndex.includes('Words &amp; &lt;games&gt;'), 'Decode and safely escape the lesson title');
@@ -86,7 +90,7 @@ try {
     assert.ok(existsSync(join(dist, decodeURIComponent(href))), `Broken English lesson link: ${href}`);
   }
   assert.equal(readFileSync(join(dist, 'english/2026-11-17-words & games.html'), 'utf8'), lesson, 'Keep standalone lesson HTML untouched');
-  console.log('PASS English library: automatic discovery, encoded URLs, escaped titles and unchanged HTML lessons');
+  console.log('PASS English library: build from another working directory, encoded URLs, escaped titles and unchanged HTML lessons');
   const server = readFileSync(join(dist, 'tags/server/index.html'), 'utf8');
   const links = [...server.matchAll(/class="post-link" href="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(links, ['/blog/beta/', '/blog/gamma/', '/blog/alpha/']);
