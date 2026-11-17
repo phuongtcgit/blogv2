@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 
@@ -56,6 +56,11 @@ function htmlFiles(dir) {
 }
 
 try {
+  const english = join(root, 'public/english');
+  mkdirSync(english, { recursive: true });
+  const lesson = '<!doctype html><html lang="en"><head><title>Words &amp; &lt;games&gt;</title></head><body><p>LESSON_BODY</p></body></html>';
+  writeFileSync(join(english, '2026-11-17-words & games.html'), lesson);
+  writeFileSync(join(english, 'notes.txt'), 'Not a lesson');
   resetPosts();
   writePost('alpha', ['Server', 'server ', ' SERVER ', 'Bất động sản', '<img src=x onerror="alert(1)">'], {
     date: '2026-01-02',
@@ -73,6 +78,15 @@ try {
   writePost('draft', ['server', 'draft-only', 'C++', '💥'], { draft: true, date: '2027-01-01' });
   const valid = build();
   assert.equal(valid.status, 0, valid.output);
+  const englishIndex = readFileSync(join(dist, 'english/index.html'), 'utf8');
+  assert.ok(englishIndex.includes('Words &amp; &lt;games&gt;'), 'Decode and safely escape the lesson title');
+  assert.ok(!englishIndex.includes('notes.txt'), 'Only list HTML lessons');
+  assert.ok(englishIndex.includes('aria-current="page"'), 'Highlight the English navigation');
+  for (const [, href] of englishIndex.matchAll(/class="post-link" href="([^"]+)"/g)) {
+    assert.ok(existsSync(join(dist, decodeURIComponent(href))), `Broken English lesson link: ${href}`);
+  }
+  assert.equal(readFileSync(join(dist, 'english/2026-11-17-words & games.html'), 'utf8'), lesson, 'Keep standalone lesson HTML untouched');
+  console.log('PASS English library: automatic discovery, encoded URLs, escaped titles and unchanged HTML lessons');
   const server = readFileSync(join(dist, 'tags/server/index.html'), 'utf8');
   const links = [...server.matchAll(/class="post-link" href="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(links, ['/blog/beta/', '/blog/gamma/', '/blog/alpha/']);
@@ -89,6 +103,12 @@ try {
   for (const file of htmlFiles(dist)) {
     const html = readFileSync(file, 'utf8');
     assert.ok(!html.includes('SECRET_DRAFT_BODY') && !html.includes('draft-only'), file);
+    // Standalone public HTML lessons are copied untouched, without blog meta.
+    if (!existsSync(join(root, 'public', relative(dist, file)))) {
+      for (const attribute of ['name="description"', 'property="og:description"', 'name="twitter:description"']) {
+        assert.match(html, new RegExp(`<meta ${attribute} content="[^"]+"`), `Missing page description in ${file}`);
+      }
+    }
     for (const [, href] of html.matchAll(/href="(\/tags\/[^"?#]*)"/g)) {
       assert.ok(existsSync(join(dist, href, 'index.html')), `Broken tag link ${href} in ${file}`);
     }
@@ -100,6 +120,7 @@ try {
   assert.ok(!existsSync(join(dist, 'tags/draft-only/index.html')));
   const alpha = readFileSync(join(dist, 'blog/alpha/index.html'), 'utf8');
   const beta = readFileSync(join(dist, 'blog/beta/index.html'), 'utf8');
+  assert.ok(alpha.includes('<meta name="description" content="Fixture for tag navigation"'), 'Keep the article-specific description');
   for (const [html, expectedCount] of [[alpha, 4], [beta, 2]]) {
     const toc = html.match(/<nav class="article-toc"[\s\S]*?<\/nav>/)?.[0];
     assert.ok(toc, 'Static TOC missing from Markdown/MDX');

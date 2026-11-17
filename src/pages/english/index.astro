@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getEnglishLessons } from '../../lib/english';
+import { formatDate } from '../../lib/utils';
+
+const lessons = await getEnglishLessons();
+---
+
+<BaseLayout title="English cùng con" description="Các bài học tiếng Anh cùng con: từ vựng, phát âm, bài hát và trò chơi.">
+  <h1 class="page-title">English cùng con</h1>
+  <p class="topic-note">Cùng học từ vựng, nghe phát âm, hát và chơi bằng tiếng Anh.</p>
+
+  {lessons.length ? (
+    <section aria-labelledby="english-lessons">
+      <h2 class="section-title" id="english-lessons">{lessons.length} bài học</h2>
+      <ul class="post-list">
+        {lessons.map((lesson) => (
+          <li>
+            {lesson.date && <time datetime={lesson.date}>{formatDate(new Date(`${lesson.date}T00:00:00Z`))}</time>}
+            <a class="post-link" href={lesson.url}>{lesson.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ) : (
+    <p class="topic-note">Bài học mới sẽ sớm được cập nhật.</p>
+  )}
+</BaseLayout>

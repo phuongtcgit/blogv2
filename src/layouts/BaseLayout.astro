@@ -13,7 +13,7 @@ interface Props {
   wide?: boolean;
 }
 
-const { title, description, image, isArticle = false, wide = false } = Astro.props;
+const { title, description = SITE.description, image, isArticle = false, wide = false } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url);
 
@@ -86,6 +86,7 @@ const socialLinks = Object.entries(SITE.social).filter(
         <a class="brand" href="/">{SITE.title}</a>
         <nav class="site-nav" aria-label="Điều hướng chính">
           <a href="/blog">Blog</a>
+          <a href="/english/" aria-current={Astro.url.pathname.startsWith('/english') ? 'page' : undefined}>English</a>
           <a href="/about">Giới thiệu</a>
         </nav>
         <button
@@ -181,29 +182,29 @@ const socialLinks = Object.entries(SITE.social).filter(
         const btn = document.getElementById('theme-toggle');
         if (!btn) return;
 
-        const current = () => {
-          const t = localStorage.getItem(KEY);
-          return ORDER.includes(t) ? t : 'auto';
-        };
+        // The head script reads storage safely. Keep the current selection in
+        // memory so toggling also works when reads or writes are blocked.
+        let state = document.documentElement.dataset.theme ?? 'auto';
 
         const apply = (t) => {
+          state = t;
           if (t === 'auto') {
             delete document.documentElement.dataset.theme;
           } else {
             document.documentElement.dataset.theme = t;
           }
-          try {
-            localStorage.setItem(KEY, t);
-          } catch {}
           btn.dataset.state = t;
           btn.setAttribute('aria-label', 'Chế độ giao diện: ' + NAMES[t]);
         };
 
         btn.addEventListener('click', () => {
-          apply(ORDER[(ORDER.indexOf(current()) + 1) % ORDER.length]);
+          apply(ORDER[(ORDER.indexOf(state) + 1) % ORDER.length]);
+          try {
+            localStorage.setItem(KEY, state);
+          } catch {}
         });
 
-        btn.dataset.state = current();
+        apply(state);
       })();
     </script>
   </body>
