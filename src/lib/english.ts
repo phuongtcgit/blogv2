@@ -1,6 +1,3 @@
-import { readdir, readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
-
 export interface EnglishLesson {
   title: string;
   url: string;
@@ -18,21 +15,13 @@ function decodeTitle(value: string): string {
   }).replace(/\s+/g, ' ').trim();
 }
 
-// The caller must pass Astro's configured public directory. process.cwd() can
-// differ from the project root in a deployment build.
-export async function getEnglishLessons(directory: string): Promise<EnglishLesson[]> {
-  let files;
-  try {
-    files = await readdir(directory, { withFileTypes: true });
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return [];
-    throw error;
-  }
-
-  const lessons = await Promise.all(files
-    .filter((file) => file.isFile() && /\.html?$/i.test(file.name) && !/^index\.html?$/i.test(file.name))
-    .map(async ({ name }) => {
-      const html = await readFile(resolve(directory, name), 'utf8');
+// Vite supplies the HTML at compile time, before deployment. Rendering the
+// library never needs access to the source tree or a particular working directory.
+export function getEnglishLessons(sources: Record<string, string>): EnglishLesson[] {
+  const lessons = Object.entries(sources)
+    .filter(([path]) => /\.html?$/i.test(path) && !/^index\.html?$/i.test(path.split('/').at(-1)!))
+    .map(([path, html]) => {
+      const name = path.split('/').at(-1)!;
       const source = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
       const title = decodeTitle(source.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? '')
         || name.replace(/\.html?$/i, '').replace(/[-_]+/g, ' ');
@@ -41,7 +30,7 @@ export async function getEnglishLessons(directory: string): Promise<EnglishLesso
       const date = parsed && !Number.isNaN(parsed.valueOf()) && parsed.toISOString().slice(0, 10) === candidate
         ? candidate : undefined;
       return { title, url: `/english/${encodeURIComponent(name)}`, date };
-    }));
+    });
 
   // A filename date survives clones/deploys, unlike filesystem modification time.
   return lessons.sort((a, b) =>
