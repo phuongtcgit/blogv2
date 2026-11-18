@@ -7,6 +7,8 @@ export interface EnglishLesson {
   grade?: EnglishGrade;
 }
 
+const lessonTitleOrder = new Intl.Collator('vi', { numeric: true });
+
 // Titles stay plain text; Astro escapes them when rendering links.
 function decodeTitle(value: string): string {
   const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
@@ -39,6 +41,6 @@ export function getEnglishLessons(sources: Record<string, string>): EnglishLesso
 
   // A filename date survives clones/deploys, unlike filesystem modification time.
   return lessons.sort((a, b) =>
-    (b.date ?? '').localeCompare(a.date ?? '') || a.title.localeCompare(b.title, 'vi') || a.url.localeCompare(b.url)
+    (b.date ?? '').localeCompare(a.date ?? '') || lessonTitleOrder.compare(a.title, b.title) || a.url.localeCompare(b.url)
   );
 }

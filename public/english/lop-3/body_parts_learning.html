@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Bé Học Bộ Phận Cơ Thể - Tiếng Anh Mỹ &amp; Tiếng Việt</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(160deg, #fffdf5 0%, #f0f9ff 55%, #fdf2f8 100%);
+      min-height: 100vh;
+    }
+    .font-display {
+      font-family: 'Nunito', 'Inter', sans-serif;
+    }
+    .body-part {
+      cursor: pointer;
+      transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.22s ease, opacity 0.18s ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .body-part:hover {
+      filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.55));
+      transform: scale(1.04);
+    }
+    .body-part.active-part {
+      filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.95));
+      transform: scale(1.38);
+    }
+    .body-part.quiz-correct {
+      filter: drop-shadow(0 0 14px rgba(16, 185, 129, 0.9));
+      transform: scale(1.08);
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    .float-badge {
+      animation: floatSlow 2.8s ease-in-out infinite;
+    }
+    .pin-dot {
+      transition: r 0.18s ease, fill 0.18s ease;
+      cursor: pointer;
+    }
+    .pin-dot:hover, .pin-dot.active-pin {
+      fill: #f59e0b;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased">
+  <div class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur border border-sky-100 rounded-3xl shadow-sm px-4 sm:px-6 py-4 mb-5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-400 to-amber-400 flex items-center justify-center text-2xl shadow-sm shrink-0">
+            👧
+          </div>
+          <div>
+            <h1 class="font-display text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight">
+              Bé Học Bộ Phận Cơ Thể
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500">
+              Trỏ hoặc chạm vào từng bộ phận để nghe tiếng Anh Mỹ chuẩn &amp; nghĩa tiếng Việt
+            </p>
+          </div>
+        </div>
+
+        <!-- Mode Tabs -->
+        <nav class="flex flex-wrap items-center gap-2 bg-slate-100 p-1.5 rounded-2xl" aria-label="Chế độ học">
+          <button id="tab-explore" type="button" class="mode-tab px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-rose-600 shadow-sm">
+            ✨ Khám phá
+          </button>
+          <button id="tab-song" type="button" class="mode-tab px-4 py-2 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900">
+            🎵 Bài hát
+          </button>
+          <button id="tab-quiz" type="button" class="mode-tab px-4 py-2 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900">
+            ⭐ Trò chơi
+          </button>
+        </nav>
+      </div>
+
+      <!-- Voice & Interaction Controls -->
+      <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide mr-1">Giọng đọc (US):</span>
+          <button id="voice-female" type="button" class="voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition bg-rose-500 text-white border-rose-500 shadow-sm">
+            👩 Giọng Nữ
+          </button>
+          <button id="voice-male" type="button" class="voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-sky-300">
+            👨 Giọng Nam
+          </button>
+          <button id="voice-both" type="button" class="voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-violet-300">
+            👩+👨 Nữ rồi Nam
+          </button>
+          <button id="voice-human" type="button" class="voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-emerald-300" title="Phát âm chuẩn từ người thật (Từ điển Mỹ)">
+            🎙️ Người thật (Mỹ)
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <label class="inline-flex items-center gap-2 cursor-pointer select-none bg-sky-50 px-3 py-1.5 rounded-xl border border-sky-100">
+            <input id="hover-toggle" type="checkbox" checked class="w-4 h-4 accent-sky-600 rounded" />
+            <span class="text-xs sm:text-sm font-semibold text-sky-900">Trỏ chuột là đọc</span>
+          </label>
+
+          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+            <button id="speed-slow" type="button" class="speed-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900">
+              🐢 Chậm
+            </button>
+            <button id="speed-normal" type="button" class="speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm">
+              🐇 Vừa
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Natural Voice Picker & Quality Status -->
+      <div class="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="flex items-center gap-1.5 text-slate-600 font-semibold">
+            <span>👩 Mẫu nữ:</span>
+            <select id="select-female-voice" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-medium text-slate-700 max-w-[190px]"></select>
+          </label>
+          <label class="flex items-center gap-1.5 text-slate-600 font-semibold">
+            <span>👨 Mẫu nam:</span>
+            <select id="select-male-voice" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-medium text-slate-700 max-w-[190px]"></select>
+          </label>
+        </div>
+        <span id="voice-quality-badge" class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600">
+          Đang kiểm tra giọng đọc...
+        </span>
+      </div>
+
+      <!-- Audio unlock banner (shown until first interaction if needed) -->
+      <div id="audio-banner" class="mt-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3">
+        <p class="text-xs sm:text-sm text-amber-900 font-medium">
+          💡 <strong>Mẹo nhỏ:</strong> Chạm nút bên cạnh (hoặc chạm vào bất kỳ bộ phận nào) một lần đầu tiên để trình duyệt mở khóa âm thanh khi trỏ chuột.
+        </p>
+        <button id="unlock-audio-btn" type="button" class="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-sm transition">
+          🔊 Bật âm thanh
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <!-- Left Column: Interactive Human Figure -->
+      <section class="lg:col-span-6 bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4 sm:p-5 flex flex-col items-center relative">
+        <!-- Floating Live Tooltip -->
+        <div id="live-pill" class="float-badge mb-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 text-white text-xs sm:text-sm font-bold shadow-sm text-center">
+          Trỏ hoặc chạm vào bé để học từ mới nhé!
+        </div>
+
+        <!-- Interactive SVG Character -->
+        <div class="w-full max-w-md mx-auto select-none">
+          <svg id="body-svg" viewBox="0 0 420 580" class="w-full h-auto overflow-visible" role="img" aria-label="Hình minh họa các bộ phận cơ thể người">
+            <defs>
+              <linearGradient id="bgAura" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.7" />
+                <stop offset="100%" stop-color="#fce7f3" stop-opacity="0.5" />
+              </linearGradient>
+              <linearGradient id="dressGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fb7185" />
+                <stop offset="100%" stop-color="#f43f5e" />
+              </linearGradient>
+              <linearGradient id="shirtGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="100%" stop-color="#0ea5e9" />
+              </linearGradient>
+            </defs>
+
+            <!-- Soft backdrop oval & ground shadow -->
+            <ellipse cx="210" cy="290" rx="175" ry="255" fill="url(#bgAura)" />
+            <ellipse cx="210" cy="542" rx="95" ry="14" fill="#cbd5e1" opacity="0.55" />
+
+            <!-- HAIR (back & pigtails) -->
+            <g class="body-part" data-part="hair" tabindex="0" aria-label="Hair - Tóc">
+              <circle cx="136" cy="108" r="24" fill="#5c3a21" />
+              <circle cx="284" cy="108" r="24" fill="#5c3a21" />
+              <circle cx="152" cy="94" r="7" fill="#fb7185" />
+              <circle cx="268" cy="94" r="7" fill="#fb7185" />
+              <path d="M148 92 C148 45, 272 45, 272 92 C272 72, 148 72, 148 92 Z" fill="#5c3a21" />
+            </g>
+
+            <!-- NECK -->
+            <g class="body-part" data-part="neck" tabindex="0" aria-label="Neck - Cổ">
+              <rect x="193" y="160" width="34" height="32" rx="12" fill="#fbd3b6" stroke="#e2a882" stroke-width="1.5" />
+            </g>
+
+            <!-- EARS -->
+            <g class="body-part" data-part="ears" tabindex="0" aria-label="Ears - Tai">
+              <ellipse cx="146" cy="116" rx="11" ry="16" fill="#fbd3b6" stroke="#e2a882" stroke-width="1.5" />
+              <path d="M143 111 Q148 116 143 121" fill="none" stroke="#d99268" stroke-width="2" stroke-linecap="round" />
+              <ellipse cx="274" cy="116" rx="11" ry="16" fill="#fbd3b6" stroke="#e2a882" stroke-width="1.5" />
+              <path d="M277 111 Q272 116 277 121" fill="none" stroke="#d99268" stroke-width="2" stroke-linecap="round" />
+            </g>
+
+            <!-- HEAD (Face base) -->
+            <g class="body-part" data-part="head" tabindex="0" aria-label="Head - Đầu">
+              <ellipse cx="210" cy="114" rx="60" ry="58" fill="#fde0c8" stroke="#e2a882" stroke-width="2" />
+              <!-- Rosy cheeks -->
+              <ellipse cx="173" cy="128" rx="10" ry="6" fill="#fda4af" opacity="0.55" />
+              <ellipse cx="247" cy="128" rx="10" ry="6" fill="#fda4af" opacity="0.55" />
+            </g>
+
+            <!-- HAIR BANGS (top of head, clickable for hair too) -->
+            <g class="body-part" data-part="hair" tabindex="0" aria-label="Hair - Tóc">
+              <path d="M150 100 C154 56, 266 56, 270 100 C252 78, 228 76, 210 86 C192 76, 168 78, 150 100 Z" fill="#5c3a21" />
+            </g>
+
+            <!-- EYES -->
+            <g class="body-part" data-part="eyes" tabindex="0" aria-label="Eyes - Mắt">
+              <!-- Eyebrows -->
+              <path d="M174 96 Q186 90 197 95" fill="none" stroke="#4a2e1b" stroke-width="3" stroke-linecap="round" />
+              <path d="M223 95 Q234 90 246 96" fill="none" stroke="#4a2e1b" stroke-width="3" stroke-linecap="round" />
+              <!-- Left eye -->
+              <ellipse cx="186" cy="110" rx="10" ry="11" fill="#ffffff" stroke="#334155" stroke-width="1.5" />
+              <circle cx="186" cy="111" r="6" fill="#1e293b" />
+              <circle cx="188" cy="108" r="2.2" fill="#ffffff" />
+              <!-- Right eye -->
+              <ellipse cx="234" cy="110" rx="10" ry="11" fill="#ffffff" stroke="#334155" stroke-width="1.5" />
+              <circle cx="234" cy="111" r="6" fill="#1e293b" />
+              <circle cx="236" cy="108" r="2.2" fill="#ffffff" />
+            </g>
+
+            <!-- NOSE -->
+            <g class="body-part" data-part="nose" tabindex="0" aria-label="Nose - Mũi">
+              <circle cx="210" cy="124" r="9" fill="transparent" />
+              <path d="M207 121 Q210 129 214 123" fill="none" stroke="#d97757" stroke-width="2.8" stroke-linecap="round" />
+            </g>
+
+            <!-- MOUTH -->
+            <g class="body-part" data-part="mouth" tabindex="0" aria-label="Mouth - Miệng">
+              <rect x="190" y="133" width="40" height="22" rx="10" fill="transparent" />
+              <path d="M193 139 Q210 155 227 139 Z" fill="#e11d48" stroke="#be123c" stroke-width="1.5" />
+              <path d="M198 140 Q210 143 222 140" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+            </g>
+
+            <!-- ARMS (upper & lower) -->
+            <g class="body-part" data-part="arms" tabindex="0" aria-label="Arms - Cánh tay">
+              <!-- Left arm -->
+              <path d="M148 196 C125 225, 112 262, 104 298" fill="none" stroke="#fde0c8" stroke-width="24" stroke-linecap="round" />
+              <path d="M148 196 C125 225, 112 262, 104 298" fill="none" stroke="#e2a882" stroke-width="24" stroke-linecap="round" opacity="0.18" />
+              <!-- Right arm -->
+              <path d="M272 196 C295 225, 308 262, 316 298" fill="none" stroke="#fde0c8" stroke-width="24" stroke-linecap="round" />
+              <path d="M272 196 C295 225, 308 262, 316 298" fill="none" stroke="#e2a882" stroke-width="24" stroke-linecap="round" opacity="0.18" />
+            </g>
+
+            <!-- ELBOWS -->
+            <g class="body-part" data-part="elbows" tabindex="0" aria-label="Elbows - Khuỷu tay">
+              <circle cx="122" cy="248" r="14" fill="#fbd3b6" stroke="#e2a882" stroke-width="1.5" opacity="0.85" />
+              <circle cx="298" cy="248" r="14" fill="#fbd3b6" stroke="#e2a882" stroke-width="1.5" opacity="0.85" />
+            </g>
+
+            <!-- HANDS -->
+            <g class="body-part" data-part="hands" tabindex="0" aria-label="Hands - Bàn tay">
+              <circle cx="100" cy="306" r="15" fill="#fde0c8" stroke="#e2a882" stroke-width="1.8" />
+              <circle cx="320" cy="306" r="15" fill="#fde0c8" stroke="#e2a882" stroke-width="1.8" />
+            </g>
+
+            <!-- FINGERS -->
+            <g class="body-part" data-part="fingers" tabindex="0" aria-label="Fingers - Ngón tay">
+              <!-- Left fingers -->
+              <line x1="88" y1="312" x2="80" y2="324" stroke="#fde0c8" stroke-width="5.5" stroke-linecap="round" />
+              <line x1="94" y1="318" x2="90" y2="331" stroke="#fde0c8" stroke-width="5.5" stroke-linecap="round" />
+              <line x1="101" y1="319" x2="100" y2="332" stroke="#fde0c8" stroke-width="5.5" stroke-linecap="round" />
+              <line x1="108" y1="316" x2="110" y2="328" stroke="#fde0c8" stroke-width="5.5" stroke-linecap="round" />
+              <!-- Right fingers -->
+              <line x1="332" y1="312" x2="340" y2="324" stroke="#fde0c8" stroke-width="5.5" stroke-linecap="round" />
+              <line x1="326" y1="318" x2="330" y2="331" stroke="#fde0c8" stroke-width="5.5" stroke-linecap="round" />
+              <line x1="319" y1="319" x2="320" y2="332" stroke="#fde0c8" stroke-width="5.5" stroke-linecap="round" />
+              <line x1="312" y1="316" x2="310" y2="328" stroke="#fde0c8" stroke-width="5.5" stroke-linecap="round" />
+            </g>
+
+            <!-- TORSO: SHOULDERS, CHEST, STOMACH -->
+            <!-- Base shirt -->
+            <path d="M150 186 Q210 176 270 186 L282 222 L254 226 L250 318 Q210 326 170 318 L166 226 L138 222 Z" fill="url(#shirtGrad)" stroke="#0284c7" stroke-width="2" />
+
+            <!-- SHOULDERS -->
+            <g class="body-part" data-part="shoulders" tabindex="0" aria-label="Shoulders - Vai">
+              <ellipse cx="154" cy="196" rx="22" ry="15" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5" />
+              <ellipse cx="266" cy="196" rx="22" ry="15" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5" />
+              <path d="M144 192 Q154 186 164 192" fill="none" stroke="#e0f2fe" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M256 192 Q266 186 276 192" fill="none" stroke="#e0f2fe" stroke-width="2.5" stroke-linecap="round" />
+            </g>
+
+            <!-- CHEST -->
+            <g class="body-part" data-part="chest" tabindex="0" aria-label="Chest - Ngực">
+              <rect x="172" y="200" width="76" height="46" rx="16" fill="#0ea5e9" opacity="0.35" />
+              <!-- Cute star badge on chest -->
+              <path d="M210 212 L214 221 L224 222 L216 228 L218 238 L210 233 L202 238 L204 228 L196 222 L206 221 Z" fill="#fde047" stroke="#eab308" stroke-width="1.5" />
+            </g>
+
+            <!-- STOMACH / TUMMY -->
+            <g class="body-part" data-part="stomach" tabindex="0" aria-label="Stomach - Bụng">
+              <rect x="170" y="252" width="80" height="58" rx="18" fill="#38bdf8" opacity="0.4" stroke="#bae6fd" stroke-width="1.5" stroke-dasharray="4 3" />
+              <circle cx="210" cy="282" r="4" fill="#e0f2fe" />
+            </g>
+
+            <!-- Skirt / Shorts -->
+            <path d="M166 314 L254 314 L268 364 Q210 374 152 364 Z" fill="url(#dressGrad)" stroke="#e11d48" stroke-width="2" />
+
+            <!-- LEGS -->
+            <g class="body-part" data-part="legs" tabindex="0" aria-label="Legs - Chân">
+              <rect x="170" y="362" width="30" height="132" rx="14" fill="#fde0c8" stroke="#e2a882" stroke-width="1.8" />
+              <rect x="220" y="362" width="30" height="132" rx="14" fill="#fde0c8" stroke="#e2a882" stroke-width="1.8" />
+            </g>
+
+            <!-- KNEES -->
+            <g class="body-part" data-part="knees" tabindex="0" aria-label="Knees - Đầu gối">
+              <ellipse cx="185" cy="432" rx="16" ry="13" fill="#fbd3b6" stroke="#d99268" stroke-width="2" />
+              <path d="M178 432 Q185 437 192 432" fill="none" stroke="#d99268" stroke-width="2" stroke-linecap="round" />
+              <ellipse cx="235" cy="432" rx="16" ry="13" fill="#fbd3b6" stroke="#d99268" stroke-width="2" />
+              <path d="M228 432 Q235 437 242 432" fill="none" stroke="#d99268" stroke-width="2" stroke-linecap="round" />
+            </g>
+
+            <!-- FEET -->
+            <g class="body-part" data-part="feet" tabindex="0" aria-label="Feet - Bàn chân">
+              <ellipse cx="178" cy="512" rx="24" ry="14" fill="#fde0c8" stroke="#e2a882" stroke-width="2" />
+              <ellipse cx="242" cy="512" rx="24" ry="14" fill="#fde0c8" stroke="#e2a882" stroke-width="2" />
+            </g>
+
+            <!-- TOES -->
+            <g class="body-part" data-part="toes" tabindex="0" aria-label="Toes - Ngón chân">
+              <!-- Left toes -->
+              <circle cx="155" cy="514" r="4.5" fill="#fbd3b6" stroke="#d99268" stroke-width="1.2" />
+              <circle cx="163" cy="520" r="4" fill="#fbd3b6" stroke="#d99268" stroke-width="1.2" />
+              <circle cx="172" cy="522" r="3.8" fill="#fbd3b6" stroke="#d99268" stroke-width="1.2" />
+              <!-- Right toes -->
+              <circle cx="265" cy="514" r="4.5" fill="#fbd3b6" stroke="#d99268" stroke-width="1.2" />
+              <circle cx="257" cy="520" r="4" fill="#fbd3b6" stroke="#d99268" stroke-width="1.2" />
+              <circle cx="248" cy="522" r="3.8" fill="#fbd3b6" stroke="#d99268" stroke-width="1.2" />
+            </g>
+
+            <!-- Subtle label callouts on left & right -->
+            <g class="text-[11px] font-bold fill-slate-500" style="font-family: 'Nunito', sans-serif;">
+              <text x="18" y="84">Hair (Tóc)</text>
+              <line x1="82" y1="81" x2="146" y2="86" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="18" y="122">Ears (Tai)</text>
+              <line x1="80" y1="119" x2="134" y2="116" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="18" y="198">Shoulders (Vai)</text>
+              <line x1="104" y1="195" x2="132" y2="195" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="18" y="252">Elbows (Khuỷu tay)</text>
+              <line x1="118" y1="248" x2="108" y2="248" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="18" y="308">Hands (Bàn tay)</text>
+              <line x1="106" y1="305" x2="85" y2="305" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="18" y="436">Knees (Đầu gối)</text>
+              <line x1="108" y1="432" x2="168" y2="432" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="18" y="514">Feet (Bàn chân)</text>
+              <line x1="106" y1="511" x2="150" y2="511" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <!-- Right side callouts -->
+              <text x="308" y="72">Head (Đầu)</text>
+              <line x1="258" y1="74" x2="302" y2="70" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="110">Eyes (Mắt)</text>
+              <line x1="246" y1="108" x2="302" y2="107" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="136">Nose (Mũi)</text>
+              <line x1="220" y1="125" x2="302" y2="133" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="162">Mouth (Miệng)</text>
+              <line x1="228" y1="145" x2="302" y2="158" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="188">Neck (Cổ)</text>
+              <line x1="228" y1="176" x2="302" y2="184" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="226">Chest (Ngực)</text>
+              <line x1="248" y1="222" x2="302" y2="222" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="284">Stomach (Bụng)</text>
+              <line x1="252" y1="280" x2="302" y2="280" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="346">Fingers (Ngón tay)</text>
+              <line x1="336" y1="326" x2="336" y2="334" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="400">Legs (Chân)</text>
+              <line x1="252" y1="396" x2="302" y2="396" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+
+              <text x="308" y="534">Toes (Ngón chân)</text>
+              <line x1="266" y1="518" x2="302" y2="530" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 2" />
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Right Column: Dynamic Panel (Explore / Song / Quiz) -->
+      <section class="lg:col-span-6 space-y-5">
+        <!-- PANEL 1: EXPLORE -->
+        <div id="panel-explore" class="space-y-5">
+          <!-- Active Word Flashcard -->
+          <div class="bg-white/95 border border-rose-100 rounded-3xl shadow-sm p-5 sm:p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div id="card-emoji" class="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-4xl shrink-0">
+                  🗣️
+                </div>
+                <div>
+                  <div class="flex items-baseline gap-2.5 flex-wrap">
+                    <h2 id="card-en" class="font-display text-3xl sm:text-4xl font-black text-slate-900">Head</h2>
+                    <span id="card-ipa" class="text-sm sm:text-base font-semibold text-sky-600 bg-sky-50 px-2.5 py-0.5 rounded-lg">/hed/</span>
+                  </div>
+                  <p id="card-vi" class="font-display text-xl sm:text-2xl font-bold text-rose-600 mt-1">
+                    Đầu
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Speak Buttons (Female / Male / Vietnamese) -->
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <button id="btn-speak-female" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-sm transition active:scale-95">
+                <span>👩</span> Nghe giọng Nữ (US)
+              </button>
+              <button id="btn-speak-male" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-sm transition active:scale-95">
+                <span>👨</span> Nghe giọng Nam (US)
+              </button>
+              <button id="btn-speak-vi" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-sm transition active:scale-95">
+                <span>🇻🇳</span> Đọc tiếng Việt
+              </button>
+            </div>
+
+            <!-- Example Sentence -->
+            <div class="mt-5 bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Câu mẫu cho bé</p>
+                <p id="card-sentence-en" class="font-display text-base sm:text-lg font-extrabold text-slate-800">
+                  "Touch your head!"
+                </p>
+                <p id="card-sentence-vi" class="text-sm text-slate-600 mt-0.5">
+                  Chạm vào đầu của con nhé!
+                </p>
+              </div>
+              <button id="btn-speak-sentence" type="button" class="shrink-0 px-4 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-sky-300 text-slate-700 font-bold text-sm shadow-sm transition">
+                🔊 Đọc câu mẫu
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Vocabulary Grid -->
+          <div class="bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-display text-base sm:text-lg font-extrabold text-slate-800">
+                📚 Danh sách 18 bộ phận cơ thể
+              </h3>
+              <span class="text-xs font-semibold text-slate-400">Chạm thẻ để đọc</span>
+            </div>
+            <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+          </div>
+        </div>
+
+        <!-- PANEL 2: SONG -->
+        <div id="panel-song" class="hidden space-y-5">
+          <div class="bg-white/95 border border-violet-100 rounded-3xl shadow-sm p-5 sm:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <span class="inline-block px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-700 text-xs font-bold mb-1">
+                  🎵 Bài hát chuẩn thiếu nhi (Super Simple Songs)
+                </span>
+                <h2 class="font-display text-2xl font-black text-slate-900">
+                  Head, Shoulders, Knees &amp; Toes
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500">
+                  Xem video hát chuẩn và chạm vào từng từ bên dưới để hình bé phát sáng theo!
+                </p>
+              </div>
+            </div>
+
+            <!-- Version Switcher -->
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+                <button id="yt-ver-learn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-violet-700 shadow-sm transition">
+                  🐢 Bản học chậm (Learn It)
+                </button>
+                <button id="yt-ver-sing" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition">
+                  🎉 Bản hát vui nhộn (Sing It)
+                </button>
+              </div>
+              <a id="yt-external-link" href="https://www.youtube.com/watch?v=lMQcwNZVUO8" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-rose-600 hover:text-rose-700 underline">
+                Mở trên YouTube ↗
+              </a>
+            </div>
+
+            <!-- YouTube Video Card (works everywhere, no Error 153) -->
+            <div id="yt-card-wrap" class="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-900 shadow-sm mb-3 group">
+              <img
+                id="yt-thumb"
+                src="https://i.ytimg.com/vi/lMQcwNZVUO8/hqdefault.jpg"
+                alt="Head, Shoulders, Knees & Toes (Learn It)"
+                class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-300"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/25 to-transparent flex flex-col items-center justify-center p-4 text-center">
+                <a
+                  id="yt-play-overlay"
+                  href="https://www.youtube.com/watch?v=lMQcwNZVUO8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-display font-extrabold text-sm sm:text-base shadow-lg transition transform group-hover:scale-105"
+                >
+                  <span class="text-lg">▶️</span> Mở bài hát trên YouTube
+                </a>
+                <p id="yt-video-caption" class="text-xs text-white/90 font-semibold mt-2.5 drop-shadow">
+                  Head, Shoulders, Knees & Toes (Learn It)
+                </p>
+              </div>
+              <iframe
+                id="yt-song-frame"
+                class="hidden w-full h-full border-0"
+                referrerpolicy="strict-origin-when-cross-origin"
+                src=""
+                title="Head, Shoulders, Knees & Toes (Learn It)"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <button id="yt-inline-toggle" type="button" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200 transition">
+                📺 Phát nhúng tại trang (dùng khi đã đưa lên web https://)
+              </button>
+            </div>
+
+            <!-- Interactive Lyrics (tap words to highlight & speak) -->
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-display text-sm font-extrabold text-slate-700">
+                📖 Lời bài hát song ngữ (chạm vào từ tô màu để nghe &amp; xem vị trí)
+              </h3>
+            </div>
+            <div id="lyrics-box" class="space-y-2.5 bg-slate-50 border border-slate-100 rounded-2xl p-4"></div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: MINI QUIZ -->
+        <div id="panel-quiz" class="hidden space-y-5">
+          <div class="bg-white/95 border border-emerald-100 rounded-3xl shadow-sm p-5 sm:p-6">
+            <div class="flex items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 class="font-display text-2xl font-black text-slate-900">⭐ Bé Tìm Bộ Phận</h2>
+                <p class="text-xs sm:text-sm text-slate-500">Nghe tiếng Anh và chạm đúng vị trí trên hình bé nhé!</p>
+              </div>
+              <div class="px-4 py-2 rounded-2xl bg-amber-50 border border-amber-200 text-center shrink-0">
+                <div class="text-xs font-bold text-amber-700">Điểm của bé</div>
+                <div id="quiz-score" class="font-display text-2xl font-black text-amber-600">0 ⭐</div>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-emerald-50 to-sky-50 border border-emerald-100 rounded-2xl p-5 text-center">
+              <p class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-2">Câu hỏi hiện tại</p>
+              <p id="quiz-prompt-en" class="font-display text-2xl sm:text-3xl font-black text-slate-900">
+                Where is your ...?
+              </p>
+              <p id="quiz-prompt-vi" class="text-sm font-semibold text-slate-600 mt-1">
+                Hãy chạm vào hình bên trái!
+              </p>
+              <div class="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+                <button id="quiz-repeat-btn" type="button" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-sm transition">
+                  🔊 Nghe lại câu hỏi
+                </button>
+                <button id="quiz-next-btn" type="button" class="px-4 py-2 rounded-xl bg-white border border-slate-200 hover:border-emerald-300 text-slate-700 font-bold text-sm transition">
+                  ⏭️ Đổi câu khác
+                </button>
+              </div>
+            </div>
+
+            <div id="quiz-feedback" class="mt-4 min-h-[48px] rounded-2xl px-4 py-3 text-center font-display font-bold text-base flex items-center justify-center bg-slate-50 text-slate-500">
+              Chạm vào hình bé bên trái để trả lời!
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // =========================================================
+    // 1. DATA: 17 BODY PARTS (EN-US + IPA + VI + SAMPLE)
+    // =========================================================
+    const BODY_PARTS = [
+      { id: 'head', en: 'Head', ipa: '/hed/', vi: 'Đầu', emoji: '🙂', sentEn: 'Touch your head!', sentVi: 'Chạm vào đầu của con nhé!' },
+      { id: 'hair', en: 'Hair', ipa: '/her/', vi: 'Tóc', emoji: '💇‍♀️', sentEn: 'Brush your hair!', sentVi: 'Chải tóc gọn gàng nào!' },
+      { id: 'eyes', en: 'Eyes', ipa: '/aɪz/', vi: 'Đôi mắt', emoji: '👀', sentEn: 'Close your eyes!', sentVi: 'Nhắm mắt lại nào!' },
+      { id: 'ears', en: 'Ears', ipa: '/ɪrz/', vi: 'Đôi tai', emoji: '👂', sentEn: 'Listen with your ears!', sentVi: 'Lắng nghe bằng đôi tai nhé!' },
+      { id: 'nose', en: 'Nose', ipa: '/noʊz/', vi: 'Mũi', emoji: '👃', sentEn: 'Point to your nose!', sentVi: 'Chỉ vào mũi của con nào!' },
+      { id: 'mouth', en: 'Mouth', ipa: '/maʊθ/', vi: 'Miệng', emoji: '👄', sentEn: 'Open your mouth!', sentVi: 'Há miệng ra nào!' },
+      { id: 'neck', en: 'Neck', ipa: '/nek/', vi: 'Cổ', emoji: '🧣', sentEn: 'Turn your neck gently!', sentVi: 'Xoay nhẹ cổ của con nhé!' },
+      { id: 'shoulders', en: 'Shoulders', ipa: '/ˈʃoʊldərz/', vi: 'Đôi vai', emoji: '🤷‍♀️', sentEn: 'Shrug your shoulders!', sentVi: 'Nhún vai lên nào!' },
+      { id: 'chest', en: 'Chest', ipa: '/tʃest/', vi: 'Ngực', emoji: '💗', sentEn: 'Take a deep breath in your chest!', sentVi: 'Hít thở sâu vào lồng ngực nhé!' },
+      { id: 'stomach', en: 'Stomach', ipa: '/ˈstʌmək/', vi: 'Bụng', emoji: '🍎', sentEn: 'Rub your stomach!', sentVi: 'Xoa bụng của con nào!' },
+      { id: 'arms', en: 'Arms', ipa: '/ɑːrmz/', vi: 'Cánh tay', emoji: '💪', sentEn: 'Raise your arms high!', sentVi: 'Giơ cao hai cánh tay nào!' },
+      { id: 'elbows', en: 'Elbows', ipa: '/ˈelboʊz/', vi: 'Khuỷu tay', emoji: '🦾', sentEn: 'Bend your elbows!', sentVi: 'Gập khuỷu tay lại nhé!' },
+      { id: 'hands', en: 'Hands', ipa: '/hændz/', vi: 'Bàn tay', emoji: '🙌', sentEn: 'Clap your hands!', sentVi: 'Vỗ tay hoan hô nào!' },
+      { id: 'fingers', en: 'Fingers', ipa: '/ˈfɪŋɡərz/', vi: 'Ngón tay', emoji: '🖐️', sentEn: 'Wiggle your fingers!', sentVi: 'Ngọ nguậy các ngón tay nào!' },
+      { id: 'legs', en: 'Legs', ipa: '/leɡz/', vi: 'Đôi chân', emoji: '🦵', sentEn: 'Kick your legs!', sentVi: 'Đá chân nhẹ nhàng nào!' },
+      { id: 'knees', en: 'Knees', ipa: '/niːz/', vi: 'Đầu gối', emoji: '🧎‍♀️', sentEn: 'Bend your knees!', sentVi: 'Khuỵu đầu gối xuống nào!' },
+      { id: 'feet', en: 'Feet', ipa: '/fiːt/', vi: 'Bàn chân', emoji: '🦶', sentEn: 'Stomp your feet!', sentVi: 'Dậm chân thình thịch nào!' },
+      { id: 'toes', en: 'Toes', ipa: '/toʊz/', vi: 'Ngón chân', emoji: '👣', sentEn: 'Touch your toes!', sentVi: 'Chạm vào các ngón chân nhé!' }
+    ];
+
+    const PART_MAP = Object.fromEntries(BODY_PARTS.map(p => [p.id, p]));
+
+    // =========================================================
+    // 2. STATE
+    // =========================================================
+    let currentMode = 'explore'; // 'explore' | 'song' | 'quiz'
+    let voiceMode = 'female';    // 'female' | 'male' | 'both'
+    let speechRate = 0.95;       // 0.78 (slow) | 0.95 (normal)
+    let hoverEnabled = true;
+    let selectedPartId = 'head';
+    let hoverTimer = null;
+    let audioUnlocked = false;
+
+    // Voices cache
+    let femaleUsVoice = null;
+    let maleUsVoice = null;
+    let viVoice = null;
+
+    // Quiz state
+    let quizTarget = null;
+    let quizScore = 0;
+
+    // =========================================================
+    // 3. SPEECH SYNTHESIS (NEURAL EN-US + REAL HUMAN DICTIONARY)
+    // =========================================================
+    const humanAudioCache = {};
+    let currentAudioEl = null;
+
+    function isNaturalVoice(v) {
+      const n = v.name.toLowerCase();
+      return n.includes('natural') || n.includes('online') || n.includes('neural') || n.includes('google us english') || n.includes('enhanced') || n.includes('premium');
+    }
+
+    function scoreVoice(v, gender) {
+      const n = v.name.toLowerCase();
+      let score = 0;
+      if (v.lang.toLowerCase().startsWith('en-us') || v.lang.toLowerCase() === 'en_us') score += 50;
+      if (isNaturalVoice(v)) score += 100;
+      if (n.includes('aria') || n.includes('jenny') || n.includes('ava') || n.includes('emma')) score += (gender === 'female' ? 40 : -20);
+      if (n.includes('andrew') || n.includes('guy') || n.includes('brian') || n.includes('christopher') || n.includes('eric')) score += (gender === 'male' ? 40 : -20);
+      const femaleHints = ['samantha', 'jenny', 'aria', 'ava', 'emma', 'susan', 'michelle', 'allison', 'victoria', 'kathy', 'zira', 'female', 'woman', 'google us english'];
+      const maleHints = ['andrew', 'guy', 'brian', 'alex', 'david', 'mark', 'christopher', 'eric', 'daniel', 'fred', 'roger', 'steffan', 'male', 'man'];
+      if (gender === 'female' && femaleHints.some(h => n.includes(h))) score += 25;
+      if (gender === 'male' && maleHints.some(h => n.includes(h))) score += 25;
+      if (n.includes('zira') || n.includes('david')) score -= 15; // Prefer neural over legacy SAPI5
+      return score;
+    }
+
+    function populateVoiceSelects(pool) {
+      const fSel = document.getElementById('select-female-voice');
+      const mSel = document.getElementById('select-male-voice');
+      if (!fSel || !mSel) return;
+
+      const sortedF = [...pool].sort((a, b) => scoreVoice(b, 'female') - scoreVoice(a, 'female'));
+      const sortedM = [...pool].sort((a, b) => scoreVoice(b, 'male') - scoreVoice(a, 'male'));
+
+      fSel.innerHTML = sortedF.map(v => `<option value="${v.name}">${v.name}</option>`).join('');
+      mSel.innerHTML = sortedM.map(v => `<option value="${v.name}">${v.name}</option>`).join('');
+
+      if (femaleUsVoice) fSel.value = femaleUsVoice.name;
+      if (maleUsVoice) mSel.value = maleUsVoice.name;
+
+      fSel.onchange = () => {
+        femaleUsVoice = pool.find(v => v.name === fSel.value) || femaleUsVoice;
+        updateVoiceQualityBadge();
+        speakPart(selectedPartId, 'female');
+      };
+      mSel.onchange = () => {
+        maleUsVoice = pool.find(v => v.name === mSel.value) || maleUsVoice;
+        updateVoiceQualityBadge();
+        speakPart(selectedPartId, 'male');
+      };
+    }
+
+    function updateVoiceQualityBadge() {
+      const badge = document.getElementById('voice-quality-badge');
+      if (!badge) return;
+      const hasNatural = (femaleUsVoice && isNaturalVoice(femaleUsVoice)) || (maleUsVoice && isNaturalVoice(maleUsVoice));
+      if (hasNatural) {
+        badge.textContent = '✨ Đang dùng giọng Neural tự nhiên, truyền cảm';
+        badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200';
+      } else {
+        badge.textContent = '💡 Mẹo: Mở bằng Microsoft Edge hoặc chọn "🎙️ Người thật" để giọng hay nhất';
+        badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200';
+      }
+    }
+
+    function pickVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+
+      const enUsVoices = voices.filter(v =>
+        v.lang.toLowerCase().startsWith('en-us') || v.lang.toLowerCase() === 'en_us'
+      );
+      const fallbackEn = voices.filter(v => v.lang.toLowerCase().startsWith('en'));
+      const pool = enUsVoices.length ? enUsVoices : fallbackEn;
+
+      const sortedF = [...pool].sort((a, b) => scoreVoice(b, 'female') - scoreVoice(a, 'female'));
+      const sortedM = [...pool].sort((a, b) => scoreVoice(b, 'male') - scoreVoice(a, 'male'));
+
+      femaleUsVoice = sortedF[0] || null;
+      maleUsVoice = sortedM.find(v => v !== femaleUsVoice) || sortedM[0] || null;
+      viVoice = voices.find(v => v.lang.toLowerCase().startsWith('vi')) || null;
+
+      populateVoiceSelects(pool);
+      updateVoiceQualityBadge();
+    }
+
+    if ('speechSynthesis' in window) {
+      pickVoices();
+      window.speechSynthesis.onvoiceschanged = pickVoices;
+    }
+
+    function stopAllSpeech() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (currentAudioEl) {
+        currentAudioEl.pause();
+        currentAudioEl = null;
+      }
+    }
+
+    function speakText(text, gender = 'female', onEnd = null) {
+      if (!('speechSynthesis' in window)) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = speechRate;
+
+      if (gender === 'female') {
+        if (femaleUsVoice) u.voice = femaleUsVoice;
+        u.pitch = (femaleUsVoice && isNaturalVoice(femaleUsVoice))
+          ? 1.02
+          : ((femaleUsVoice && femaleUsVoice === maleUsVoice) ? 1.18 : 1.05);
+      } else {
+        if (maleUsVoice) u.voice = maleUsVoice;
+        u.pitch = (maleUsVoice && isNaturalVoice(maleUsVoice))
+          ? 0.98
+          : ((femaleUsVoice && femaleUsVoice === maleUsVoice) ? 0.80 : 0.92);
+      }
+
+      if (onEnd) u.onend = onEnd;
+      window.speechSynthesis.speak(u);
+    }
+
+    async function speakHumanWord(word, fallbackGender = 'female') {
+      const key = word.toLowerCase().trim();
+      try {
+        if (!(key in humanAudioCache)) {
+          const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(key)}`);
+          if (!res.ok) throw new Error('Not found');
+          const data = await res.json();
+          let audioUrl = '';
+          if (Array.isArray(data)) {
+            for (const entry of data) {
+              const phonetics = entry.phonetics || [];
+              const us = phonetics.find(p => p.audio && p.audio.includes('-us.mp3'));
+              const any = phonetics.find(p => p.audio && p.audio.startsWith('http'));
+              if (us) { audioUrl = us.audio; break; }
+              if (any && !audioUrl) audioUrl = any.audio;
+            }
+          }
+          humanAudioCache[key] = audioUrl || null;
+        }
+
+        const url = humanAudioCache[key];
+        if (url) {
+          stopAllSpeech();
+          currentAudioEl = new Audio(url);
+          currentAudioEl.playbackRate = speechRate < 0.85 ? 0.85 : 1.0;
+          await currentAudioEl.play();
+          return;
+        }
+      } catch (err) {
+        // Fallback smoothly to Neural TTS
+      }
+      speakText(word, fallbackGender);
+    }
+
+    function speakPart(partId, overrideGender = null) {
+      const part = PART_MAP[partId];
+      if (!part) return;
+
+      stopAllSpeech();
+      const mode = overrideGender || voiceMode;
+
+      if (mode === 'human') {
+        speakHumanWord(part.en, 'female');
+      } else if (mode === 'both') {
+        speakText(part.en, 'female', () => {
+          setTimeout(() => speakText(part.en, 'male'), 220);
+        });
+      } else {
+        speakText(part.en, mode);
+      }
+    }
+
+    function speakVietnamese(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'vi-VN';
+      if (viVoice) u.voice = viVoice;
+      u.rate = 0.95;
+      window.speechSynthesis.speak(u);
+    }
+
+    function unlockAudio() {
+      audioUnlocked = true;
+      const banner = document.getElementById('audio-banner');
+      if (banner) banner.classList.add('hidden');
+      initWebAudio();
+      if ('speechSynthesis' in window) {
+        pickVoices();
+        const silent = new SpeechSynthesisUtterance('');
+        window.speechSynthesis.speak(silent);
+      }
+    }
+
+    // =========================================================
+    // 4. WEB AUDIO API (CHIMES + "HEAD, SHOULDERS, KNEES & TOES")
+    // =========================================================
+    let audioCtx = null;
+
+    function initWebAudio() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playNote(freq, duration = 0.3, type = 'triangle', gainVal = 0.18) {
+      initWebAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    }
+
+    function playSuccessChime() {
+      playNote(523.25, 0.14, 'sine', 0.18);
+      setTimeout(() => playNote(659.25, 0.14, 'sine', 0.18), 90);
+      setTimeout(() => playNote(783.99, 0.28, 'sine', 0.2), 180);
+    }
+
+    function playGentleError() {
+      playNote(260, 0.18, 'triangle', 0.14);
+      setTimeout(() => playNote(220, 0.22, 'triangle', 0.12), 120);
+    }
+
+    // Song: Interactive Bilingual Lyrics + Official Super Simple Songs Video
+    const SONG_LINES = [
+      {
+        tokens: [
+          { text: 'Head', part: 'head' }, { text: ', ' },
+          { text: 'shoulders', part: 'shoulders' }, { text: ', ' },
+          { text: 'knees', part: 'knees' }, { text: ' and ' },
+          { text: 'toes', part: 'toes' }, { text: ', ' },
+          { text: 'knees', part: 'knees' }, { text: ' and ' },
+          { text: 'toes', part: 'toes' }
+        ],
+        vi: 'Đầu, đôi vai, đầu gối và ngón chân, đầu gối và ngón chân'
+      },
+      {
+        tokens: [
+          { text: 'And ' },
+          { text: 'eyes', part: 'eyes' }, { text: ', and ' },
+          { text: 'ears', part: 'ears' }, { text: ', and ' },
+          { text: 'mouth', part: 'mouth' }, { text: ', and ' },
+          { text: 'nose', part: 'nose' }
+        ],
+        vi: 'Và đôi mắt, đôi tai, cái miệng, và cái mũi'
+      },
+      {
+        tokens: [
+          { text: 'Head', part: 'head' }, { text: ', ' },
+          { text: 'shoulders', part: 'shoulders' }, { text: ', ' },
+          { text: 'knees', part: 'knees' }, { text: ' and ' },
+          { text: 'toes', part: 'toes' }, { text: ', ' },
+          { text: 'knees', part: 'knees' }, { text: ' and ' },
+          { text: 'toes', part: 'toes' }, { text: '!' }
+        ],
+        vi: 'Đầu, đôi vai, đầu gối và ngón chân, đầu gối và ngón chân!'
+      }
+    ];
+
+    function renderLyrics() {
+      const box = document.getElementById('lyrics-box');
+      box.innerHTML = SONG_LINES.map(line => {
+        const lineHtml = line.tokens.map(t => {
+          if (t.part) {
+            return `<button type="button" data-part="${t.part}" class="song-word-btn inline-block px-2 py-0.5 mx-0.5 rounded-lg bg-violet-100 hover:bg-rose-500 hover:text-white text-violet-900 font-extrabold transition cursor-pointer">${t.text}</button>`;
+          }
+          return `<span>${t.text}</span>`;
+        }).join('');
+        return `
+          <div class="p-3 rounded-xl bg-white border border-slate-100">
+            <p class="font-display font-bold text-sm sm:text-base text-slate-800 leading-relaxed">${lineHtml}</p>
+            <p class="text-xs text-slate-500 mt-1">${line.vi}</p>
+          </div>
+        `;
+      }).join('');
+
+      box.querySelectorAll('.song-word-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          unlockAudio();
+          selectPart(btn.dataset.part, true);
+        });
+      });
+    }
+
+    function stopSong() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    // =========================================================
+    // 5. UI & INTERACTION LOGIC
+    // =========================================================
+    function highlightPart(partId) {
+      document.querySelectorAll('.body-part').forEach(el => {
+        el.classList.toggle('active-part', el.dataset.part === partId);
+      });
+      document.querySelectorAll('.vocab-chip').forEach(btn => {
+        const isActive = btn.dataset.part === partId;
+        btn.classList.toggle('ring-2', isActive);
+        btn.classList.toggle('ring-rose-400', isActive);
+        btn.classList.toggle('bg-rose-50', isActive);
+      });
+    }
+
+    function selectPart(partId, shouldSpeak = true) {
+      const part = PART_MAP[partId];
+      if (!part) return;
+      selectedPartId = partId;
+      highlightPart(partId);
+
+      document.getElementById('card-emoji').textContent = part.emoji;
+      document.getElementById('card-en').textContent = part.en;
+      document.getElementById('card-ipa').textContent = part.ipa;
+      document.getElementById('card-vi').textContent = part.vi;
+      document.getElementById('card-sentence-en').textContent = `"${part.sentEn}"`;
+      document.getElementById('card-sentence-vi').textContent = part.sentVi;
+      document.getElementById('live-pill').textContent = `${part.emoji} ${part.en} (${part.ipa}) — ${part.vi}`;
+
+      if (shouldSpeak) {
+        speakPart(partId);
+      }
+    }
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = BODY_PARTS.map(p => `
+        <button type="button" data-part="${p.id}" class="vocab-chip text-left px-3 py-2 rounded-2xl border border-slate-100 bg-slate-50/70 hover:bg-rose-50 hover:border-rose-200 transition flex items-center gap-2">
+          <span class="text-lg shrink-0">${p.emoji}</span>
+          <div class="min-w-0">
+            <div class="font-display font-extrabold text-xs sm:text-sm text-slate-800 truncate">${p.en}</div>
+            <div class="text-[11px] text-slate-500 truncate">${p.vi}</div>
+          </div>
+        </button>
+      `).join('');
+
+      grid.querySelectorAll('.vocab-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          unlockAudio();
+          selectPart(btn.dataset.part, true);
+        });
+      });
+    }
+
+    // Quiz Logic
+    function nextQuizQuestion() {
+      const randomPart = BODY_PARTS[Math.floor(Math.random() * BODY_PARTS.length)];
+      quizTarget = randomPart;
+      document.getElementById('quiz-prompt-en').textContent = `Where is your ${randomPart.en.toLowerCase()}?`;
+      document.getElementById('quiz-prompt-vi').textContent = `(${randomPart.vi} ở đâu nhỉ?)`;
+      document.getElementById('quiz-feedback').textContent = 'Chạm vào hình bé bên trái để trả lời!';
+      document.getElementById('quiz-feedback').className = 'mt-4 min-h-[48px] rounded-2xl px-4 py-3 text-center font-display font-bold text-base flex items-center justify-center bg-slate-50 text-slate-500';
+      highlightPart(null);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        speakText(`Where is your ${randomPart.en}?`, voiceMode === 'male' ? 'male' : 'female');
+      }
+    }
+
+    function handleQuizAnswer(partId) {
+      if (!quizTarget) return;
+      const fb = document.getElementById('quiz-feedback');
+      if (partId === quizTarget.id) {
+        quizScore += 1;
+        document.getElementById('quiz-score').textContent = `${quizScore} ⭐`;
+        playSuccessChime();
+        highlightPart(partId);
+        fb.textContent = `🎉 Chính xác! Đây là ${quizTarget.en} (${quizTarget.vi})!`;
+        fb.className = 'mt-4 min-h-[48px] rounded-2xl px-4 py-3 text-center font-display font-bold text-base flex items-center justify-center bg-emerald-100 text-emerald-800';
+        setTimeout(() => {
+          if (currentMode === 'quiz') nextQuizQuestion();
+        }, 1400);
+      } else {
+        const picked = PART_MAP[partId];
+        playGentleError();
+        fb.textContent = `Ối, đó là ${picked.en} (${picked.vi}) rồi. Bé thử tìm ${quizTarget.en} nhé!`;
+        fb.className = 'mt-4 min-h-[48px] rounded-2xl px-4 py-3 text-center font-display font-bold text-base flex items-center justify-center bg-amber-100 text-amber-900';
+      }
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      if (mode !== 'song') stopSong();
+
+      document.getElementById('panel-explore').classList.toggle('hidden', mode !== 'explore');
+      document.getElementById('panel-song').classList.toggle('hidden', mode !== 'song');
+      document.getElementById('panel-quiz').classList.toggle('hidden', mode !== 'quiz');
+
+      const tabMap = { explore: 'tab-explore', song: 'tab-song', quiz: 'tab-quiz' };
+      Object.entries(tabMap).forEach(([k, id]) => {
+        const btn = document.getElementById(id);
+        const active = k === mode;
+        btn.className = active
+          ? 'mode-tab px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-rose-600 shadow-sm'
+          : 'mode-tab px-4 py-2 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900';
+      });
+
+      if (mode === 'quiz') {
+        nextQuizQuestion();
+      } else if (mode === 'explore') {
+        selectPart(selectedPartId, false);
+      }
+    }
+
+    // =========================================================
+    // 6. EVENT LISTENERS
+    // =========================================================
+    document.getElementById('unlock-audio-btn').addEventListener('click', () => {
+      unlockAudio();
+      selectPart(selectedPartId, true);
+    });
+
+    document.getElementById('tab-explore').addEventListener('click', () => switchMode('explore'));
+    document.getElementById('tab-song').addEventListener('click', () => switchMode('song'));
+    document.getElementById('tab-quiz').addEventListener('click', () => switchMode('quiz'));
+
+    // Voice mode buttons
+    function setVoiceMode(mode) {
+      voiceMode = mode;
+      const styles = {
+        female: ['bg-rose-500 text-white border-rose-500 shadow-sm', 'bg-white text-slate-700 border-slate-200 hover:border-rose-300'],
+        male: ['bg-sky-500 text-white border-sky-500 shadow-sm', 'bg-white text-slate-700 border-slate-200 hover:border-sky-300'],
+        both: ['bg-violet-500 text-white border-violet-500 shadow-sm', 'bg-white text-slate-700 border-slate-200 hover:border-violet-300'],
+        human: ['bg-emerald-500 text-white border-emerald-500 shadow-sm', 'bg-white text-slate-700 border-slate-200 hover:border-emerald-300']
+      };
+      ['female', 'male', 'both', 'human'].forEach(m => {
+        const el = document.getElementById(`voice-${m}`);
+        el.className = `voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition ${m === mode ? styles[m][0] : styles[m][1]}`;
+      });
+    }
+
+    document.getElementById('voice-female').addEventListener('click', () => { unlockAudio(); setVoiceMode('female'); speakPart(selectedPartId, 'female'); });
+    document.getElementById('voice-male').addEventListener('click', () => { unlockAudio(); setVoiceMode('male'); speakPart(selectedPartId, 'male'); });
+    document.getElementById('voice-both').addEventListener('click', () => { unlockAudio(); setVoiceMode('both'); speakPart(selectedPartId, 'both'); });
+    document.getElementById('voice-human').addEventListener('click', () => { unlockAudio(); setVoiceMode('human'); speakPart(selectedPartId, 'human'); });
+
+    document.getElementById('hover-toggle').addEventListener('change', (e) => {
+      hoverEnabled = e.target.checked;
+    });
+
+    document.getElementById('speed-slow').addEventListener('click', () => {
+      speechRate = 0.76;
+      document.getElementById('speed-slow').className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm';
+      document.getElementById('speed-normal').className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900';
+    });
+
+    document.getElementById('speed-normal').addEventListener('click', () => {
+      speechRate = 0.96;
+      document.getElementById('speed-normal').className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm';
+      document.getElementById('speed-slow').className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900';
+    });
+
+    // Flashcard speak buttons
+    document.getElementById('btn-speak-female').addEventListener('click', () => { unlockAudio(); speakPart(selectedPartId, 'female'); });
+    document.getElementById('btn-speak-male').addEventListener('click', () => { unlockAudio(); speakPart(selectedPartId, 'male'); });
+    document.getElementById('btn-speak-vi').addEventListener('click', () => {
+      unlockAudio();
+      const p = PART_MAP[selectedPartId];
+      if (p) speakVietnamese(p.vi);
+    });
+    document.getElementById('btn-speak-sentence').addEventListener('click', () => {
+      unlockAudio();
+      const p = PART_MAP[selectedPartId];
+      if (!p || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      speakText(p.sentEn, voiceMode === 'male' ? 'male' : 'female');
+    });
+
+    // Song version switcher (Super Simple Songs)
+    let currentYtId = 'lMQcwNZVUO8';
+    let inlinePlayerActive = false;
+
+    function setYtVideo(videoId, title, activeBtnId, inactiveBtnId) {
+      currentYtId = videoId;
+      document.getElementById('yt-thumb').src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      document.getElementById('yt-play-overlay').href = `https://www.youtube.com/watch?v=${videoId}`;
+      document.getElementById('yt-external-link').href = `https://www.youtube.com/watch?v=${videoId}`;
+      document.getElementById('yt-video-caption').textContent = title;
+      if (inlinePlayerActive) {
+        document.getElementById('yt-song-frame').src = `https://www.youtube.com/embed/${videoId}?rel=0`;
+      }
+      document.getElementById(activeBtnId).className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-violet-700 shadow-sm transition';
+      document.getElementById(inactiveBtnId).className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition';
+    }
+
+    document.getElementById('yt-ver-learn').addEventListener('click', () => {
+      setYtVideo('lMQcwNZVUO8', `Head, Shoulders, Knees & Toes (Learn It)`, 'yt-ver-learn', 'yt-ver-sing');
+    });
+    document.getElementById('yt-ver-sing').addEventListener('click', () => {
+      setYtVideo('ZanHgPprl-0', `Head, Shoulders, Knees & Toes (Sing It)`, 'yt-ver-sing', 'yt-ver-learn');
+    });
+
+    document.getElementById('yt-inline-toggle').addEventListener('click', () => {
+      inlinePlayerActive = !inlinePlayerActive;
+      const frame = document.getElementById('yt-song-frame');
+      const thumb = document.getElementById('yt-thumb');
+      const overlay = document.getElementById('yt-play-overlay').parentElement;
+      const btn = document.getElementById('yt-inline-toggle');
+      if (inlinePlayerActive) {
+        frame.src = `https://www.youtube.com/embed/${currentYtId}?rel=0`;
+        frame.classList.remove('hidden');
+        thumb.classList.add('hidden');
+        overlay.classList.add('hidden');
+        btn.textContent = '🖼️ Quay lại thẻ mở YouTube';
+      } else {
+        frame.src = '';
+        frame.classList.add('hidden');
+        thumb.classList.remove('hidden');
+        overlay.classList.remove('hidden');
+        btn.textContent = '📺 Phát nhúng tại trang (dùng khi đã đưa lên web https://)';
+      }
+    });
+
+    // Quiz controls
+    document.getElementById('quiz-repeat-btn').addEventListener('click', () => {
+      unlockAudio();
+      if (quizTarget && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        speakText(`Where is your ${quizTarget.en}?`, voiceMode === 'male' ? 'male' : 'female');
+      }
+    });
+    document.getElementById('quiz-next-btn').addEventListener('click', () => {
+      unlockAudio();
+      nextQuizQuestion();
+    });
+
+    // SVG Body Parts interactions (hover + click + keyboard)
+    document.querySelectorAll('.body-part').forEach(el => {
+      const partId = el.dataset.part;
+
+      el.addEventListener('mouseenter', () => {
+        if (currentMode !== 'explore' || !hoverEnabled) return;
+        clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => {
+          selectPart(partId, true);
+        }, 120);
+      });
+
+      el.addEventListener('mouseleave', () => {
+        clearTimeout(hoverTimer);
+      });
+
+      el.addEventListener('click', () => {
+        unlockAudio();
+        if (currentMode === 'quiz') {
+          handleQuizAnswer(partId);
+        } else {
+          selectPart(partId, true);
+        }
+      });
+
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          unlockAudio();
+          if (currentMode === 'quiz') {
+            handleQuizAnswer(partId);
+          } else {
+            selectPart(partId, true);
+          }
+        }
+      });
+    });
+
+    // Init
+    renderVocabGrid();
+    renderLyrics();
+    selectPart('head', false);
+  </script>
+</body>
+</html>

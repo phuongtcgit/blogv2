@@ -47,3 +47,11 @@ test('grade folders keep distinct URLs for repeated filenames, including nested 
   assert.equal(lessons.find(({ title }) => title === 'Games').grade, 'lop-3');
   assert.equal(lessons.find(({ title }) => title === 'Common').grade, undefined);
 });
+
+test('numbered units follow natural order instead of placing Unit 10 before Unit 2', () => {
+  const sources = Object.fromEntries([16, 2, 10, 1].map((unit) => [
+    `/public/english/lop-1/g1_u${unit}.html`, `<title>Lớp 1 • Unit ${unit}: Lesson</title>`,
+  ]));
+  const lessons = getEnglishLessons(sources);
+  assert.deepEqual(lessons.map(({ title }) => Number(title.match(/Unit (\d+)/)[1])), [1, 2, 10, 16]);
+});

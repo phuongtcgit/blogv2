@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Bé Học Về Bạn Bè (Our Friends) - Tiếng Anh Mỹ &amp; Tiếng Việt</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(160deg, #fffdf5 0%, #f0f9ff 55%, #fdf2f8 100%);
+      min-height: 100vh;
+    }
+    .font-display { font-family: 'Nunito', 'Inter', sans-serif; }
+    .item-node {
+      cursor: pointer;
+      transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.22s ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .item-node:hover {
+      filter: drop-shadow(0 6px 12px rgba(244, 63, 94, 0.35));
+      transform: scale(1.05);
+    }
+    .item-node.active-part {
+      filter: drop-shadow(0 10px 20px rgba(245, 158, 11, 0.65));
+      transform: scale(1.75);
+    }
+    .item-node.active-part .card-bg {
+      stroke: #f59e0b;
+      stroke-width: 3.5;
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    .float-badge { animation: floatSlow 2.8s ease-in-out infinite; }
+  </style>
+</head>
+<body class="text-slate-800 antialiased">
+  <div class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+    <header class="bg-white/90 backdrop-blur border border-sky-100 rounded-3xl shadow-sm px-4 sm:px-6 py-4 mb-5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center text-2xl shadow-sm shrink-0">
+            🤝
+          </div>
+          <div>
+            <h1 class="font-display text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight">
+              Bé Học Về Bạn Bè (Our Friends)
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500">
+              Trỏ hoặc chạm vào từng hình để nghe tiếng Anh Mỹ chuẩn &amp; nghĩa tiếng Việt
+            </p>
+          </div>
+        </div>
+
+        <nav class="flex flex-wrap items-center gap-2 bg-slate-100 p-1.5 rounded-2xl" aria-label="Chế độ học">
+          <button id="tab-explore" type="button" class="mode-tab px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-rose-600 shadow-sm">
+            ✨ Khám phá
+          </button>
+          <button id="tab-song" type="button" class="mode-tab px-4 py-2 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900">
+            🎵 Bài hát
+          </button>
+          <button id="tab-quiz" type="button" class="mode-tab px-4 py-2 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900">
+            ⭐ Trò chơi
+          </button>
+        </nav>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide mr-1">Giọng đọc (US):</span>
+          <button id="voice-female" type="button" class="voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition bg-rose-500 text-white border-rose-500 shadow-sm">
+            👩 Giọng Nữ
+          </button>
+          <button id="voice-male" type="button" class="voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-sky-300">
+            👨 Giọng Nam
+          </button>
+          <button id="voice-both" type="button" class="voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-violet-300">
+            👩+👨 Nữ rồi Nam
+          </button>
+          <button id="voice-human" type="button" class="voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-emerald-300" title="Phát âm chuẩn từ người thật (Từ điển Mỹ)">
+            🎙️ Người thật (Mỹ)
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <label class="inline-flex items-center gap-2 cursor-pointer select-none bg-sky-50 px-3 py-1.5 rounded-xl border border-sky-100">
+            <input id="hover-toggle" type="checkbox" checked class="w-4 h-4 accent-sky-600 rounded" />
+            <span class="text-xs sm:text-sm font-semibold text-sky-900">Trỏ chuột là đọc</span>
+          </label>
+          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+            <button id="speed-slow" type="button" class="speed-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900">
+              🐢 Chậm
+            </button>
+            <button id="speed-normal" type="button" class="speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm">
+              🐇 Vừa
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="flex items-center gap-1.5 text-slate-600 font-semibold">
+            <span>👩 Mẫu nữ:</span>
+            <select id="select-female-voice" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-medium text-slate-700 max-w-[190px]"></select>
+          </label>
+          <label class="flex items-center gap-1.5 text-slate-600 font-semibold">
+            <span>👨 Mẫu nam:</span>
+            <select id="select-male-voice" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-medium text-slate-700 max-w-[190px]"></select>
+          </label>
+        </div>
+        <span id="voice-quality-badge" class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600">
+          Đang kiểm tra giọng đọc...
+        </span>
+      </div>
+
+      <div id="audio-banner" class="mt-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3">
+        <p class="text-xs sm:text-sm text-amber-900 font-medium">
+          💡 <strong>Mẹo nhỏ:</strong> Chạm nút bên cạnh (hoặc chạm vào một hình bất kỳ) một lần đầu tiên để mở khóa âm thanh khi trỏ chuột.
+        </p>
+        <button id="unlock-audio-btn" type="button" class="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-sm transition">
+          🔊 Bật âm thanh
+        </button>
+      </div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <section class="lg:col-span-6 bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4 sm:p-5 flex flex-col items-center">
+        <div id="live-pill" class="float-badge mb-3 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-rose-500 text-white text-xs sm:text-sm font-bold shadow-sm text-center">
+          Trỏ hoặc chạm vào từng hình để học nhé!
+        </div>
+        <div class="w-full max-w-lg mx-auto select-none">
+          <svg id="board-svg" viewBox="0 0 460 560" class="w-full h-auto overflow-visible" role="img" aria-label="Bé Học Về Bạn Bè (Our Friends)">
+            <rect x="4" y="4" width="452" height="552" rx="28" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" />
+            <g id="svg-tiles-layer"></g>
+          </svg>
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 space-y-5">
+        <div id="panel-explore" class="space-y-5">
+          <div class="bg-white/95 border border-rose-100 rounded-3xl shadow-sm p-5 sm:p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div id="card-emoji" class="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-4xl shrink-0">
+                  🔢
+                </div>
+                <div>
+                  <div class="flex items-baseline gap-2.5 flex-wrap">
+                    <h2 id="card-en" class="font-display text-3xl sm:text-4xl font-black text-slate-900">Word</h2>
+                    <span id="card-ipa" class="text-sm sm:text-base font-semibold text-sky-600 bg-sky-50 px-2.5 py-0.5 rounded-lg">/.../</span>
+                  </div>
+                  <p id="card-vi" class="font-display text-xl sm:text-2xl font-bold text-rose-600 mt-1">Nghĩa</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <button id="btn-speak-female" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-sm transition active:scale-95">
+                <span>👩</span> Nghe giọng Nữ (US)
+              </button>
+              <button id="btn-speak-male" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-sm transition active:scale-95">
+                <span>👨</span> Nghe giọng Nam (US)
+              </button>
+              <button id="btn-speak-vi" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-sm transition active:scale-95">
+                <span>🇻🇳</span> Đọc tiếng Việt
+              </button>
+            </div>
+
+            <div class="mt-5 bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Câu mẫu cho bé</p>
+                <p id="card-sentence-en" class="font-display text-base sm:text-lg font-extrabold text-slate-800">...</p>
+                <p id="card-sentence-vi" class="text-sm text-slate-600 mt-0.5">...</p>
+              </div>
+              <button id="btn-speak-sentence" type="button" class="shrink-0 px-4 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-sky-300 text-slate-700 font-bold text-sm shadow-sm transition">
+                🔊 Đọc câu mẫu
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-display text-base sm:text-lg font-extrabold text-slate-800">🤝 Danh sách 12 từ vựng &amp; mẫu câu Bạn bè</h3>
+              <span class="text-xs font-semibold text-slate-400">Chạm thẻ để đọc</span>
+            </div>
+            <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+          </div>
+        </div>
+
+        <div id="panel-song" class="hidden space-y-5">
+          <div class="bg-white/95 border border-violet-100 rounded-3xl shadow-sm p-5 sm:p-6">
+            <div class="mb-4">
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-700 text-xs font-bold mb-1">🎵 Bài hát Bạn bè (Super Simple Songs)</span>
+              <h2 class="font-display text-2xl font-black text-slate-900">Hello Hello! &amp; Let's Be Friends!</h2>
+              <p class="text-xs sm:text-sm text-slate-500">Bé xem video hát theo và chạm vào từng từ tô màu bên dưới để nghe lại!</p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+                <button id="yt-ver-1" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-violet-700 shadow-sm transition">👏 Hello Hello! Can You Clap?</button>
+                <button id="yt-ver-2" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition">🤝 Let's Be Friends!</button>
+              </div>
+              <a id="yt-external-link" href="https://www.youtube.com/watch?v=fN1Cyr0ZK9M" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-rose-600 hover:text-rose-700 underline">
+                Mở trên YouTube ↗
+              </a>
+            </div>
+
+            <div id="yt-card-wrap" class="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-900 shadow-sm mb-3 group">
+              <img id="yt-thumb" src="https://i.ytimg.com/vi/fN1Cyr0ZK9M/hqdefault.jpg" alt="Hello Hello! &amp; Let's Be Friends!" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-300" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/25 to-transparent flex flex-col items-center justify-center p-4 text-center">
+                <a id="yt-play-overlay" href="https://www.youtube.com/watch?v=fN1Cyr0ZK9M" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-display font-extrabold text-sm sm:text-base shadow-lg transition transform group-hover:scale-105">
+                  <span class="text-lg">▶️</span> Mở bài hát trên YouTube
+                </a>
+                <p id="yt-video-caption" class="text-xs text-white/90 font-semibold mt-2.5 drop-shadow">👏 Hello Hello! Can You Clap?</p>
+              </div>
+              <iframe id="yt-song-frame" class="hidden w-full h-full border-0" referrerpolicy="strict-origin-when-cross-origin" src="" title="Hello Hello! &amp; Let's Be Friends!" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <button id="yt-inline-toggle" type="button" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200 transition">
+                📺 Phát nhúng tại trang (dùng khi đã đưa lên web https://)
+              </button>
+            </div>
+
+            <div class="mb-2">
+              <h3 class="font-display text-sm font-extrabold text-slate-700">📖 Lời bài hát song ngữ (chạm từ tô màu để hình bên trái phát sáng)</h3>
+            </div>
+            <div id="lyrics-box" class="space-y-2.5 bg-slate-50 border border-slate-100 rounded-2xl p-4"></div>
+          </div>
+        </div>
+
+        <div id="panel-quiz" class="hidden space-y-5">
+          <div class="bg-white/95 border border-emerald-100 rounded-3xl shadow-sm p-5 sm:p-6">
+            <div class="flex items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 class="font-display text-2xl font-black text-slate-900">⭐ Bé Tìm Từ Về Bạn Bè</h2>
+                <p class="text-xs sm:text-sm text-slate-500">Nghe tiếng Anh và chạm đúng hình bên trái nhé!</p>
+              </div>
+              <div class="px-4 py-2 rounded-2xl bg-amber-50 border border-amber-200 text-center shrink-0">
+                <div class="text-xs font-bold text-amber-700">Điểm của bé</div>
+                <div id="quiz-score" class="font-display text-2xl font-black text-amber-600">0 ⭐</div>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-emerald-50 to-sky-50 border border-emerald-100 rounded-2xl p-5 text-center">
+              <p class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-2">Câu hỏi hiện tại</p>
+              <p id="quiz-prompt-en" class="font-display text-2xl sm:text-3xl font-black text-slate-900">Find: ...</p>
+              <p id="quiz-prompt-vi" class="text-sm font-semibold text-slate-600 mt-1">Hãy chạm vào hình bên trái!</p>
+              <div class="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+                <button id="quiz-repeat-btn" type="button" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-sm transition">
+                  🔊 Nghe lại câu hỏi
+                </button>
+                <button id="quiz-next-btn" type="button" class="px-4 py-2 rounded-xl bg-white border border-slate-200 hover:border-emerald-300 text-slate-700 font-bold text-sm transition">
+                  ⏭️ Đổi câu khác
+                </button>
+              </div>
+            </div>
+
+            <div id="quiz-feedback" class="mt-4 min-h-[48px] rounded-2xl px-4 py-3 text-center font-display font-bold text-base flex items-center justify-center bg-slate-50 text-slate-500">
+              Chạm vào hình bên trái để trả lời!
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const ITEMS = [{"id": "friend", "en": "Friend", "audio": "friend", "ipa": "/frend/", "vi": "Bạn bè", "emoji": "🧑‍🤝‍🧑", "bg": "#fef3c7", "border": "#fde68a", "sentEn": "She is my friend.", "sentVi": "Bạn ấy là bạn của con."}, {"id": "teacher", "en": "Teacher", "audio": "teacher", "ipa": "/ˈtiːtʃər/", "vi": "Thầy / Cô giáo", "emoji": "👩‍🏫", "bg": "#e0f2fe", "border": "#bae6fd", "sentEn": "That's my teacher.", "sentVi": "Kia là cô giáo của con."}, {"id": "classmate", "en": "Classmate", "audio": "classmate", "ipa": "/ˈklæsmeɪt/", "vi": "Bạn cùng lớp", "emoji": "🎒", "bg": "#dcfce7", "border": "#bbf7d0", "sentEn": "Nam is my classmate.", "sentVi": "Nam là bạn cùng lớp với con."}, {"id": "boy", "en": "Boy", "audio": "boy", "ipa": "/bɔɪ/", "vi": "Bạn trai / Bé trai", "emoji": "👦", "bg": "#e0f2fe", "border": "#bae6fd", "sentEn": "He is a nice boy.", "sentVi": "Bạn ấy là một cậu bé ngoan."}, {"id": "girl", "en": "Girl", "audio": "girl", "ipa": "/ɡɜːrl/", "vi": "Bạn gái / Bé gái", "emoji": "👧", "bg": "#fce7f3", "border": "#fbcfe8", "sentEn": "She is a smart girl.", "sentVi": "Bạn ấy là một cô bé thông minh."}, {"id": "thisis", "en": "This is...", "audio": "this", "ipa": "/ðɪs ɪz/", "vi": "Đây là... (ở gần)", "emoji": "👇", "bg": "#fef3c7", "border": "#fde68a", "sentEn": "This is Mary.", "sentVi": "Đây là bạn Mary."}, {"id": "thatis", "en": "That's...", "audio": "that", "ipa": "/ðæts/", "vi": "Kia là... (ở xa)", "emoji": "👉", "bg": "#ede9fe", "border": "#ddd6fe", "sentEn": "That's Mr Long.", "sentVi": "Kia là thầy Long."}, {"id": "yes", "en": "Yes, it is", "audio": "yes", "ipa": "/jes ɪt ɪz/", "vi": "Đúng rồi", "emoji": "✅", "bg": "#dcfce7", "border": "#bbf7d0", "sentEn": "Yes, it is.", "sentVi": "Đúng rồi ạ."}, {"id": "no", "en": "No, it isn't", "audio": "no", "ipa": "/noʊ ɪt ˈɪznt/", "vi": "Không phải", "emoji": "❌", "bg": "#fee2e2", "border": "#fecaca", "sentEn": "No, it isn't. It's Hoa.", "sentVi": "Không phải, đó là bạn Hoa."}, {"id": "nice", "en": "Nice to meet you", "audio": "nice", "ipa": "/naɪs tuː miːt juː/", "vi": "Rất vui được gặp bạn", "emoji": "😊", "bg": "#fce7f3", "border": "#fbcfe8", "sentEn": "Nice to meet you!", "sentVi": "Rất vui được gặp bạn!"}, {"id": "play", "en": "Play together", "audio": "play", "ipa": "/pleɪ təˈɡeðər/", "vi": "Chơi cùng nhau", "emoji": "🎈", "bg": "#ffedd5", "border": "#fed7aa", "sentEn": "Let's play together!", "sentVi": "Cùng chơi với nhau nhé!"}, {"id": "share", "en": "Share", "audio": "share", "ipa": "/ʃer/", "vi": "Chia sẻ", "emoji": "🫶", "bg": "#fce7f3", "border": "#fbcfe8", "sentEn": "I share toys with friends.", "sentVi": "Con chia sẻ đồ chơi với bạn."}];
+    const SONG_LINES = [{"tokens": [{"text": "Hello, hello! Can you clap your hands? Let's be "}, {"text": "friends", "part": "friend"}, {"text": "!"}], "vi": "Xin chào! Bạn có thể vỗ tay không? Hãy làm bạn nhé!"}, {"tokens": [{"text": "This is", "part": "thisis"}, {"text": " my "}, {"text": "teacher", "part": "teacher"}, {"text": ", "}, {"text": "nice to meet you", "part": "nice"}, {"text": "!"}], "vi": "Đây là cô giáo của mình, rất vui được gặp bạn!"}];
+    const PART_MAP = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+
+    let currentMode = 'explore';
+    let voiceMode = 'female';
+    let speechRate = 0.95;
+    let hoverEnabled = true;
+    let selectedPartId = ITEMS[0].id;
+    let hoverTimer = null;
+
+    let femaleUsVoice = null;
+    let maleUsVoice = null;
+    let viVoice = null;
+    let quizTarget = null;
+    let quizScore = 0;
+
+    function renderSvgTiles() {
+      const layer = document.getElementById('svg-tiles-layer');
+      const cols = 3, w = 132, h = 122, gapX = 14, gapY = 12, startX = 18, startY = 18;
+      layer.innerHTML = ITEMS.map((c, idx) => {
+        const col = idx % cols, row = Math.floor(idx / cols);
+        const x = startX + col * (w + gapX), y = startY + row * (h + gapY);
+        const cx = x + w / 2, cy = y + 50;
+        return `
+          <g class="item-node" data-part="${c.id}" tabindex="0" aria-label="${c.en} - ${c.vi}">
+            <rect class="card-bg" x="${x}" y="${y}" width="${w}" height="${h}" rx="20" fill="#ffffff" stroke="${c.border}" stroke-width="2" />
+            <circle cx="${cx}" cy="${cy}" r="30" fill="${c.bg}" />
+            <text x="${cx}" y="${cy + 12}" text-anchor="middle" style="font-size:34px;">${c.emoji}</text>
+            <text x="${cx}" y="${y + 98}" text-anchor="middle" class="font-display text-[13px] font-extrabold fill-slate-800">${c.en}</text>
+            <text x="${cx}" y="${y + 114}" text-anchor="middle" class="text-[11px] font-semibold fill-slate-500">${c.vi}</text>
+          </g>
+        `;
+      }).join('');
+    }
+
+    const humanAudioCache = {};
+    let currentAudioEl = null;
+
+    function isNaturalVoice(v) {
+      const n = v.name.toLowerCase();
+      return n.includes('natural') || n.includes('online') || n.includes('neural') || n.includes('google us english') || n.includes('enhanced') || n.includes('premium');
+    }
+
+    function scoreVoice(v, gender) {
+      const n = v.name.toLowerCase();
+      let score = 0;
+      if (v.lang.toLowerCase().startsWith('en-us') || v.lang.toLowerCase() === 'en_us') score += 50;
+      if (isNaturalVoice(v)) score += 100;
+      if (n.includes('aria') || n.includes('jenny') || n.includes('ava') || n.includes('emma')) score += (gender === 'female' ? 40 : -20);
+      if (n.includes('andrew') || n.includes('guy') || n.includes('brian') || n.includes('christopher') || n.includes('eric')) score += (gender === 'male' ? 40 : -20);
+      const femaleHints = ['samantha', 'jenny', 'aria', 'ava', 'emma', 'susan', 'michelle', 'allison', 'victoria', 'kathy', 'zira', 'female', 'woman', 'google us english'];
+      const maleHints = ['andrew', 'guy', 'brian', 'alex', 'david', 'mark', 'christopher', 'eric', 'daniel', 'fred', 'roger', 'steffan', 'male', 'man'];
+      if (gender === 'female' && femaleHints.some(h => n.includes(h))) score += 25;
+      if (gender === 'male' && maleHints.some(h => n.includes(h))) score += 25;
+      if (n.includes('zira') || n.includes('david')) score -= 15;
+      return score;
+    }
+
+    function populateVoiceSelects(pool) {
+      const fSel = document.getElementById('select-female-voice');
+      const mSel = document.getElementById('select-male-voice');
+      if (!fSel || !mSel) return;
+      const sortedF = [...pool].sort((a, b) => scoreVoice(b, 'female') - scoreVoice(a, 'female'));
+      const sortedM = [...pool].sort((a, b) => scoreVoice(b, 'male') - scoreVoice(a, 'male'));
+      fSel.innerHTML = sortedF.map(v => `<option value="${v.name}">${v.name}</option>`).join('');
+      mSel.innerHTML = sortedM.map(v => `<option value="${v.name}">${v.name}</option>`).join('');
+      if (femaleUsVoice) fSel.value = femaleUsVoice.name;
+      if (maleUsVoice) mSel.value = maleUsVoice.name;
+      fSel.onchange = () => { femaleUsVoice = pool.find(v => v.name === fSel.value) || femaleUsVoice; updateVoiceQualityBadge(); speakPart(selectedPartId, 'female'); };
+      mSel.onchange = () => { maleUsVoice = pool.find(v => v.name === mSel.value) || maleUsVoice; updateVoiceQualityBadge(); speakPart(selectedPartId, 'male'); };
+    }
+
+    function updateVoiceQualityBadge() {
+      const badge = document.getElementById('voice-quality-badge');
+      if (!badge) return;
+      const hasNatural = (femaleUsVoice && isNaturalVoice(femaleUsVoice)) || (maleUsVoice && isNaturalVoice(maleUsVoice));
+      if (hasNatural) {
+        badge.textContent = '✨ Đang dùng giọng Neural tự nhiên, truyền cảm';
+        badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200';
+      } else {
+        badge.textContent = '💡 Mẹo: Mở bằng Microsoft Edge hoặc chọn "🎙️ Người thật" để giọng hay nhất';
+        badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200';
+      }
+    }
+
+    function pickVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+      const enUsVoices = voices.filter(v => v.lang.toLowerCase().startsWith('en-us') || v.lang.toLowerCase() === 'en_us');
+      const fallbackEn = voices.filter(v => v.lang.toLowerCase().startsWith('en'));
+      const pool = enUsVoices.length ? enUsVoices : fallbackEn;
+      const sortedF = [...pool].sort((a, b) => scoreVoice(b, 'female') - scoreVoice(a, 'female'));
+      const sortedM = [...pool].sort((a, b) => scoreVoice(b, 'male') - scoreVoice(a, 'male'));
+      femaleUsVoice = sortedF[0] || null;
+      maleUsVoice = sortedM.find(v => v !== femaleUsVoice) || sortedM[0] || null;
+      viVoice = voices.find(v => v.lang.toLowerCase().startsWith('vi')) || null;
+      populateVoiceSelects(pool);
+      updateVoiceQualityBadge();
+    }
+
+    if ('speechSynthesis' in window) {
+      pickVoices();
+      window.speechSynthesis.onvoiceschanged = pickVoices;
+    }
+
+    function stopAllSpeech() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (currentAudioEl) { currentAudioEl.pause(); currentAudioEl = null; }
+    }
+
+    function speakText(text, gender = 'female', onEnd = null) {
+      if (!('speechSynthesis' in window)) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = speechRate;
+      if (gender === 'female') {
+        if (femaleUsVoice) u.voice = femaleUsVoice;
+        u.pitch = (femaleUsVoice && isNaturalVoice(femaleUsVoice)) ? 1.02 : ((femaleUsVoice && femaleUsVoice === maleUsVoice) ? 1.18 : 1.05);
+      } else {
+        if (maleUsVoice) u.voice = maleUsVoice;
+        u.pitch = (maleUsVoice && isNaturalVoice(maleUsVoice)) ? 0.98 : ((femaleUsVoice && femaleUsVoice === maleUsVoice) ? 0.80 : 0.92);
+      }
+      if (onEnd) u.onend = onEnd;
+      window.speechSynthesis.speak(u);
+    }
+
+    async function speakHumanWord(word, fullPhrase, fallbackGender = 'female') {
+      const key = word.toLowerCase().trim();
+      try {
+        if (!(key in humanAudioCache)) {
+          const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(key)}`);
+          if (!res.ok) throw new Error('Not found');
+          const data = await res.json();
+          let audioUrl = '';
+          if (Array.isArray(data)) {
+            for (const entry of data) {
+              const phonetics = entry.phonetics || [];
+              const us = phonetics.find(p => p.audio && p.audio.includes('-us.mp3'));
+              const any = phonetics.find(p => p.audio && p.audio.startsWith('http'));
+              if (us) { audioUrl = us.audio; break; }
+              if (any && !audioUrl) audioUrl = any.audio;
+            }
+          }
+          humanAudioCache[key] = audioUrl || null;
+        }
+        const url = humanAudioCache[key];
+        if (url) {
+          stopAllSpeech();
+          currentAudioEl = new Audio(url);
+          currentAudioEl.playbackRate = speechRate < 0.85 ? 0.85 : 1.0;
+          await currentAudioEl.play();
+          return;
+        }
+      } catch (err) {}
+      speakText(fullPhrase, fallbackGender);
+    }
+
+    function speakPart(partId, overrideGender = null) {
+      const part = PART_MAP[partId];
+      if (!part) return;
+      stopAllSpeech();
+      const mode = overrideGender || voiceMode;
+      if (mode === 'human') speakHumanWord(part.audio, part.en, 'female');
+      else if (mode === 'both') speakText(part.en, 'female', () => setTimeout(() => speakText(part.en, 'male'), 220));
+      else speakText(part.en, mode);
+    }
+
+    function speakVietnamese(text) {
+      if (!('speechSynthesis' in window)) return;
+      stopAllSpeech();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'vi-VN';
+      if (viVoice) u.voice = viVoice;
+      u.rate = 0.95;
+      window.speechSynthesis.speak(u);
+    }
+
+    function unlockAudio() {
+      const banner = document.getElementById('audio-banner');
+      if (banner) banner.classList.add('hidden');
+      initWebAudio();
+      if ('speechSynthesis' in window) {
+        pickVoices();
+        const silent = new SpeechSynthesisUtterance('');
+        window.speechSynthesis.speak(silent);
+      }
+    }
+
+    let audioCtx = null;
+    function initWebAudio() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }
+    function playNote(freq, duration = 0.25, type = 'sine', gainVal = 0.16) {
+      initWebAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    }
+    function playSuccessChime() {
+      playNote(523.25, 0.14, 'sine', 0.18);
+      setTimeout(() => playNote(659.25, 0.14, 'sine', 0.18), 90);
+      setTimeout(() => playNote(783.99, 0.28, 'sine', 0.2), 180);
+    }
+    function playGentleError() {
+      playNote(260, 0.18, 'triangle', 0.14);
+      setTimeout(() => playNote(220, 0.22, 'triangle', 0.12), 120);
+    }
+
+    function renderLyrics() {
+      const box = document.getElementById('lyrics-box');
+      box.innerHTML = SONG_LINES.map(line => {
+        const lineHtml = line.tokens.map(t => {
+          if (t.part) return `<button type="button" data-part="${t.part}" class="song-word-btn inline-block px-2 py-0.5 mx-0.5 rounded-lg bg-violet-100 hover:bg-rose-500 hover:text-white text-violet-900 font-extrabold transition cursor-pointer">${t.text}</button>`;
+          return `<span>${t.text}</span>`;
+        }).join('');
+        return `<div class="p-3 rounded-xl bg-white border border-slate-100"><p class="font-display font-bold text-sm sm:text-base text-slate-800 leading-relaxed">${lineHtml}</p><p class="text-xs text-slate-500 mt-1">${line.vi}</p></div>`;
+      }).join('');
+      box.querySelectorAll('.song-word-btn').forEach(btn => {
+        btn.addEventListener('click', () => { unlockAudio(); selectPart(btn.dataset.part, true); });
+      });
+    }
+
+    function highlightPart(partId) {
+      document.querySelectorAll('.item-node, .hobby-node').forEach(el => {
+        const isAct = el.dataset.part === partId;
+        el.classList.toggle('active-part', isAct);
+        if (isAct && el.parentNode) {
+          const rect = el.querySelector('rect');
+          if (rect) {
+            const rx = parseFloat(rect.getAttribute('x') || 0);
+            const ry = parseFloat(rect.getAttribute('y') || 0);
+            const ox = rx < 60 ? 'left' : (rx > 260 ? 'right' : 'center');
+            const oy = ry < 60 ? 'top' : (ry > 360 ? 'bottom' : 'center');
+            el.style.transformOrigin = ox + ' ' + oy;
+          }
+          el.parentNode.appendChild(el);
+        }
+      });
+    }
+
+    function selectPart(partId, shouldSpeak = true) {
+      const part = PART_MAP[partId];
+      if (!part) return;
+      selectedPartId = partId;
+      highlightPart(partId);
+      document.getElementById('card-emoji').textContent = part.emoji;
+      document.getElementById('card-en').textContent = part.en;
+      document.getElementById('card-ipa').textContent = part.ipa;
+      document.getElementById('card-vi').textContent = part.vi;
+      document.getElementById('card-sentence-en').textContent = `"${part.sentEn}"`;
+      document.getElementById('card-sentence-vi').textContent = part.sentVi;
+      document.getElementById('live-pill').textContent = `${part.emoji} ${part.en} (${part.ipa}) — ${part.vi}`;
+      if (shouldSpeak) speakPart(partId);
+    }
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = ITEMS.map(p => `
+        <button type="button" data-part="${p.id}" class="vocab-chip text-left px-3 py-2 rounded-2xl border border-slate-100 bg-slate-50/70 hover:bg-rose-50 hover:border-rose-200 transition flex items-center gap-2">
+          <span class="text-lg shrink-0">${p.emoji}</span>
+          <div class="min-w-0">
+            <div class="font-display font-extrabold text-xs sm:text-sm text-slate-800 truncate">${p.en}</div>
+            <div class="text-[11px] text-slate-500 truncate">${p.vi}</div>
+          </div>
+        </button>
+      `).join('');
+      grid.querySelectorAll('.vocab-chip').forEach(btn => {
+        btn.addEventListener('click', () => { unlockAudio(); selectPart(btn.dataset.part, true); });
+      });
+    }
+
+    function nextQuizQuestion() {
+      const randomPart = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+      quizTarget = randomPart;
+      document.getElementById('quiz-prompt-en').textContent = `Find: "${randomPart.en}"`;
+      document.getElementById('quiz-prompt-vi').textContent = `(${randomPart.vi} là hình nào nhỉ?)`;
+      document.getElementById('quiz-feedback').textContent = 'Chạm vào hình bên trái để trả lời!';
+      document.getElementById('quiz-feedback').className = 'mt-4 min-h-[48px] rounded-2xl px-4 py-3 text-center font-display font-bold text-base flex items-center justify-center bg-slate-50 text-slate-500';
+      highlightPart(null);
+      stopAllSpeech();
+      speakText(`Find ${randomPart.en}`, voiceMode === 'male' ? 'male' : 'female');
+    }
+
+    function handleQuizAnswer(partId) {
+      if (!quizTarget) return;
+      const fb = document.getElementById('quiz-feedback');
+      if (partId === quizTarget.id) {
+        quizScore += 1;
+        document.getElementById('quiz-score').textContent = `${quizScore} ⭐`;
+        playSuccessChime();
+        highlightPart(partId);
+        fb.textContent = `🎉 Chính xác! Đây là ${quizTarget.en} (${quizTarget.vi})!`;
+        fb.className = 'mt-4 min-h-[48px] rounded-2xl px-4 py-3 text-center font-display font-bold text-base flex items-center justify-center bg-emerald-100 text-emerald-800';
+        setTimeout(() => { if (currentMode === 'quiz') nextQuizQuestion(); }, 1400);
+      } else {
+        const picked = PART_MAP[partId];
+        playGentleError();
+        fb.textContent = `Ối, đó là ${picked.en} (${picked.vi}) rồi. Bé thử tìm ${quizTarget.en} nhé!`;
+        fb.className = 'mt-4 min-h-[48px] rounded-2xl px-4 py-3 text-center font-display font-bold text-base flex items-center justify-center bg-amber-100 text-amber-900';
+      }
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      stopAllSpeech();
+      document.getElementById('panel-explore').classList.toggle('hidden', mode !== 'explore');
+      document.getElementById('panel-song').classList.toggle('hidden', mode !== 'song');
+      document.getElementById('panel-quiz').classList.toggle('hidden', mode !== 'quiz');
+      const tabMap = { explore: 'tab-explore', song: 'tab-song', quiz: 'tab-quiz' };
+      Object.entries(tabMap).forEach(([k, id]) => {
+        const btn = document.getElementById(id);
+        btn.className = (k === mode)
+          ? 'mode-tab px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-rose-600 shadow-sm'
+          : 'mode-tab px-4 py-2 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900';
+      });
+      if (mode === 'quiz') nextQuizQuestion();
+      else if (mode === 'explore') selectPart(selectedPartId, false);
+    }
+
+    renderSvgTiles();
+    renderVocabGrid();
+    renderLyrics();
+
+    document.getElementById('unlock-audio-btn').addEventListener('click', () => { unlockAudio(); selectPart(selectedPartId, true); });
+    document.getElementById('tab-explore').addEventListener('click', () => switchMode('explore'));
+    document.getElementById('tab-song').addEventListener('click', () => switchMode('song'));
+    document.getElementById('tab-quiz').addEventListener('click', () => switchMode('quiz'));
+
+    function setVoiceMode(mode) {
+      voiceMode = mode;
+      const styles = {
+        female: ['bg-rose-500 text-white border-rose-500 shadow-sm', 'bg-white text-slate-700 border-slate-200 hover:border-rose-300'],
+        male: ['bg-sky-500 text-white border-sky-500 shadow-sm', 'bg-white text-slate-700 border-slate-200 hover:border-sky-300'],
+        both: ['bg-violet-500 text-white border-violet-500 shadow-sm', 'bg-white text-slate-700 border-slate-200 hover:border-violet-300'],
+        human: ['bg-emerald-500 text-white border-emerald-500 shadow-sm', 'bg-white text-slate-700 border-slate-200 hover:border-emerald-300']
+      };
+      ['female', 'male', 'both', 'human'].forEach(m => {
+        const el = document.getElementById(`voice-${m}`);
+        el.className = `voice-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition ${m === mode ? styles[m][0] : styles[m][1]}`;
+      });
+    }
+
+    document.getElementById('voice-female').addEventListener('click', () => { unlockAudio(); setVoiceMode('female'); speakPart(selectedPartId, 'female'); });
+    document.getElementById('voice-male').addEventListener('click', () => { unlockAudio(); setVoiceMode('male'); speakPart(selectedPartId, 'male'); });
+    document.getElementById('voice-both').addEventListener('click', () => { unlockAudio(); setVoiceMode('both'); speakPart(selectedPartId, 'both'); });
+    document.getElementById('voice-human').addEventListener('click', () => { unlockAudio(); setVoiceMode('human'); speakPart(selectedPartId, 'human'); });
+
+    document.getElementById('hover-toggle').addEventListener('change', (e) => { hoverEnabled = e.target.checked; });
+    document.getElementById('speed-slow').addEventListener('click', () => {
+      speechRate = 0.76;
+      document.getElementById('speed-slow').className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm';
+      document.getElementById('speed-normal').className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900';
+    });
+    document.getElementById('speed-normal').addEventListener('click', () => {
+      speechRate = 0.96;
+      document.getElementById('speed-normal').className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm';
+      document.getElementById('speed-slow').className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900';
+    });
+
+    document.getElementById('btn-speak-female').addEventListener('click', () => { unlockAudio(); speakPart(selectedPartId, 'female'); });
+    document.getElementById('btn-speak-male').addEventListener('click', () => { unlockAudio(); speakPart(selectedPartId, 'male'); });
+    document.getElementById('btn-speak-vi').addEventListener('click', () => { unlockAudio(); const p = PART_MAP[selectedPartId]; if (p) speakVietnamese(p.vi); });
+    document.getElementById('btn-speak-sentence').addEventListener('click', () => { unlockAudio(); const p = PART_MAP[selectedPartId]; if (!p) return; stopAllSpeech(); speakText(p.sentEn, voiceMode === 'male' ? 'male' : 'female'); });
+
+    let currentYtId = 'fN1Cyr0ZK9M';
+    let inlinePlayerActive = false;
+    function setYtVideo(videoId, title, activeBtnId, inactiveBtnId) {
+      currentYtId = videoId;
+      document.getElementById('yt-thumb').src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      document.getElementById('yt-play-overlay').href = `https://www.youtube.com/watch?v=${videoId}`;
+      document.getElementById('yt-external-link').href = `https://www.youtube.com/watch?v=${videoId}`;
+      document.getElementById('yt-video-caption').textContent = title;
+      if (inlinePlayerActive) document.getElementById('yt-song-frame').src = `https://www.youtube.com/embed/${videoId}?rel=0`;
+      document.getElementById(activeBtnId).className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-violet-700 shadow-sm transition';
+      document.getElementById(inactiveBtnId).className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition';
+    }
+    document.getElementById('yt-ver-1').addEventListener('click', () => setYtVideo('fN1Cyr0ZK9M', '👏 Hello Hello! Can You Clap?', 'yt-ver-1', 'yt-ver-2'));
+    document.getElementById('yt-ver-2').addEventListener('click', () => setYtVideo('BM7Cg905Wo8', '🤝 Let\'s Be Friends!', 'yt-ver-2', 'yt-ver-1'));
+    document.getElementById('yt-inline-toggle').addEventListener('click', () => {
+      inlinePlayerActive = !inlinePlayerActive;
+      const frame = document.getElementById('yt-song-frame');
+      const thumb = document.getElementById('yt-thumb');
+      const overlay = document.getElementById('yt-play-overlay').parentElement;
+      const btn = document.getElementById('yt-inline-toggle');
+      if (inlinePlayerActive) {
+        frame.src = `https://www.youtube.com/embed/${currentYtId}?rel=0`;
+        frame.classList.remove('hidden'); thumb.classList.add('hidden'); overlay.classList.add('hidden');
+        btn.textContent = '🖼️ Quay lại thẻ mở YouTube';
+      } else {
+        frame.src = '';
+        frame.classList.add('hidden'); thumb.classList.remove('hidden'); overlay.classList.remove('hidden');
+        btn.textContent = '📺 Phát nhúng tại trang (dùng khi đã đưa lên web https://)';
+      }
+    });
+
+    document.getElementById('quiz-repeat-btn').addEventListener('click', () => { unlockAudio(); if (quizTarget) { stopAllSpeech(); speakText(`Find ${quizTarget.en}`, voiceMode === 'male' ? 'male' : 'female'); } });
+    document.getElementById('quiz-next-btn').addEventListener('click', () => { unlockAudio(); nextQuizQuestion(); });
+
+    document.querySelectorAll('.item-node').forEach(el => {
+      const partId = el.dataset.part;
+      el.addEventListener('mouseenter', () => { if (currentMode !== 'explore' || !hoverEnabled) return; clearTimeout(hoverTimer); hoverTimer = setTimeout(() => selectPart(partId, true), 120); });
+      el.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
+      el.addEventListener('click', () => { unlockAudio(); if (currentMode === 'quiz') handleQuizAnswer(partId); else selectPart(partId, true); });
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); unlockAudio(); if (currentMode === 'quiz') handleQuizAnswer(partId); else selectPart(partId, true); } });
+    });
+
+    selectPart(ITEMS[0].id, false);
+  </script>
+</body>
+</html>
