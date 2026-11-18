@@ -1,7 +1,10 @@
+import { getEnglishGrade, type EnglishGrade } from './english-grades.ts';
+
 export interface EnglishLesson {
   title: string;
   url: string;
   date?: string;
+  grade?: EnglishGrade;
 }
 
 // Titles stay plain text; Astro escapes them when rendering links.
@@ -21,7 +24,8 @@ export function getEnglishLessons(sources: Record<string, string>): EnglishLesso
   const lessons = Object.entries(sources)
     .filter(([path]) => /\.html?$/i.test(path) && !/^index\.html?$/i.test(path.split('/').at(-1)!))
     .map(([path, html]) => {
-      const name = path.split('/').at(-1)!;
+      const relative = path.replace(/^\/public\/english\//, '');
+      const name = relative.split('/').at(-1)!;
       const source = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
       const title = decodeTitle(source.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? '')
         || name.replace(/\.html?$/i, '').replace(/[-_]+/g, ' ');
@@ -29,7 +33,8 @@ export function getEnglishLessons(sources: Record<string, string>): EnglishLesso
       const parsed = candidate ? new Date(`${candidate}T00:00:00Z`) : undefined;
       const date = parsed && !Number.isNaN(parsed.valueOf()) && parsed.toISOString().slice(0, 10) === candidate
         ? candidate : undefined;
-      return { title, url: `/english/${encodeURIComponent(name)}`, date };
+      const url = `/english/${relative.split('/').map(encodeURIComponent).join('/')}`;
+      return { title, url, date, grade: getEnglishGrade(relative)?.slug };
     });
 
   // A filename date survives clones/deploys, unlike filesystem modification time.

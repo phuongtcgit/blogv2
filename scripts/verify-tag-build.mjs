@@ -62,6 +62,10 @@ try {
   const lesson = '<!doctype html><html lang="en"><head><title>Words &amp; &lt;games&gt;</title></head><body><p>LESSON_BODY</p></body></html>';
   writeFileSync(join(english, '2026-11-17-words & games.html'), lesson);
   writeFileSync(join(english, 'notes.txt'), 'Not a lesson');
+  for (const grade of ['lop-1', 'lop-3']) {
+    mkdirSync(join(english, grade, 'unit 1'), { recursive: true });
+    writeFileSync(join(english, grade, 'unit 1/same.html'), lesson.replace('Words &amp; &lt;games&gt;', `Fixture ${grade}`));
+  }
   resetPosts();
   writePost('alpha', ['Server', 'server ', ' SERVER ', 'Bất động sản', '<img src=x onerror="alert(1)">'], {
     date: '2026-01-02',
@@ -92,11 +96,29 @@ try {
     assert.ok(existsSync(output), `Broken English lesson link: ${href}`);
     const original = readFileSync(join(root, 'public', decodeURIComponent(href)), 'utf8');
     const built = readFileSync(output, 'utf8');
-    assert.equal(built, addEnglishNavigation(original), `Automatic return navigation missing or lesson HTML changed: ${href}`);
-    assert.equal(addEnglishNavigation(built), built, `Duplicate return links: ${href}`);
+    const lessonPath = decodeURIComponent(href).replace(/^\/english\//, '');
+    assert.equal(built, addEnglishNavigation(original, lessonPath), `Automatic return navigation missing or lesson HTML changed: ${href}`);
+    assert.equal(addEnglishNavigation(built, lessonPath), built, `Duplicate return links: ${href}`);
+  }
+  for (const grade of ['lop-1', 'lop-3']) {
+    const archive = readFileSync(join(dist, `english/${grade}/index.html`), 'utf8');
+    const members = [...archive.matchAll(/class="post-link" href="([^"]+)"/g)].map((m) => m[1]);
+    assert.ok(members.includes(`/english/${grade}/unit%201/same.html`), 'Discover nested lessons and preserve repeated filenames');
+    assert.ok(members.every((href) => href.startsWith(`/english/${grade}/`)), `Wrong grade membership in ${grade}`);
+    const nested = readFileSync(join(dist, `english/${grade}/unit 1/same.html`), 'utf8');
+    assert.ok(nested.includes(`href="/english/${grade}/"`), 'Return to the correct grade');
+    assert.match(archive, new RegExp(`href="/english/${grade}/" aria-current="page"`));
+    assert.ok(!archive.includes('data-english-navigation="auto"'), 'Do not inject lesson buttons into archive pages');
+  }
+  const redirects = readFileSync(join(dist, '_redirects'), 'utf8');
+  for (const line of redirects.split('\n').filter((line) => line && !line.startsWith('#'))) {
+    const [from, to, code] = line.trim().split(/\s+/);
+    assert.equal(code, '301');
+    assert.notEqual(from, to);
+    assert.ok(existsSync(join(dist, `${to}.html`)), `Broken legacy redirect: ${from} -> ${to}`);
   }
   assert.equal(readFileSync(join(dist, 'english/2026-11-17-words & games.html'), 'utf8'), addEnglishNavigation(lesson), 'Add navigation while preserving the standalone lesson');
-  console.log('PASS English library: discovery from another working directory, safe links, automatic return navigation and preserved lesson content');
+  console.log('PASS English library: recursive grade discovery, repeated filenames, correct return links, legacy redirects and preserved lesson content');
   const server = readFileSync(join(dist, 'tags/server/index.html'), 'utf8');
   const links = [...server.matchAll(/class="post-link" href="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(links, ['/blog/beta/', '/blog/gamma/', '/blog/alpha/']);
@@ -156,8 +178,12 @@ try {
   resetPosts();
   writePost('empty', []);
   writePost('blank', ['', ' \t ']);
+  rmSync(join(english, 'lop-1'), { recursive: true, force: true });
   const empty = build();
   assert.equal(empty.status, 0, empty.output);
+  const emptyGrade = readFileSync(join(dist, 'english/lop-1/index.html'), 'utf8');
+  assert.ok(emptyGrade.includes('Bài học lớp 1 sẽ sớm được cập nhật.'));
+  assert.ok(!emptyGrade.includes('class="post-link"'), 'Empty grade does not show lessons from another grade');
   assert.deepEqual(readdirSync(join(dist, 'tags')), ['index.html']);
   assert.ok(readFileSync(join(dist, 'tags/index.html'), 'utf8').includes('Chưa có chủ đề nào.'));
   assert.ok(readFileSync(join(dist, 'index.html'), 'utf8').includes('Chưa có chủ đề nào.'));

@@ -1,0 +1,36 @@
+---
+import { ENGLISH_GRADES, type EnglishGrade } from '../lib/english-grades';
+import type { EnglishLesson } from '../lib/english';
+
+interface Props { lessons: EnglishLesson[]; activeGrade?: EnglishGrade }
+const { lessons, activeGrade } = Astro.props;
+const entries = [
+  { url: '/english/', label: 'Tất cả', count: lessons.length, active: !activeGrade },
+  ...ENGLISH_GRADES.map(({ slug, label }) => ({
+    url: `/english/${slug}/`, label,
+    count: lessons.filter(({ grade }) => grade === slug).length,
+    active: activeGrade === slug,
+  })),
+];
+---
+
+<nav class="english-grades" aria-label="Chọn lớp học English">
+  {entries.map(({ url, label, count, active }) => (
+    <a href={url} aria-current={active ? 'page' : undefined}>
+      {label} <span class="grade-count">({count}<span class="sr-only"> bài học</span>)</span>
+    </a>
+  ))}
+</nav>
+
+<style>
+  .english-grades { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+  .english-grades a {
+    display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px;
+    padding: 0.4rem 0.85rem; border: 1px solid var(--border); border-radius: var(--radius);
+    font: 0.875rem var(--font-mono); color: var(--text-soft);
+  }
+  .english-grades a:hover, .english-grades a[aria-current='page'] {
+    border-color: var(--accent); color: var(--accent); background: var(--code-bg); text-decoration: none;
+  }
+  .grade-count { font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+</style>

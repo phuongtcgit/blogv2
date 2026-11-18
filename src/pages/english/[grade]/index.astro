@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import EnglishGradeNav from '../../../components/EnglishGradeNav.astro';
+import EnglishLessonList from '../../../components/EnglishLessonList.astro';
+import { ENGLISH_GRADES } from '../../../lib/english-grades';
+import { englishLessons } from '../../../lib/english-library';
+
+export function getStaticPaths() {
+  return ENGLISH_GRADES.map((grade) => ({ params: { grade: grade.slug }, props: { grade } }));
+}
+
+const { grade } = Astro.props;
+const lessons = englishLessons.filter((lesson) => lesson.grade === grade.slug);
+---
+
+<BaseLayout title={`English ${grade.label}`} description={`Các bài học tiếng Anh ${grade.label.toLowerCase()}: từ vựng, phát âm, bài hát và trò chơi.`}>
+  <h1 class="page-title">English {grade.label}</h1>
+  <p class="topic-note">Cùng học từ vựng, nghe phát âm, hát và chơi bằng tiếng Anh.</p>
+  <EnglishGradeNav lessons={englishLessons} activeGrade={grade.slug} />
+
+  {lessons.length ? (
+    <section aria-labelledby="english-lessons">
+      <h2 class="section-title" id="english-lessons">{lessons.length} bài học</h2>
+      <EnglishLessonList lessons={lessons} />
+    </section>
+  ) : (
+    <p class="topic-note">Bài học {grade.label.toLowerCase()} sẽ sớm được cập nhật.</p>
+  )}
+</BaseLayout>

@@ -1,0 +1,18 @@
+---
+import type { EnglishLesson } from '../lib/english';
+import { ENGLISH_GRADES } from '../lib/english-grades';
+import { formatDate } from '../lib/utils';
+
+interface Props { lessons: EnglishLesson[]; showGrade?: boolean }
+const { lessons, showGrade = false } = Astro.props;
+---
+
+<ul class="post-list">
+  {lessons.map((lesson) => (
+    <li>
+      {lesson.date && <time datetime={lesson.date}>{formatDate(new Date(`${lesson.date}T00:00:00Z`))}</time>}
+      <a class="post-link" href={lesson.url}>{lesson.title}</a>
+      {showGrade && <p class="post-excerpt">{ENGLISH_GRADES.find(({ slug }) => slug === lesson.grade)?.label ?? 'Bài học chung'}</p>}
+    </li>
+  ))}
+</ul>

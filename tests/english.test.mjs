@@ -30,3 +30,20 @@ test('English sources produce decoded titles, safe links and stable dates withou
 test('an empty compile-time lesson collection produces a useful empty list', () => {
   assert.deepEqual(getEnglishLessons({}), []);
 });
+
+test('grade folders keep distinct URLs for repeated filenames, including nested units and encoded names', () => {
+  const lessons = getEnglishLessons({
+    '/public/english/lop-1/Colors.html': '<title>Colors one</title>',
+    '/public/english/lop-3/Colors.html': '<title>Colors three</title>',
+    '/public/english/lop-3/unit 2/Words & games.html': '<title>Games</title>',
+    '/public/english/Common.html': '<title>Common</title>',
+    '/public/english/lop-1/index.html': '<title>Archive</title>',
+  });
+  assert.equal(lessons.length, 4);
+  assert.equal(lessons.find(({ title }) => title === 'Colors one').url, '/english/lop-1/Colors.html');
+  assert.equal(lessons.find(({ title }) => title === 'Colors one').grade, 'lop-1');
+  assert.equal(lessons.find(({ title }) => title === 'Colors three').grade, 'lop-3');
+  assert.equal(lessons.find(({ title }) => title === 'Games').url, '/english/lop-3/unit%202/Words%20%26%20games.html');
+  assert.equal(lessons.find(({ title }) => title === 'Games').grade, 'lop-3');
+  assert.equal(lessons.find(({ title }) => title === 'Common').grade, undefined);
+});
