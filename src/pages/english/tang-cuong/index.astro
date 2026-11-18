@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import EnglishGradeNav from '../../../components/EnglishGradeNav.astro';
+import EnglishReinforcementClasses from '../../../components/EnglishReinforcementClasses.astro';
+import { englishLessons, englishReinforcements } from '../../../lib/english-library';
+---
+
+<BaseLayout title="Tăng cường Tiếng Anh" description="Bài tập tiếng Anh tăng cường cho Lớp 1 và Lớp 3: nhớ chữ, tập viết, ghép chữ, nghe và nói.">
+  <h1 class="page-title">Tăng cường Tiếng Anh</h1>
+  <p class="topic-note">Chọn lớp để luyện thêm theo chủ đề, với lộ trình học từng ngày.</p>
+  <EnglishGradeNav lessons={englishLessons} reinforcements={englishReinforcements} activeSection="reinforcements" />
+  <EnglishReinforcementClasses reinforcements={englishReinforcements} />
+</BaseLayout>

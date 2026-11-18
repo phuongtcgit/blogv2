@@ -1,0 +1,16 @@
+---
+import { ENGLISH_GRADES } from '../lib/english-grades';
+import type { EnglishLesson } from '../lib/english';
+
+interface Props { reinforcements: EnglishLesson[] }
+const { reinforcements } = Astro.props;
+---
+
+<ul class="post-list reinforcement-classes">
+  {ENGLISH_GRADES.map(({ slug, label }) => (
+    <li>
+      <a class="post-link" href={`/english/${slug}/tang-cuong/`}>Tăng cường English {label}</a>
+      <p class="post-excerpt">{reinforcements.filter(({ grade }) => grade === slug).length} bài tập · Nhớ chữ, tập viết, ghép chữ, nghe và nói.</p>
+    </li>
+  ))}
+</ul>

@@ -3,8 +3,13 @@ import { ENGLISH_GRADES, type EnglishGrade } from '../lib/english-grades';
 import type { EnglishLesson } from '../lib/english';
 import { ENGLISH_WORKBOOKS } from '../lib/english-workbooks';
 
-interface Props { lessons: EnglishLesson[]; activeGrade?: EnglishGrade; activeSection?: 'lessons' | 'workbooks' }
-const { lessons, activeGrade, activeSection = 'lessons' } = Astro.props;
+interface Props {
+  lessons: EnglishLesson[];
+  reinforcements: EnglishLesson[];
+  activeGrade?: EnglishGrade;
+  activeSection?: 'lessons' | 'workbooks' | 'reinforcements';
+}
+const { lessons, reinforcements, activeGrade, activeSection = 'lessons' } = Astro.props;
 const entries = [
   { url: '/english/', label: 'Tất cả', count: lessons.length, countLabel: 'bài học', active: activeSection === 'lessons' && !activeGrade },
   ...ENGLISH_GRADES.map(({ slug, label }) => ({
@@ -13,6 +18,7 @@ const entries = [
     countLabel: 'bài học', active: activeSection === 'lessons' && activeGrade === slug,
   })),
   { url: '/english/bai-tap/', label: 'Bài tập', count: ENGLISH_WORKBOOKS.length, countLabel: 'bộ bài tập', active: activeSection === 'workbooks' },
+  { url: '/english/tang-cuong/', label: 'Tăng cường', count: reinforcements.length, countLabel: 'bài tăng cường', active: activeSection === 'reinforcements' },
 ];
 ---
 
@@ -25,10 +31,10 @@ const entries = [
 </nav>
 
 <style>
-  .english-grades { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+  .english-grades { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0; }
   .english-grades a {
     display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px;
-    padding: 0.4rem 0.85rem; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 0.4rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius);
     font: 0.875rem var(--font-mono); color: var(--text-soft);
   }
   .english-grades a:hover, .english-grades a[aria-current='page'] {

@@ -2,8 +2,9 @@
 import type { EnglishGrade } from '../lib/english-grades';
 import { ENGLISH_WORKBOOKS } from '../lib/english-workbooks';
 
-interface Props { grade: EnglishGrade }
+interface Props { grade: EnglishGrade; reinforcementCount?: number }
 const workbook = ENGLISH_WORKBOOKS.find(({ grade }) => grade === Astro.props.grade);
+const { reinforcementCount = 0 } = Astro.props;
 ---
 
 {workbook && (
@@ -11,8 +12,12 @@ const workbook = ENGLISH_WORKBOOKS.find(({ grade }) => grade === Astro.props.gra
     <div>
       <h2>{workbook.title}</h2>
       <p>{workbook.description}</p>
+      {reinforcementCount > 0 && <p>Thêm {reinforcementCount} bài tăng cường: nhớ chữ, tập viết, ghép chữ, nghe và nói.</p>}
     </div>
-    <a href={workbook.url}>Làm bài tập →</a>
+    <div class="workbook-actions">
+      <a href={workbook.url}>Làm bài tập →</a>
+      {reinforcementCount > 0 && <a class="reinforcement-link" href={`/english/${workbook.grade}/tang-cuong/`}>Tăng cường ({reinforcementCount}) →</a>}
+    </div>
   </aside>
 )}
 
@@ -24,6 +29,7 @@ const workbook = ENGLISH_WORKBOOKS.find(({ grade }) => grade === Astro.props.gra
   }
   h2 { margin: 0; font: 600 0.95rem/1.5 var(--font-mono); }
   p { margin: 0.25rem 0 0; font-size: 0.875rem; color: var(--text-soft); }
+  .workbook-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   a {
     display: inline-flex; align-items: center; min-height: 44px; padding: 0.4rem 0.75rem;
     border: 1px solid var(--accent); border-radius: var(--radius); background: var(--bg);

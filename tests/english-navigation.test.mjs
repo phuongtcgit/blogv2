@@ -38,3 +38,16 @@ test('lessons return to their own grade, including nested lessons and copied bui
   assert.ok(moved.includes('href="/english/lop-3/"'));
   assert.ok(!moved.includes('href="/english/lop-1/"'));
 });
+
+test('reinforcement pages return to their grade reinforcement list and update copied navigation', () => {
+  const original = '<body><h1>Extra practice</h1></body>';
+  for (const grade of ['lop-1', 'lop-3']) {
+    const path = `${grade}/tang-cuong/unit 1/review.html`;
+    const built = addEnglishNavigation(original, path);
+    assert.ok(built.includes(`href="/english/${grade}/tang-cuong/"`));
+    assert.equal(built.replace(englishNavigationForPath(path), ''), original);
+    assert.equal(addEnglishNavigation(built, path), built);
+    const copied = addEnglishNavigation(addEnglishNavigation(original, `${grade}/regular.html`), path);
+    assert.equal(copied, built);
+  }
+});

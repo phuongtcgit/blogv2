@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import EnglishGradeNav from '../../../../components/EnglishGradeNav.astro';
+import EnglishLessonList from '../../../../components/EnglishLessonList.astro';
+import { ENGLISH_GRADES } from '../../../../lib/english-grades';
+import { englishLessons, englishReinforcements } from '../../../../lib/english-library';
+
+export function getStaticPaths() {
+  return ENGLISH_GRADES.map((grade) => ({ params: { grade: grade.slug }, props: { grade } }));
+}
+const { grade } = Astro.props;
+const lessons = englishReinforcements.filter((lesson) => lesson.grade === grade.slug);
+---
+
+<BaseLayout title={`Tăng cường English ${grade.label}`} description={`Bài tập tiếng Anh tăng cường ${grade.label.toLowerCase()}: nhớ chữ, tập viết, ghép chữ, nghe và nói.`}>
+  <h1 class="page-title">Tăng cường English {grade.label}</h1>
+  <p class="topic-note">Nhớ chữ, tập viết, ghép chữ, nghe và nói. Bé có thể chọn ngày học ngay trong mỗi bài.</p>
+  <EnglishGradeNav lessons={englishLessons} reinforcements={englishReinforcements} activeSection="reinforcements" />
+  <p class="topic-note"><a href={`/english/${grade.slug}/`}>← Bài học {grade.label}</a> · <a href="/english/tang-cuong/">Chọn lớp khác</a></p>
+  {lessons.length ? (
+    <section aria-labelledby="reinforcement-lessons">
+      <h2 class="section-title" id="reinforcement-lessons">{lessons.length} bài tập tăng cường</h2>
+      <EnglishLessonList lessons={lessons} />
+    </section>
+  ) : (
+    <p class="topic-note">Bài tập tăng cường {grade.label.toLowerCase()} sẽ sớm được cập nhật.</p>
+  )}
+</BaseLayout>

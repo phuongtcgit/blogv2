@@ -4,7 +4,7 @@ import EnglishGradeNav from '../../../components/EnglishGradeNav.astro';
 import EnglishLessonList from '../../../components/EnglishLessonList.astro';
 import EnglishWorkbookLink from '../../../components/EnglishWorkbookLink.astro';
 import { ENGLISH_GRADES } from '../../../lib/english-grades';
-import { englishLessons } from '../../../lib/english-library';
+import { englishLessons, englishReinforcements } from '../../../lib/english-library';
 
 export function getStaticPaths() {
   return ENGLISH_GRADES.map((grade) => ({ params: { grade: grade.slug }, props: { grade } }));
@@ -12,13 +12,14 @@ export function getStaticPaths() {
 
 const { grade } = Astro.props;
 const lessons = englishLessons.filter((lesson) => lesson.grade === grade.slug);
+const reinforcementCount = englishReinforcements.filter((lesson) => lesson.grade === grade.slug).length;
 ---
 
 <BaseLayout title={`English ${grade.label}`} description={`Các bài học tiếng Anh ${grade.label.toLowerCase()}: từ vựng, phát âm, bài hát và trò chơi.`}>
   <h1 class="page-title">English {grade.label}</h1>
   <p class="topic-note">Cùng học từ vựng, nghe phát âm, hát và chơi bằng tiếng Anh.</p>
-  <EnglishGradeNav lessons={englishLessons} activeGrade={grade.slug} />
-  <EnglishWorkbookLink grade={grade.slug} />
+  <EnglishGradeNav lessons={englishLessons} reinforcements={englishReinforcements} activeGrade={grade.slug} />
+  <EnglishWorkbookLink grade={grade.slug} reinforcementCount={reinforcementCount} />
 
   {lessons.length ? (
     <section aria-labelledby="english-lessons">

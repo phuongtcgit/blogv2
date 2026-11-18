@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { englishLessons as lessons } from '../../lib/english-library';
+import { englishLessons as lessons, englishReinforcements } from '../../lib/english-library';
 import EnglishGradeNav from '../../components/EnglishGradeNav.astro';
 import EnglishLessonList from '../../components/EnglishLessonList.astro';
 ---
@@ -8,7 +8,7 @@ import EnglishLessonList from '../../components/EnglishLessonList.astro';
 <BaseLayout title="English cùng con" description="Các bài học tiếng Anh cùng con: từ vựng, phát âm, bài hát và trò chơi.">
   <h1 class="page-title">English cùng con</h1>
   <p class="topic-note">Cùng học từ vựng, nghe phát âm, hát và chơi bằng tiếng Anh.</p>
-  <EnglishGradeNav lessons={lessons} />
+  <EnglishGradeNav lessons={lessons} reinforcements={englishReinforcements} />
 
   {lessons.length ? (
     <section aria-labelledby="english-lessons">

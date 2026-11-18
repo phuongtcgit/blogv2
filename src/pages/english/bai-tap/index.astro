@@ -1,15 +1,17 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import EnglishGradeNav from '../../../components/EnglishGradeNav.astro';
-import { englishLessons } from '../../../lib/english-library';
+import { englishLessons, englishReinforcements } from '../../../lib/english-library';
 import { ENGLISH_WORKBOOKS } from '../../../lib/english-workbooks';
+import EnglishReinforcementClasses from '../../../components/EnglishReinforcementClasses.astro';
 ---
 
 <BaseLayout title="Bài tập Tiếng Anh" description="Bài tập tiếng Anh tương tác cho Lớp 1 và Lớp 3: nghe, chọn đáp án, điền từ và sắp xếp câu.">
   <h1 class="page-title">Bài tập Tiếng Anh</h1>
   <p class="topic-note">Chọn lớp để bắt đầu luyện tập. Bé có thể đổi Unit ngay trong bộ bài tập.</p>
-  <EnglishGradeNav lessons={englishLessons} activeSection="workbooks" />
+  <EnglishGradeNav lessons={englishLessons} reinforcements={englishReinforcements} activeSection="workbooks" />
 
+  <h2 class="section-title">Bài tập tổng hợp</h2>
   <ul class="post-list">
     {ENGLISH_WORKBOOKS.map((workbook) => (
       <li>
@@ -18,4 +20,6 @@ import { ENGLISH_WORKBOOKS } from '../../../lib/english-workbooks';
       </li>
     ))}
   </ul>
+  <h2 class="section-title">Luyện tập tăng cường</h2>
+  <EnglishReinforcementClasses reinforcements={englishReinforcements} />
 </BaseLayout>

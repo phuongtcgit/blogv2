@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hệ Thống Từ Vựng Mở Rộng 4 Trong 1: Nhớ Chữ • Tập Viết • Nghe • Nói</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(160deg, #f0f9ff 0%, #fffbeb 50%, #fdf2f8 100%); min-height: 100vh; }
+    .font-display { font-family: 'Nunito', 'Inter', sans-serif; }
+    .zoom-card { transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease; }
+    .zoom-card:hover { transform: scale(1.06); z-index: 10; }
+    canvas#trace-canvas { touch-action: none; cursor: crosshair; }
+    @keyframes pulseMic {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.5); }
+      50% { box-shadow: 0 0 0 14px rgba(244, 63, 94, 0); }
+    }
+    .mic-listening { animation: pulseMic 1.2s infinite; }
+  </style>
+</head>
+<body class="text-slate-800 antialiased">
+  <div class="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+    <!-- Header -->
+    <header class="bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4 sm:p-5 mb-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-rose-500 flex items-center justify-center text-2xl shadow-sm shrink-0">🚀</div>
+          <div>
+            <h1 class="font-display text-xl sm:text-2xl font-black text-slate-900">Lớp 1 • Unit 15–16: Bóng đá & Ở nhà (15 từ)</h1>
+            <p class="text-xs sm:text-sm text-slate-500">Mở rộng từ liên quan • Tách vần dễ nhớ • Tập tô viết • Luyện nói chấm điểm</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-2">
+          <span class="text-xs font-bold text-amber-800">Sao tích lũy:</span>
+          <span id="stars-box" class="font-display text-xl font-black text-amber-600">0 ⭐</span>
+        </div>
+      </div>
+
+      <!-- Topic Selector + Voice Controls -->
+      <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div id="topic-bar" class="flex flex-wrap gap-1.5"></div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="v-female" type="button" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-500 text-white shadow-sm">👩 Nữ (US)</button>
+          <button id="v-male" type="button" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-700">👨 Nam (US)</button>
+          <button id="v-slow" type="button" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700">🐢 Chậm</button>
+        </div>
+      </div>
+      <div class="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center gap-2">
+        <span class="text-xs font-bold text-slate-500 uppercase">Lộ trình 3 ngày / tuần:</span>
+        <div id="day-bar" class="flex flex-wrap gap-1.5"></div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <!-- Left: Expanded Word Network Selector -->
+      <aside class="lg:col-span-4 bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4">
+        <h2 class="font-display text-base font-black text-slate-800 mb-3">📚 Chọn từ trong chủ đề</h2>
+        <div id="word-list" class="grid grid-cols-2 lg:grid-cols-1 gap-2"></div>
+      </aside>
+
+      <!-- Right: 4-Step Interactive Practice -->
+      <section class="lg:col-span-8 bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4 sm:p-6">
+        <!-- 4 Mode Tabs -->
+        <nav class="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl mb-5">
+          <button id="m-tab-1" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-rose-600 shadow-sm">1. Nhớ mặt chữ &amp; Mở rộng</button>
+          <button id="m-tab-2" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600">2. Tập tô &amp; Viết</button>
+          <button id="m-tab-3" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600">3. Ghép chữ cái</button>
+          <button id="m-tab-4" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600">4. Nghe &amp; Nói</button>
+        </nav>
+
+        <!-- STEP 1: PHONICS COLOR-CODING & RELATED WORDS -->
+        <div id="step-1" class="space-y-5">
+          <div class="bg-gradient-to-br from-sky-50 to-indigo-50 border border-sky-100 rounded-3xl p-6 text-center">
+            <div id="s1-emoji" class="text-6xl mb-2">🐘</div>
+            <div id="s1-phonics" class="font-display text-4xl sm:text-5xl font-black tracking-wide mb-2"></div>
+            <p id="s1-ipa" class="text-sm font-bold text-sky-700 mb-1">/ˈelɪfənt/</p>
+            <p id="s1-vi" class="font-display text-2xl font-extrabold text-rose-600 mb-4">Con voi</p>
+            <button id="s1-speak" type="button" class="px-5 py-2.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-sm">🔊 Nghe đọc từ</button>
+          </div>
+
+          <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 sm:p-5">
+            <h3 class="font-display text-sm font-black uppercase text-amber-800 mb-3">
+              🕸️ Từ vựng mở rộng liên quan (chạm vào để nghe &amp; học thêm)
+            </h3>
+            <div id="s1-related" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+          </div>
+        </div>
+
+        <!-- STEP 2: TRACE & WRITE CANVAS -->
+        <div id="step-2" class="hidden space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="font-display text-lg font-black text-slate-900">✍️ Bé tập tô theo nét chữ mờ</h3>
+              <p class="text-xs text-slate-500">Dùng ngón tay hoặc chuột tô theo hình chữ bên dưới</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="pen-rose" type="button" class="w-7 h-7 rounded-full bg-rose-500 ring-2 ring-offset-2 ring-rose-400" aria-label="Bút đỏ"></button>
+              <button id="pen-blue" type="button" class="w-7 h-7 rounded-full bg-sky-500" aria-label="Bút xanh"></button>
+              <button id="pen-green" type="button" class="w-7 h-7 rounded-full bg-emerald-500" aria-label="Bút xanh lá"></button>
+              <button id="trace-clear" type="button" class="ml-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700">🗑️ Xóa viết lại</button>
+            </div>
+          </div>
+          <div class="bg-white border-2 border-dashed border-sky-300 rounded-3xl overflow-hidden flex justify-center">
+            <canvas id="trace-canvas" width="600" height="240" class="w-full max-w-[600px] h-auto"></canvas>
+          </div>
+          <div class="text-center">
+            <button id="trace-done" type="button" class="px-5 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-sm">⭐ Con viết xong rồi!</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: SPELLING TILES -->
+        <div id="step-3" class="hidden space-y-5">
+          <div class="bg-violet-50 border border-violet-100 rounded-2xl p-5 text-center">
+            <p class="text-xs font-bold uppercase text-violet-700 mb-2">🧩 Ghép các chữ cái thành từ đúng</p>
+            <div id="s3-emoji" class="text-5xl mb-1">🐘</div>
+            <div id="s3-vi" class="font-display text-xl font-extrabold text-slate-800 mb-3">Con voi</div>
+            <div id="s3-slots" class="min-h-[60px] bg-white border-2 border-dashed border-violet-300 rounded-2xl p-3 flex flex-wrap justify-center gap-2"></div>
+          </div>
+          <div id="s3-pool" class="flex flex-wrap justify-center gap-2"></div>
+          <div class="flex justify-center gap-3">
+            <button id="s3-reset" type="button" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm">🔄 Xếp lại</button>
+            <button id="s3-speak" type="button" class="px-4 py-2 rounded-xl bg-violet-500 text-white font-bold text-sm">🔊 Nghe gợi ý</button>
+          </div>
+          <div id="s3-fb" class="min-h-[44px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center"></div>
+        </div>
+
+        <!-- STEP 4: LISTEN & SPEAK (FREE WEB SPEECH RECOGNITION) -->
+        <div id="step-4" class="hidden space-y-5">
+          <div class="bg-rose-50 border border-rose-100 rounded-3xl p-6 text-center">
+            <p class="text-xs font-bold uppercase text-rose-700 mb-2">🎙️ Luyện nghe &amp; nói (Miễn phí trên Chrome / Edge / Safari)</p>
+            <div id="s4-emoji" class="text-6xl mb-2">🐘</div>
+            <div id="s4-word" class="font-display text-3xl sm:text-4xl font-black text-slate-900 mb-1">Elephant</div>
+            <div id="s4-sent" class="text-sm font-semibold text-slate-600 mb-4">"The elephant is big."</div>
+            <div class="flex flex-wrap justify-center gap-3">
+              <button id="s4-listen" type="button" class="px-5 py-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-sm">🔊 Nghe mẫu</button>
+              <button id="s4-mic" type="button" class="px-6 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-sm">🎙️ Bấm để nói</button>
+            </div>
+          </div>
+          <div id="s4-result" class="min-h-[60px] rounded-2xl p-4 text-center font-display font-bold text-base bg-slate-50 text-slate-600 flex items-center justify-center">
+            Bấm "Nghe mẫu" rồi bấm "Bấm để nói" và đọc to từ trên nhé!
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const DATA = [{"id": "g1_t8", "name": "Lớp 1 • Unit 15–16: Bóng đá & Ở nhà (15 từ)", "filename": "l1_08_bong_da_o_nha.html", "days": [[{"w": "Football", "chunks": ["Foot", "ball"], "ipa": "/ˈfʊtbɔːl/", "vi": "Bóng đá", "e": "⚽", "sent": "I play football.", "related": [{"w": "Kick", "vi": "Đá", "e": "🦵"}, {"w": "Goal", "vi": "Bàn thắng", "e": "🥅"}, {"w": "Field", "vi": "Sân", "e": "🌿"}, {"w": "Team", "vi": "Đội", "e": "🧑‍🤝‍🧑"}]}, {"w": "Father", "chunks": ["Fa", "ther"], "ipa": "/ˈfɑːðər/", "vi": "Bố / Ba", "e": "👨", "sent": "Point to father.", "related": [{"w": "Dad", "vi": "Ba", "e": "🧔"}, {"w": "Strong", "vi": "Khỏe", "e": "💪"}, {"w": "Play", "vi": "Chơi", "e": "⚽"}, {"w": "Love", "vi": "Yêu", "e": "❤️"}]}, {"w": "Face", "chunks": ["Fa", "ce"], "ipa": "/feɪs/", "vi": "Khuôn mặt", "e": "😊", "sent": "A smiling face.", "related": [{"w": "Smile", "vi": "Cười", "e": "😁"}, {"w": "Eye", "vi": "Mắt", "e": "👀"}, {"w": "Nose", "vi": "Mũi", "e": "👃"}, {"w": "Wash", "vi": "Rửa", "e": "🧼"}]}, {"w": "Foot", "chunks": ["Fo", "ot"], "ipa": "/fʊt/", "vi": "Bàn chân", "e": "🦶", "sent": "Kick with your foot.", "related": [{"w": "Shoe", "vi": "Giày", "e": "👟"}, {"w": "Sock", "vi": "Tất", "e": "🧦"}, {"w": "Kick", "vi": "Đá", "e": "🦵"}, {"w": "Toe", "vi": "Ngón chân", "e": "👣"}]}, {"w": "Goal", "chunks": ["Go", "al"], "ipa": "/ɡoʊl/", "vi": "Khung thành", "e": "🥅", "sent": "Score a goal!", "related": [{"w": "Score", "vi": "Ghi bàn", "e": "🎉"}, {"w": "Net", "vi": "Lưới", "e": "🕸️"}, {"w": "Ball", "vi": "Bóng", "e": "⚽"}, {"w": "Win", "vi": "Thắng", "e": "🏆"}]}], [{"w": "Window", "chunks": ["Win", "dow"], "ipa": "/ˈwɪndoʊ/", "vi": "Cửa sổ", "e": "🪟", "sent": "How many windows?", "related": [{"w": "Open", "vi": "Mở", "e": "🔓"}, {"w": "Glass", "vi": "Kính", "e": "✨"}, {"w": "Wind", "vi": "Gió", "e": "🌬️"}, {"w": "Sun", "vi": "Nắng", "e": "☀️"}]}, {"w": "Water", "chunks": ["Wa", "ter"], "ipa": "/ˈwɔːtər/", "vi": "Nước", "e": "💧", "sent": "Drink some water.", "related": [{"w": "Drink", "vi": "Uống", "e": "🥤"}, {"w": "Clean", "vi": "Sạch", "e": "✨"}, {"w": "Cold", "vi": "Mát", "e": "🧊"}, {"w": "Wash", "vi": "Rửa", "e": "🧼"}]}, {"w": "Washing", "chunks": ["Wash", "ing"], "ipa": "/ˈwɑːʃɪŋ/", "vi": "Rửa / Giặt", "e": "🧼", "sent": "Washing my hands.", "related": [{"w": "Soap", "vi": "Xà phòng", "e": "🫧"}, {"w": "Hand", "vi": "Tay", "e": "✋"}, {"w": "Clean", "vi": "Sạch", "e": "✨"}, {"w": "Water", "vi": "Nước", "e": "💧"}]}, {"w": "Wall", "chunks": ["Wa", "ll"], "ipa": "/wɔːl/", "vi": "Bức tường", "e": "🧱", "sent": "Picture on the wall.", "related": [{"w": "Picture", "vi": "Tranh", "e": "🖼️"}, {"w": "Clock", "vi": "Đồng hồ", "e": "⏰"}, {"w": "Room", "vi": "Phòng", "e": "🏠"}, {"w": "High", "vi": "Cao", "e": "⬆️"}]}, {"w": "Home", "chunks": ["Ho", "me"], "ipa": "/hoʊm/", "vi": "Ngôi nhà", "e": "🏠", "sent": "Sweet home!", "related": [{"w": "Family", "vi": "Gia đình", "e": "🏡"}, {"w": "Warm", "vi": "Ấm áp", "e": "❤️"}, {"w": "Room", "vi": "Phòng", "e": "🛋️"}, {"w": "Love", "vi": "Yêu", "e": "💖"}]}], [{"w": "Sofa", "chunks": ["So", "fa"], "ipa": "/ˈsoʊfə/", "vi": "Ghế sô-pha", "e": "🛋️", "sent": "Sit on the sofa.", "related": [{"w": "Sit", "vi": "Ngồi", "e": "🧘"}, {"w": "Soft", "vi": "Êm", "e": "☁️"}, {"w": "TV", "vi": "Ti vi", "e": "📺"}, {"w": "Living", "vi": "Phòng khách", "e": "🏡"}]}, {"w": "Broom", "chunks": ["Bro", "om"], "ipa": "/bruːm/", "vi": "Cái chổi", "e": "🧹", "sent": "Sweep with a broom.", "related": [{"w": "Sweep", "vi": "Quét", "e": "🧹"}, {"w": "Clean", "vi": "Sạch", "e": "✨"}, {"w": "Floor", "vi": "Sàn", "e": "🏠"}, {"w": "Help", "vi": "Giúp mẹ", "e": "🤝"}]}, {"w": "Towel", "chunks": ["Tow", "el"], "ipa": "/ˈtaʊəl/", "vi": "Khăn tắm", "e": "🛁", "sent": "A soft towel.", "related": [{"w": "Dry", "vi": "Lau khô", "e": "✨"}, {"w": "Soft", "vi": "Mềm", "e": "☁️"}, {"w": "Bath", "vi": "Tắm", "e": "🚿"}, {"w": "Clean", "vi": "Sạch", "e": "🧼"}]}, {"w": "Key", "chunks": ["K", "ey"], "ipa": "/kiː/", "vi": "Chìa khóa", "e": "🔑", "sent": "House key.", "related": [{"w": "Lock", "vi": "Khóa", "e": "🔒"}, {"w": "Door", "vi": "Cửa", "e": "🚪"}, {"w": "Open", "vi": "Mở", "e": "🔓"}, {"w": "Small", "vi": "Nhỏ", "e": "🤏"}]}, {"w": "Trophy", "chunks": ["Tro", "phy"], "ipa": "/ˈtroʊfi/", "vi": "Cúp vô địch", "e": "🏆", "sent": "Win the trophy!", "related": [{"w": "Win", "vi": "Thắng", "e": "🎉"}, {"w": "Gold", "vi": "Vàng", "e": "💛"}, {"w": "Team", "vi": "Đội", "e": "🧑‍🤝‍🧑"}, {"w": "Happy", "vi": "Vui", "e": "😄"}]}]]}];
+
+    let topicIdx = 0, dayIdx = 0, wordIdx = 0, voiceMode = 'female', rate = 0.92, stars = 0;
+    function curWords() { return DATA[topicIdx].days[dayIdx]; }
+    try { stars = parseInt(localStorage.getItem('vocab4in1_stars') || '0', 10) || 0; } catch(e) {}
+
+    let femaleUsVoice = null, maleUsVoice = null;
+    function isNat(v){ const n=v.name.toLowerCase(); return n.includes('natural')||n.includes('online')||n.includes('neural')||n.includes('google us english'); }
+    function pickVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const vs = window.speechSynthesis.getVoices();
+      const pool = vs.filter(v => v.lang.toLowerCase().startsWith('en-us'));
+      const list = pool.length ? pool : vs.filter(v => v.lang.toLowerCase().startsWith('en'));
+      femaleUsVoice = list.find(v => isNat(v) && /aria|jenny|ava|emma|google/i.test(v.name)) || list.find(isNat) || list[0] || null;
+      maleUsVoice = list.find(v => isNat(v) && /andrew|guy|brian|christopher|eric/i.test(v.name)) || list.find(v => v !== femaleUsVoice) || list[0] || null;
+    }
+    if ('speechSynthesis' in window) { pickVoices(); window.speechSynthesis.onvoiceschanged = pickVoices; }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = rate;
+      if (voiceMode === 'male') { if(maleUsVoice) u.voice = maleUsVoice; u.pitch = 0.9; }
+      else { if(femaleUsVoice) u.voice = femaleUsVoice; u.pitch = 1.05; }
+      window.speechSynthesis.speak(u);
+    }
+
+    function addStar() {
+      stars += 1;
+      document.getElementById('stars-box').textContent = `${stars} ⭐`;
+      try { localStorage.setItem('vocab4in1_stars', String(stars)); } catch(e) {}
+    }
+
+    const CHUNK_COLORS = ['text-rose-600', 'text-sky-600', 'text-emerald-600', 'text-violet-600'];
+
+    function renderTopics() {
+      const bar = document.getElementById('topic-bar');
+      bar.innerHTML = DATA.map((t, i) => `
+        <button type="button" data-t="${i}" class="t-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition ${i===topicIdx ? 'bg-violet-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-violet-100'}">${t.name}</button>
+      `).join('');
+      bar.querySelectorAll('.t-btn').forEach(b => b.addEventListener('click', () => { topicIdx = parseInt(b.dataset.t, 10); dayIdx = 0; wordIdx = 0; renderAll(); }));
+    }
+
+    function renderWordList() {
+      const words = curWords();
+      const list = document.getElementById('word-list');
+      list.innerHTML = words.map((item, i) => `
+        <button type="button" data-w="${i}" class="w-btn zoom-card text-left px-3.5 py-3 rounded-2xl border-2 transition flex items-center gap-3 ${i===wordIdx ? 'bg-rose-50 border-rose-400 shadow-sm' : 'bg-slate-50/80 border-slate-100 hover:border-sky-300'}">
+          <span class="text-2xl shrink-0">${item.e}</span>
+          <div>
+            <div class="font-display font-black text-base text-slate-900">${item.w}</div>
+            <div class="text-xs font-semibold text-slate-500">${item.vi}</div>
+          </div>
+        </button>
+      `).join('');
+      list.querySelectorAll('.w-btn').forEach(b => b.addEventListener('click', () => {
+        wordIdx = parseInt(b.dataset.w, 10);
+        renderAll();
+        speak(curWords()[wordIdx].w);
+      }));
+    }
+
+    function renderStep1() {
+      const item = curWords()[wordIdx];
+      document.getElementById('s1-emoji').textContent = item.e;
+      document.getElementById('s1-phonics').innerHTML = item.chunks.map((c, i) =>
+        `<span class="${CHUNK_COLORS[i % CHUNK_COLORS.length]}">${c}</span>`
+      ).join('<span class="text-slate-300 mx-1">·</span>');
+      document.getElementById('s1-ipa').textContent = item.ipa;
+      document.getElementById('s1-vi').textContent = item.vi;
+
+      const rel = document.getElementById('s1-related');
+      rel.innerHTML = item.related.map(r => `
+        <button type="button" data-rw="${r.w}" class="rel-btn zoom-card bg-white border border-amber-200 hover:border-rose-400 rounded-2xl p-3 text-center shadow-sm">
+          <div class="text-2xl mb-1">${r.e}</div>
+          <div class="font-display font-black text-sm text-slate-900">${r.w}</div>
+          <div class="text-[11px] font-semibold text-slate-500">${r.vi}</div>
+        </button>
+      `).join('');
+      rel.querySelectorAll('.rel-btn').forEach(b => b.addEventListener('click', () => speak(b.dataset.rw)));
+    }
+
+    // STEP 2: Trace Canvas
+    const canvas = document.getElementById('trace-canvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false, penColor = '#f43f5e';
+
+    function drawGhostWord() {
+      const item = curWords()[wordIdx];
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Guide lines
+      ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
+      ctx.beginPath(); ctx.moveTo(20, 175); ctx.lineTo(580, 175); ctx.stroke();
+      ctx.setLineDash([]);
+      // Ghost text
+      ctx.font = '900 92px Nunito, Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillText(item.w, canvas.width / 2, canvas.height / 2);
+      ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2;
+      ctx.strokeText(item.w, canvas.width / 2, canvas.height / 2);
+    }
+
+    function getPos(e) {
+      const r = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: (clientX - r.left) * (canvas.width / r.width), y: (clientY - r.top) * (canvas.height / r.height) };
+    }
+    canvas.addEventListener('pointerdown', (e) => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!drawing) return;
+      const p = getPos(e);
+      ctx.strokeStyle = penColor; ctx.lineWidth = 10; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.lineTo(p.x, p.y); ctx.stroke();
+    });
+    window.addEventListener('pointerup', () => { drawing = false; });
+
+    // STEP 3: Spelling Tiles
+    let s3Chosen = [], s3Pool = [];
+    function initStep3() {
+      const item = curWords()[wordIdx];
+      document.getElementById('s3-emoji').textContent = item.e;
+      document.getElementById('s3-vi').textContent = item.vi;
+      s3Chosen = [];
+      s3Pool = item.w.toUpperCase().split('').map((ch, i) => ({ ch, id: i })).sort(() => Math.random() - 0.5);
+      document.getElementById('s3-fb').textContent = 'Chạm từng chữ cái để ghép thành từ!';
+      document.getElementById('s3-fb').className = 'min-h-[44px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center';
+      paintStep3();
+    }
+    function paintStep3() {
+      const target = curWords()[wordIdx].w.toUpperCase();
+      const slots = document.getElementById('s3-slots');
+      const pool = document.getElementById('s3-pool');
+      slots.innerHTML = s3Chosen.length
+        ? s3Chosen.map((c, i) => `<button type="button" data-i="${i}" class="s3-c px-4 py-2 rounded-xl bg-violet-600 text-white font-display font-black text-2xl shadow-sm">${c.ch}</button>`).join('')
+        : '<span class="text-sm text-slate-400 font-semibold">Các chữ cái bé chọn sẽ hiện ở đây...</span>';
+
+      const used = new Set(s3Chosen.map(c => c.id));
+      pool.innerHTML = s3Pool.map(p => `
+        <button type="button" data-id="${p.id}" ${used.has(p.id)?'disabled':''} class="s3-p zoom-card px-4 py-2.5 rounded-2xl border-2 font-display font-black text-2xl ${used.has(p.id)?'bg-slate-100 border-slate-100 text-slate-300':'bg-white border-violet-200 hover:border-rose-400 text-slate-900 shadow-sm'}">${p.ch}</button>
+      `).join('');
+
+      pool.querySelectorAll('.s3-p:not([disabled])').forEach(b => b.addEventListener('click', () => {
+        const obj = s3Pool.find(x => x.id === parseInt(b.dataset.id, 10));
+        if (obj) {
+          s3Chosen.push(obj); paintStep3();
+          const built = s3Chosen.map(x => x.ch).join('');
+          if (built.length === target.length) {
+            const fb = document.getElementById('s3-fb');
+            if (built === target) {
+              addStar(); speak(target);
+              fb.textContent = `🎉 Tuyệt vời! Bé ghép đúng từ ${target}!`;
+              fb.className = 'min-h-[44px] rounded-2xl p-3 text-center font-display font-bold text-base bg-emerald-100 text-emerald-800 flex items-center justify-center';
+            } else {
+              fb.textContent = 'Chưa đúng thứ tự rồi, bé bấm Xếp lại nhé!';
+              fb.className = 'min-h-[44px] rounded-2xl p-3 text-center font-display font-bold text-base bg-amber-100 text-amber-900 flex items-center justify-center';
+            }
+          }
+        }
+      }));
+      slots.querySelectorAll('.s3-c').forEach(b => b.addEventListener('click', () => { s3Chosen.splice(parseInt(b.dataset.i, 10), 1); paintStep3(); }));
+    }
+
+    // STEP 4: Listen & Speak
+    function renderStep4() {
+      const item = curWords()[wordIdx];
+      document.getElementById('s4-emoji').textContent = item.e;
+      document.getElementById('s4-word').textContent = item.w;
+      document.getElementById('s4-sent').textContent = `"${item.sent}"`;
+      document.getElementById('s4-result').textContent = 'Bấm "Nghe mẫu" rồi bấm "Bấm để nói" và đọc to từ trên nhé!';
+      document.getElementById('s4-result').className = 'min-h-[60px] rounded-2xl p-4 text-center font-display font-bold text-base bg-slate-50 text-slate-600 flex items-center justify-center';
+    }
+
+    document.getElementById('s4-listen').addEventListener('click', () => speak(curWords()[wordIdx].w));
+    document.getElementById('s4-mic').addEventListener('click', () => {
+      const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const resBox = document.getElementById('s4-result');
+      const micBtn = document.getElementById('s4-mic');
+      if (!Rec) {
+        resBox.textContent = '💡 Trình duyệt hiện tại chưa hỗ trợ micro nhận diện giọng nói. Bạn hãy mở bằng Chrome, Edge hoặc Safari nhé!';
+        resBox.className = 'min-h-[60px] rounded-2xl p-4 text-center font-display font-bold text-sm bg-amber-100 text-amber-900 flex items-center justify-center';
+        return;
+      }
+      const rec = new Rec();
+      rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 3;
+      micBtn.classList.add('mic-listening');
+      micBtn.textContent = '🎙️ Đang nghe bé nói...';
+      resBox.textContent = 'Hãy đọc to từ tiếng Anh vào micro nhé!';
+      rec.onresult = (ev) => {
+        const target = curWords()[wordIdx].w.toLowerCase();
+        const transcripts = Array.from(ev.results[0]).map(r => r.transcript.toLowerCase().trim());
+        const matched = transcripts.some(t => t.includes(target) || target.includes(t));
+        if (matched) {
+          addStar();
+          resBox.textContent = `🎉 Quá giỏi! Máy nghe được "${transcripts[0]}" — Chuẩn xác! (+1 ⭐)`;
+          resBox.className = 'min-h-[60px] rounded-2xl p-4 text-center font-display font-bold text-base bg-emerald-100 text-emerald-800 flex items-center justify-center';
+        } else {
+          resBox.textContent = `Máy nghe được "${transcripts[0]}". Bé thử bấm nghe mẫu và đọc lại "${curWords()[wordIdx].w}" nhé!`;
+          resBox.className = 'min-h-[60px] rounded-2xl p-4 text-center font-display font-bold text-base bg-amber-100 text-amber-900 flex items-center justify-center';
+        }
+      };
+      rec.onerror = () => {
+        resBox.textContent = 'Chưa nghe rõ, bé kiểm tra quyền micro và thử bấm lại nhé!';
+        resBox.className = 'min-h-[60px] rounded-2xl p-4 text-center font-display font-bold text-sm bg-amber-100 text-amber-900 flex items-center justify-center';
+      };
+      rec.onend = () => {
+        micBtn.classList.remove('mic-listening');
+        micBtn.textContent = '🎙️ Bấm để nói';
+      };
+      rec.start();
+    });
+
+    function switchStep(n) {
+      [1,2,3,4].forEach(k => {
+        document.getElementById(`step-${k}`).classList.toggle('hidden', k !== n);
+        document.getElementById(`m-tab-${k}`).className = k === n
+          ? 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-rose-600 shadow-sm'
+          : 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600';
+      });
+      if (n === 2) drawGhostWord();
+    }
+
+    function renderDays() {
+      const bar = document.getElementById('day-bar');
+      const days = DATA[topicIdx].days;
+      bar.innerHTML = days.map((d, i) => `
+        <button type="button" data-d="${i}" class="d-btn px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition ${i===dayIdx ? 'bg-emerald-500 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-emerald-100'}">
+          📅 Ngày ${i + 1} (${d.length} từ)
+        </button>
+      `).join('');
+      bar.querySelectorAll('.d-btn').forEach(b => b.addEventListener('click', () => {
+        dayIdx = parseInt(b.dataset.d, 10);
+        wordIdx = 0;
+        renderAll();
+      }));
+    }
+
+    function renderAll() {
+      renderTopics();
+      renderDays();
+      renderWordList();
+      renderStep1();
+      drawGhostWord();
+      initStep3();
+      renderStep4();
+    }
+
+    document.getElementById('stars-box').textContent = `${stars} ⭐`;
+    [1,2,3,4].forEach(k => document.getElementById(`m-tab-${k}`).addEventListener('click', () => switchStep(k)));
+    document.getElementById('s1-speak').addEventListener('click', () => speak(curWords()[wordIdx].w));
+    document.getElementById('trace-clear').addEventListener('click', drawGhostWord);
+    document.getElementById('trace-done').addEventListener('click', () => { addStar(); speak(curWords()[wordIdx].w); });
+    document.getElementById('pen-rose').addEventListener('click', () => { penColor = '#f43f5e'; });
+    document.getElementById('pen-blue').addEventListener('click', () => { penColor = '#0ea5e9'; });
+    document.getElementById('pen-green').addEventListener('click', () => { penColor = '#10b981'; });
+    document.getElementById('s3-reset').addEventListener('click', initStep3);
+    document.getElementById('s3-speak').addEventListener('click', () => speak(curWords()[wordIdx].w));
+
+    document.getElementById('v-female').addEventListener('click', () => { voiceMode='female'; document.getElementById('v-female').className='px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-500 text-white shadow-sm'; document.getElementById('v-male').className='px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-700'; });
+    document.getElementById('v-male').addEventListener('click', () => { voiceMode='male'; document.getElementById('v-male').className='px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-white shadow-sm'; document.getElementById('v-female').className='px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-700'; });
+    document.getElementById('v-slow').addEventListener('click', () => {
+      rate = rate < 0.85 ? 0.92 : 0.72;
+      document.getElementById('v-slow').className = rate < 0.85 ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-sm' : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700';
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>

@@ -66,6 +66,8 @@ try {
   for (const grade of ['lop-1', 'lop-3']) {
     mkdirSync(join(english, grade, 'unit 1'), { recursive: true });
     writeFileSync(join(english, grade, 'unit 1/same.html'), lesson.replace('Words &amp; &lt;games&gt;', `Fixture ${grade}`));
+    mkdirSync(join(english, grade, 'tang-cuong'), { recursive: true });
+    writeFileSync(join(english, grade, 'tang-cuong/l1_99_fixture.html'), `<html><head><title>Generic reinforcement app</title></head><body><h1>Extra ${grade} &amp; review</h1></body></html>`);
   }
   resetPosts();
   writePost('alpha', ['Server', 'server ', ' SERVER ', 'Bất động sản', '<img src=x onerror="alert(1)">'], {
@@ -108,6 +110,30 @@ try {
   }
   for (const [, title] of englishIndex.matchAll(/class="post-link" href="[^"]+">([^<]*)<\/a>/g)) {
     assert.ok(!title.includes('Tiếng Anh Mỹ'), `Untrimmed display title: ${title}`);
+  }
+  assert.ok(!/class="post-link" href="[^"]+\/tang-cuong\//.test(englishIndex), 'Do not inflate lesson counts with reinforcement pages');
+  const reinforcementHub = readFileSync(join(dist, 'english/tang-cuong/index.html'), 'utf8');
+  assert.match(reinforcementHub, /href="\/english\/tang-cuong\/" aria-current="page"/);
+  for (const grade of ['lop-1', 'lop-3']) {
+    const route = `/english/${grade}/tang-cuong/`;
+    assert.ok(reinforcementHub.includes(`href="${route}"`));
+    assert.ok(workbookHub.includes(`href="${route}"`), 'Exercise menu links to reinforcement lists');
+    const archive = readFileSync(join(dist, `english/${grade}/tang-cuong/index.html`), 'utf8');
+    assert.ok(!archive.includes('data-english-navigation="auto"'), 'Reinforcement index uses the blog layout');
+    assert.ok(archive.includes(`Extra ${grade} &amp; review`), 'Use specific H1 titles instead of identical app titles');
+    const links = [...archive.matchAll(/class="post-link" href="([^"]+)"/g)].map((m) => m[1]);
+    assert.ok(links.length > 0 && links.every((href) => href.startsWith(route)), 'Reinforcement membership stays within its grade');
+    for (const href of links) {
+      const relative = decodeURIComponent(href).replace(/^\/english\//, '');
+      const original = readFileSync(join(root, 'public/english', relative), 'utf8');
+      const built = readFileSync(join(dist, 'english', relative), 'utf8');
+      assert.equal(built, addEnglishNavigation(original, relative));
+      assert.ok(built.includes(`href="${route}"`), 'Return to the reinforcement list');
+      assert.equal(addEnglishNavigation(built, relative), built);
+    }
+    const gradeArchive = readFileSync(join(dist, `english/${grade}/index.html`), 'utf8');
+    assert.ok(gradeArchive.includes(`href="${route}"`), 'Grade pages link directly to extra practice');
+    assert.ok(!/class="post-link" href="[^"]+\/tang-cuong\//.test(gradeArchive), 'Keep extra practice out of ordinary lesson lists');
   }
   for (const [, href] of englishIndex.matchAll(/class="post-link" href="([^"]+)"/g)) {
     const output = join(dist, decodeURIComponent(href));
@@ -205,6 +231,9 @@ try {
   assert.ok(emptyGrade.includes('Bài học lớp 1 sẽ sớm được cập nhật.'));
   assert.ok(!emptyGrade.includes('class="post-link"'), 'Empty grade does not show lessons from another grade');
   assert.ok(emptyGrade.includes('href="/english/lop-1/bai-tap/"'), 'Workbooks stay available even if a grade has no lessons');
+  const emptyReinforcement = readFileSync(join(dist, 'english/lop-1/tang-cuong/index.html'), 'utf8');
+  assert.ok(emptyReinforcement.includes('Bài tập tăng cường lớp 1 sẽ sớm được cập nhật.'));
+  assert.ok(!emptyReinforcement.includes('class="post-link"'), 'Removed reinforcement files do not leave stale links');
   assert.deepEqual(readdirSync(join(dist, 'tags')), ['index.html']);
   assert.ok(readFileSync(join(dist, 'tags/index.html'), 'utf8').includes('Chưa có chủ đề nào.'));
   assert.ok(readFileSync(join(dist, 'index.html'), 'utf8').includes('Chưa có chủ đề nào.'));

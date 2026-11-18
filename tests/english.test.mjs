@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cleanEnglishTitle, getEnglishLessons } from '../src/lib/english.ts';
+import { cleanEnglishTitle, getEnglishLessons, getEnglishReinforcements } from '../src/lib/english.ts';
 
 test('English sources produce decoded titles, safe links and stable dates without reading the filesystem', () => {
   const files = {
@@ -72,4 +72,24 @@ test('display titles drop the bilingual suffix after decoding HTML entities and 
   });
   assert.equal(lessons.length, 1, 'Workbooks must not inflate lesson counts');
   assert.equal(lessons[0].title, 'Colors');
+});
+
+test('reinforcement folders have their own catalog, use topic headings and follow filename numbering', () => {
+  const sources = {
+    '/public/english/lop-1/lesson.html': '<title>Ordinary lesson</title><h1>Heading</h1>',
+    '/public/english/lop-3/tang-cuong/l3_02_school.html': '<title>Generic app</title><h1>🏫 Topic 2</h1>',
+    '/public/english/lop-3/tang-cuong/l3_01_family.html': '<title>Generic app</title><!-- <h1>Wrong</h1> --><script>const fake = "<h1>Wrong</h1>";</script><h1><span>👋 Topic 1 &amp; family</span></h1>',
+    '/public/english/lop-3/tang-cuong/unordered.html': '<title>Fallback title</title>',
+    '/public/english/lop-1/tang-cuong/l1_01_review.html': '<title>Generic app</title><h1>Review - Tiếng Anh Mỹ &amp; Tiếng Việt</h1>',
+    '/public/english/lop-1/tang-cuong/index.html': '<title>Archive</title>',
+  };
+  assert.deepEqual(getEnglishLessons(sources).map(({ title }) => title), ['Ordinary lesson']);
+  const exercises = getEnglishReinforcements(sources);
+  assert.equal(exercises.length, 4);
+  const third = exercises.filter(({ grade }) => grade === 'lop-3');
+  assert.deepEqual(third.map(({ title }) => title), ['👋 Topic 1 & family', '🏫 Topic 2', 'Fallback title']);
+  assert.deepEqual(third.map(({ order }) => order), [1, 2, undefined]);
+  assert.equal(exercises.find(({ grade }) => grade === 'lop-1').title, 'Review');
+  assert.ok(exercises.every(({ url }) => url.includes('/tang-cuong/')));
+  assert.deepEqual(getEnglishReinforcements(Object.fromEntries(Object.entries(sources).reverse())), exercises);
 });
