@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sách Bài Tập Tương Tác - Tiếng Anh Lớp 3 Global Success</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(160deg, #f0f9ff 0%, #fffbeb 55%, #fdf2f8 100%); min-height: 100vh; }
+    .font-display { font-family: 'Nunito', 'Inter', sans-serif; }
+    .zoom-card { transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease; }
+    .zoom-card:hover { transform: scale(1.06); z-index: 10; }
+    .font-size-xl .ex-word { font-size: 1.45rem !important; line-height: 2rem !important; }
+    .font-size-xl .ex-emoji { font-size: 4rem !important; }
+    .font-size-2xl .ex-word { font-size: 1.85rem !important; line-height: 2.5rem !important; }
+    .font-size-2xl .ex-emoji { font-size: 5rem !important; }
+  </style>
+</head>
+<body class="text-slate-800 antialiased font-size-xl">
+  <div class="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+    <header class="bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4 sm:p-5 mb-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-2xl shadow-sm shrink-0">📗</div>
+          <div>
+            <h1 class="font-display text-xl sm:text-2xl font-black text-slate-900">Sách Bài Tập Tiếng Anh Lớp 3</h1>
+            <p class="text-xs sm:text-sm text-slate-500">Mỗi phần 6 bài tập: Điền từ (Mục A) • Sắp xếp câu (Mục B) • Đọc hiểu (Mục D)</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-2">
+          <span class="text-xs font-bold text-amber-800">Tổng sao của bé:</span>
+          <span id="total-stars" class="font-display text-xl font-black text-amber-600">0 ⭐</span>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-bold text-slate-500 uppercase">Giọng đọc (US):</span>
+          <button id="v-female" type="button" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-rose-500 text-white shadow-sm">👩 Nữ</button>
+          <button id="v-male" type="button" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white border border-slate-200 text-slate-700">👨 Nam</button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-bold text-slate-500">🔍 Cỡ chữ:</span>
+          <button id="sz-md" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">Vừa</button>
+          <button id="sz-lg" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-500 text-white shadow-sm">Lớn</button>
+          <button id="sz-xl" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">Siêu lớn</button>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100">
+        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Chọn chủ đề (Unit 1 – 20):</p>
+        <div id="unit-bar" class="flex flex-wrap gap-1.5"></div>
+      </div>
+    </header>
+
+    <div class="bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+        <div>
+          <h2 id="unit-heading" class="font-display text-2xl font-black text-slate-900">Unit</h2>
+          <p id="unit-sub" class="text-sm text-slate-500 font-semibold">Chủ đề</p>
+        </div>
+        <div class="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl">
+          <button id="ex-tab-1" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-rose-600 shadow-sm">A. Điền từ (6)</button>
+          <button id="ex-tab-2" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600">B. Sắp xếp câu (6)</button>
+          <button id="ex-tab-3" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600">D. Đọc &amp; Chọn (6)</button>
+        </div>
+      </div>
+
+      <!-- MỤC A: WORD PUZZLE (6 ITEMS) -->
+      <div id="ex-1" class="space-y-5">
+        <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 text-center">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase text-emerald-700">Mục A: Chọn chữ cái đúng</span>
+            <span id="ex1-progress" class="text-xs font-bold text-emerald-700">Câu 1/6</span>
+          </div>
+          <div id="ex1-emoji" class="ex-emoji text-6xl mb-2">👃</div>
+          <div id="ex1-vi" class="text-base font-bold text-slate-600 mb-2">Cái mũi</div>
+          <div id="ex1-word" class="ex-word font-display text-3xl sm:text-4xl font-black tracking-widest text-slate-900 mb-3">N _ S E</div>
+          <div class="flex justify-center gap-2">
+            <button id="ex1-speak" type="button" class="px-4 py-2 rounded-xl bg-white border border-emerald-200 text-emerald-700 font-bold text-sm shadow-sm">🔊 Nghe từ mẫu</button>
+            <button id="ex1-next" type="button" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-sm shadow-sm">⏭️ Câu tiếp</button>
+          </div>
+        </div>
+        <div id="ex1-opts" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+        <div id="ex1-fb" class="min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center"></div>
+      </div>
+
+      <!-- MỤC B: MAKE SENTENCES (6 ITEMS) -->
+      <div id="ex-2" class="hidden space-y-5">
+        <div class="bg-sky-50 border border-sky-100 rounded-2xl p-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-bold uppercase text-sky-700">Mục B: Chạm các thẻ từ để ghép thành câu đúng</span>
+            <span id="ex2-progress" class="text-xs font-bold text-sky-700">Câu 1/6</span>
+          </div>
+          <p id="ex2-vi" class="ex-word font-display font-extrabold text-slate-800 mb-4">Gợi ý tiếng Việt</p>
+          <div id="ex2-answer-box" class="min-h-[68px] bg-white border-2 border-dashed border-sky-300 rounded-2xl p-3 flex flex-wrap items-center gap-2"></div>
+        </div>
+        <div id="ex2-pool" class="flex flex-wrap gap-2.5 justify-center"></div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <button id="ex2-clear" type="button" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm">🔄 Xếp lại</button>
+          <button id="ex2-check" type="button" class="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-sm">✅ Kiểm tra câu</button>
+          <button id="ex2-next" type="button" class="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-sm">⏭️ Câu tiếp</button>
+        </div>
+        <div id="ex2-fb" class="min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center"></div>
+      </div>
+
+      <!-- MỤC D: READ AND CIRCLE (6 ITEMS) -->
+      <div id="ex-3" class="hidden space-y-4">
+        <div class="bg-violet-50 border border-violet-100 rounded-2xl p-4">
+          <p class="text-xs font-bold uppercase text-violet-700">Mục D: Đọc và chọn đáp án đúng điền vào chỗ trống (6 câu)</p>
+        </div>
+        <div id="ex3-list" class="space-y-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const UNITS = [{"id": "U1-2", "name": "Unit 1–2: Hello & Names", "vi": "Chào hỏi & Tên tuổi", "puzzles": [{"e": "👋", "vi": "Xin chào", "miss": "H_LLO", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Hello"}, {"e": "🌅", "vi": "Buổi sáng", "miss": "M_RNING", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Morning"}, {"e": "🖐️", "vi": "Tạm biệt", "miss": "GOOD_YE", "ans": "B", "opts": ["B", "D", "P", "T"], "full": "Goodbye"}, {"e": "🏷️", "vi": "Tên", "miss": "N_ME", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Name"}, {"e": "🎂", "vi": "Tuổi / Già", "miss": "_LD", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Old"}, {"e": "😊", "vi": "Khỏe / Tốt", "miss": "F_NE", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Fine"}], "sentences": [{"vi": "Tên của bạn là gì?", "words": ["What's", "your", "name?"]}, {"vi": "Tên mình là Linh.", "words": ["My", "name's", "Linh."]}, {"vi": "Bạn có khỏe không?", "words": ["How", "are", "you?"]}, {"vi": "Mình khỏe, cảm ơn bạn.", "words": ["I'm", "fine,", "thank", "you."]}, {"vi": "Bạn bao nhiêu tuổi?", "words": ["How", "old", "are", "you?"]}, {"vi": "Mình tám tuổi.", "words": ["I'm", "eight", "years", "old."]}], "read": [{"q": "A: What's your name? — B: ___ name's Linh.", "opts": ["My", "Your", "She"], "ans": "My"}, {"q": "A: How ___ are you? — B: I'm eight years old.", "opts": ["old", "fine", "name"], "ans": "old"}, {"q": "A: How are you? — B: Fine, ___ you.", "opts": ["thank", "hello", "bye"], "ans": "thank"}, {"q": "Hello, I ___ Mai.", "opts": ["am", "is", "are"], "ans": "am"}, {"q": "___ morning, teacher!", "opts": ["Good", "Fine", "Nice"], "ans": "Good"}, {"q": "Goodbye, Ben! — ___, Lucy!", "opts": ["Bye", "Hi", "How"], "ans": "Bye"}]}, {"id": "U4", "name": "Unit 4: Our Bodies", "vi": "Cơ thể của chúng ta", "puzzles": [{"e": "👃", "vi": "Cái mũi", "miss": "N_SE", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Nose"}, {"e": "👀", "vi": "Đôi mắt", "miss": "_YES", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Eyes"}, {"e": "👂", "vi": "Đôi tai", "miss": "E_RS", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Ears"}, {"e": "👄", "vi": "Cái miệng", "miss": "M_UTH", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Mouth"}, {"e": "✋", "vi": "Bàn tay", "miss": "H_ND", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Hand"}, {"e": "🙂", "vi": "Cái đầu", "miss": "H_AD", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Head"}], "sentences": [{"vi": "Hãy chạm vào mũi của con!", "words": ["Touch", "your", "nose!"]}, {"vi": "Mở miệng ra nào!", "words": ["Open", "your", "mouth!"]}, {"vi": "Chạm vào tóc của con!", "words": ["Touch", "your", "hair!"]}, {"vi": "Đây là cái đầu của mình.", "words": ["This", "is", "my", "head."]}, {"vi": "Đây là đôi mắt của mình.", "words": ["These", "are", "my", "eyes."]}, {"vi": "Vỗ tay nào!", "words": ["Clap", "your", "hands!"]}], "read": [{"q": "Listen with your ___.", "opts": ["ears", "nose", "hair"], "ans": "ears"}, {"q": "Clap your ___.", "opts": ["hands", "eyes", "mouth"], "ans": "hands"}, {"q": "Close your ___.", "opts": ["eyes", "ears", "hair"], "ans": "eyes"}, {"q": "What's ___? — It's a nose.", "opts": ["this", "these", "they"], "ans": "this"}, {"q": "Touch ___ head!", "opts": ["your", "you", "I"], "ans": "your"}, {"q": "Open your ___!", "opts": ["mouth", "hair", "ear"], "ans": "mouth"}]}, {"id": "U5", "name": "Unit 5: My Hobbies", "vi": "Sở thích của em", "puzzles": [{"e": "🏊‍♀️", "vi": "Bơi lội", "miss": "SW_MMING", "ans": "I", "opts": ["I", "E", "A", "U"], "full": "Swimming"}, {"e": "📖", "vi": "Đọc sách", "miss": "R_ADING", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Reading"}, {"e": "✏️", "vi": "Vẽ tranh", "miss": "DR_WING", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Drawing"}, {"e": "🎤", "vi": "Ca hát", "miss": "S_NGING", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Singing"}, {"e": "💃", "vi": "Nhảy múa", "miss": "D_NCING", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Dancing"}, {"e": "👩‍🍳", "vi": "Nấu ăn", "miss": "C_OKING", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Cooking"}], "sentences": [{"vi": "Sở thích của bạn là gì?", "words": ["What's", "your", "hobby?"]}, {"vi": "Mình thích vẽ tranh.", "words": ["I", "like", "drawing."]}, {"vi": "Mình thích ca hát và nhảy múa.", "words": ["I", "like", "singing", "and", "dancing."]}, {"vi": "Mình thích đọc sách.", "words": ["I", "like", "reading", "books."]}, {"vi": "Mình thích bơi lội.", "words": ["It's", "swimming."]}, {"vi": "Mình thích nấu ăn cùng mẹ.", "words": ["I", "like", "cooking."]}], "read": [{"q": "What's your hobby? — I like ___ books.", "opts": ["reading", "cooking", "swimming"], "ans": "reading"}, {"q": "I like ___ a bike.", "opts": ["riding", "singing", "painting"], "ans": "riding"}, {"q": "What's ___ hobby? — It's dancing.", "opts": ["your", "you", "me"], "ans": "your"}, {"q": "I like ___ songs.", "opts": ["singing", "cooking", "running"], "ans": "singing"}, {"q": "I like ___ pictures.", "opts": ["painting", "swimming", "running"], "ans": "painting"}, {"q": "___ your hobby? — It's running.", "opts": ["What's", "Who's", "Where's"], "ans": "What's"}]}, {"id": "U6-7", "name": "Unit 6–7: Our School", "vi": "Trường học & Lớp học", "puzzles": [{"e": "📚", "vi": "Thư viện", "miss": "LIBR_RY", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Library"}, {"e": "🏫", "vi": "Trường học", "miss": "SCH_OL", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "School"}, {"e": "🛝", "vi": "Sân chơi", "miss": "PLAYGR_UND", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Playground"}, {"e": "💻", "vi": "Phòng máy", "miss": "C_MPUTER", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Computer"}, {"e": "🎵", "vi": "Âm nhạc", "miss": "M_SIC", "ans": "U", "opts": ["U", "A", "E", "O"], "full": "Music"}, {"e": "🎨", "vi": "Mỹ thuật", "miss": "_RT", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Art"}], "sentences": [{"vi": "Hãy đi đến thư viện nào.", "words": ["Let's", "go", "to", "the", "library."]}, {"vi": "Mời cả lớp đứng lên!", "words": ["Stand", "up,", "please!"]}, {"vi": "Mời các con ngồi xuống!", "words": ["Sit", "down,", "please!"]}, {"vi": "Em vào lớp được không ạ?", "words": ["May", "I", "come", "in?"]}, {"vi": "Đây có phải trường của bạn không?", "words": ["Is", "this", "our", "school?"]}, {"vi": "Hãy mở sách ra nào!", "words": ["Open", "your", "book!"]}], "read": [{"q": "We play in the ___.", "opts": ["playground", "library", "art room"], "ans": "playground"}, {"q": "___ your book, please!", "opts": ["Open", "Stand", "Sit"], "ans": "Open"}, {"q": "Is this our classroom? — Yes, it ___.", "opts": ["is", "are", "am"], "ans": "is"}, {"q": "Let's go to the art ___.", "opts": ["room", "desk", "pen"], "ans": "room"}, {"q": "May I go out? — Yes, you ___.", "opts": ["can", "do", "are"], "ans": "can"}, {"q": "___ quiet, please!", "opts": ["Be", "Go", "Come"], "ans": "Be"}]}, {"id": "U8", "name": "Unit 8: School Things", "vi": "Đồ dùng học tập", "puzzles": [{"e": "✏️", "vi": "Bút chì", "miss": "P_NCIL", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Pencil"}, {"e": "📕", "vi": "Quyển sách", "miss": "B_OK", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Book"}, {"e": "📏", "vi": "Thước kẻ", "miss": "R_LER", "ans": "U", "opts": ["U", "A", "E", "O"], "full": "Ruler"}, {"e": "🧼", "vi": "Cục tẩy", "miss": "ER_SER", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Eraser"}, {"e": "🎒", "vi": "Ba lô", "miss": "BACKP_CK", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Backpack"}, {"e": "🖍️", "vi": "Bút sáp", "miss": "CR_YON", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Crayon"}], "sentences": [{"vi": "Bạn có cục tẩy không?", "words": ["Do", "you", "have", "an", "eraser?"]}, {"vi": "Có, mình có.", "words": ["Yes,", "I", "do."]}, {"vi": "Không, mình không có.", "words": ["No,", "I", "don't."]}, {"vi": "Mình có một chiếc thước kẻ.", "words": ["I", "have", "a", "ruler."]}, {"vi": "Đây là hộp bút của mình.", "words": ["This", "is", "my", "pencil", "case."]}, {"vi": "Mình có hai quyển vở.", "words": ["I", "have", "two", "notebooks."]}], "read": [{"q": "I have a book ___ a notebook.", "opts": ["and", "is", "are"], "ans": "and"}, {"q": "Do you have a pen? — No, I ___.", "opts": ["don't", "do", "have"], "ans": "don't"}, {"q": "I have ___ eraser.", "opts": ["an", "a", "two"], "ans": "an"}, {"q": "Do you ___ a ruler? — Yes, I do.", "opts": ["have", "has", "is"], "ans": "have"}, {"q": "Put your pens in the pencil ___.", "opts": ["case", "bag", "book"], "ans": "case"}, {"q": "This is my ___ bag.", "opts": ["school", "pencil", "ruler"], "ans": "school"}]}, {"id": "U9", "name": "Unit 9: Colours", "vi": "Màu sắc", "puzzles": [{"e": "🟢", "vi": "Xanh lá", "miss": "GR_EN", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Green"}, {"e": "🔵", "vi": "Xanh dương", "miss": "BL_E", "ans": "U", "opts": ["U", "A", "E", "O"], "full": "Blue"}, {"e": "🟡", "vi": "Màu vàng", "miss": "YELL_W", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Yellow"}, {"e": "🟠", "vi": "Màu cam", "miss": "OR_NGE", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Orange"}, {"e": "🟤", "vi": "Màu nâu", "miss": "BR_WN", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Brown"}, {"e": "⚪", "vi": "Màu trắng", "miss": "WH_TE", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "White"}], "sentences": [{"vi": "Nó màu gì thế?", "words": ["What", "colour", "is", "it?"]}, {"vi": "Nó có màu xanh dương.", "words": ["It", "is", "blue."]}, {"vi": "Chúng có màu vàng.", "words": ["They", "are", "yellow."]}, {"vi": "Những cái bút màu gì?", "words": ["What", "colour", "are", "they?"]}, {"vi": "Quả táo màu đỏ.", "words": ["The", "apple", "is", "red."]}, {"vi": "Mình thích màu hồng.", "words": ["I", "like", "pink."]}], "read": [{"q": "What colour is the sun? — It's ___.", "opts": ["yellow", "blue", "black"], "ans": "yellow"}, {"q": "What colour are they? — ___ red.", "opts": ["They're", "It's", "I'm"], "ans": "They're"}, {"q": "The leaf is ___.", "opts": ["green", "purple", "pink"], "ans": "green"}, {"q": "The sky is ___.", "opts": ["blue", "brown", "black"], "ans": "blue"}, {"q": "What colour ___ your pen? — It's black.", "opts": ["is", "are", "am"], "ans": "is"}, {"q": "They ___ orange.", "opts": ["are", "is", "am"], "ans": "are"}]}, {"id": "U10", "name": "Unit 10: Break Time", "vi": "Giờ ra chơi", "puzzles": [{"e": "⚽", "vi": "Bóng đá", "miss": "F_OTBALL", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Football"}, {"e": "🏸", "vi": "Cầu lông", "miss": "BADM_NTON", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Badminton"}, {"e": "🏀", "vi": "Bóng rổ", "miss": "B_SKETBALL", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Basketball"}, {"e": "♟️", "vi": "Cờ vua", "miss": "CH_SS", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Chess"}, {"e": "🏓", "vi": "Bóng bàn", "miss": "T_NNIS", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Tennis"}, {"e": "💬", "vi": "Trò chuyện", "miss": "CH_T", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Chat"}], "sentences": [{"vi": "Bạn làm gì vào giờ ra chơi?", "words": ["What", "do", "you", "do", "at", "break", "time?"]}, {"vi": "Mình chơi cầu lông.", "words": ["I", "play", "badminton."]}, {"vi": "Mình chơi cờ vua.", "words": ["I", "play", "chess."]}, {"vi": "Mình chơi bóng đá giờ ra chơi.", "words": ["I", "play", "football", "at", "break", "time."]}, {"vi": "Mình giải trò chơi ô chữ.", "words": ["I", "do", "word", "puzzles."]}, {"vi": "Chúng mình trò chuyện với bạn.", "words": ["We", "chat", "with", "friends."]}], "read": [{"q": "I ___ basketball at break time.", "opts": ["play", "do", "chat"], "ans": "play"}, {"q": "I ___ word puzzles.", "opts": ["do", "play", "go"], "ans": "do"}, {"q": "What do you do ___ break time?", "opts": ["at", "in", "on"], "ans": "at"}, {"q": "I play ___ tennis.", "opts": ["table", "chair", "desk"], "ans": "table"}, {"q": "We ___ with our friends.", "opts": ["chat", "do", "make"], "ans": "chat"}, {"q": "Let's ___ football!", "opts": ["play", "do", "chat"], "ans": "play"}]}, {"id": "U11", "name": "Unit 11: My Family", "vi": "Gia đình", "puzzles": [{"e": "👨", "vi": "Bố / Ba", "miss": "F_THER", "ans": "A", "opts": ["A", "E", "O", "U"], "full": "Father"}, {"e": "👩", "vi": "Mẹ / Má", "miss": "M_THER", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Mother"}, {"e": "👦", "vi": "Anh/Em trai", "miss": "BR_THER", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Brother"}, {"e": "👧", "vi": "Chị/Em gái", "miss": "S_STER", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Sister"}, {"e": "👶", "vi": "Em bé", "miss": "B_BY", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Baby"}, {"e": "🏡", "vi": "Gia đình", "miss": "F_MILY", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Family"}], "sentences": [{"vi": "Kia là ai vậy?", "words": ["Who", "is", "that?"]}, {"vi": "Đó là mẹ của mình.", "words": ["That", "is", "my", "mother."]}, {"vi": "Anh trai mình mười tuổi.", "words": ["My", "brother", "is", "ten."]}, {"vi": "Đây là bố của mình.", "words": ["This", "is", "my", "father."]}, {"vi": "Chị gái mình chín tuổi.", "words": ["My", "sister", "is", "nine."]}, {"vi": "Chúng mình là một gia đình vui vẻ.", "words": ["We", "are", "a", "happy", "family."]}], "read": [{"q": "This is my ___. She is kind.", "opts": ["mother", "father", "brother"], "ans": "mother"}, {"q": "How old is your ___? — He is nine.", "opts": ["brother", "sister", "mother"], "ans": "brother"}, {"q": "___ is that? — That's my father.", "opts": ["Who", "What", "Where"], "ans": "Who"}, {"q": "I love my ___.", "opts": ["parents", "pencil", "desk"], "ans": "parents"}, {"q": "My grandfather ___ very kind.", "opts": ["is", "are", "am"], "ans": "is"}, {"q": "The ___ is sleeping.", "opts": ["baby", "grandfather", "uncle"], "ans": "baby"}]}, {"id": "U12", "name": "Unit 12: Jobs", "vi": "Nghề nghiệp", "puzzles": [{"e": "👨‍⚕️", "vi": "Bác sĩ", "miss": "D_CTOR", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Doctor"}, {"e": "👩‍🏫", "vi": "Giáo viên", "miss": "T_ACHER", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Teacher"}, {"e": "👩‍⚕️", "vi": "Y tá", "miss": "N_RSE", "ans": "U", "opts": ["U", "A", "E", "O"], "full": "Nurse"}, {"e": "👨‍🌾", "vi": "Nông dân", "miss": "F_RMER", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Farmer"}, {"e": "🚕", "vi": "Tài xế", "miss": "DR_VER", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Driver"}, {"e": "👨‍🍳", "vi": "Đầu bếp", "miss": "C_OK", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Cook"}], "sentences": [{"vi": "Nghề nghiệp của cô ấy là gì?", "words": ["What", "is", "her", "job?"]}, {"vi": "Cô ấy là giáo viên.", "words": ["She", "is", "a", "teacher."]}, {"vi": "Bố mình là bác sĩ.", "words": ["My", "father", "is", "a", "doctor."]}, {"vi": "Chú ấy là tài xế.", "words": ["He", "is", "a", "driver."]}, {"vi": "Bác ấy có phải nông dân không?", "words": ["Is", "he", "a", "farmer?"]}, {"vi": "Không, chú ấy là công nhân.", "words": ["No,", "he", "is", "a", "worker."]}], "read": [{"q": "A ___ teaches students.", "opts": ["teacher", "farmer", "cook"], "ans": "teacher"}, {"q": "A ___ grows rice.", "opts": ["farmer", "pilot", "singer"], "ans": "farmer"}, {"q": "A ___ flies a plane.", "opts": ["pilot", "nurse", "driver"], "ans": "pilot"}, {"q": "My mother is a ___. She works at a hospital.", "opts": ["nurse", "driver", "cook"], "ans": "nurse"}, {"q": "What's ___ job? — He's a cook.", "opts": ["his", "she", "her"], "ans": "his"}, {"q": "Is she a singer? — Yes, she ___.", "opts": ["is", "are", "am"], "ans": "is"}]}, {"id": "U13-14", "name": "Unit 13–14: My House", "vi": "Ngôi nhà & Phòng ngủ", "puzzles": [{"e": "🍳", "vi": "Nhà bếp", "miss": "K_TCHEN", "ans": "I", "opts": ["I", "E", "A", "O"], "full": "Kitchen"}, {"e": "🛏️", "vi": "Cái giường", "miss": "B_D", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Bed"}, {"e": "🛁", "vi": "Phòng tắm", "miss": "B_THROOM", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Bathroom"}, {"e": "🌷", "vi": "Khu vườn", "miss": "G_RDEN", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Garden"}, {"e": "💡", "vi": "Cái đèn", "miss": "L_MP", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Lamp"}, {"e": "🪟", "vi": "Cửa sổ", "miss": "W_NDOW", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Window"}], "sentences": [{"vi": "Phòng khách ở đâu?", "words": ["Where", "is", "the", "living", "room?"]}, {"vi": "Nó ở đây nè.", "words": ["It", "is", "here."]}, {"vi": "Có một chiếc giường trong phòng ngủ.", "words": ["There", "is", "a", "bed", "in", "the", "bedroom."]}, {"vi": "Có hai cái ghế trong phòng.", "words": ["There", "are", "two", "chairs."]}, {"vi": "Cửa sổ rất to.", "words": ["The", "window", "is", "big."]}, {"vi": "Cái đèn ở trên bàn.", "words": ["The", "lamp", "is", "on", "the", "desk."]}], "read": [{"q": "Mom cooks in the ___.", "opts": ["kitchen", "bedroom", "bathroom"], "ans": "kitchen"}, {"q": "There ___ two chairs in the room.", "opts": ["are", "is", "am"], "ans": "are"}, {"q": "We sleep in the ___.", "opts": ["bedroom", "kitchen", "garden"], "ans": "bedroom"}, {"q": "Where ___ the bathroom? — It's there.", "opts": ["is", "are", "am"], "ans": "is"}, {"q": "There ___ a big bed.", "opts": ["is", "are", "am"], "ans": "is"}, {"q": "There are flowers in the ___.", "opts": ["garden", "bed", "desk"], "ans": "garden"}]}, {"id": "U15-16", "name": "Unit 15–16: Food & Pets", "vi": "Đồ ăn & Thú cưng", "puzzles": [{"e": "🐶", "vi": "Con chó", "miss": "D_G", "ans": "O", "opts": ["O", "A", "U", "I"], "full": "Dog"}, {"e": "🐱", "vi": "Con mèo", "miss": "C_T", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Cat"}, {"e": "🐟", "vi": "Cá", "miss": "F_SH", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Fish"}, {"e": "🥛", "vi": "Sữa", "miss": "M_LK", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Milk"}, {"e": "🍞", "vi": "Bánh mì", "miss": "BR_AD", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Bread"}, {"e": "🐰", "vi": "Con thỏ", "miss": "R_BBIT", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Rabbit"}], "sentences": [{"vi": "Bạn có thích ăn cá không?", "words": ["Would", "you", "like", "some", "fish?"]}, {"vi": "Mình có một chú mèo.", "words": ["I", "have", "a", "cat."]}, {"vi": "Bạn có thú cưng nào không?", "words": ["Do", "you", "have", "any", "pets?"]}, {"vi": "Mình thích uống sữa.", "words": ["I", "like", "milk."]}, {"vi": "Cho mình xin ít cơm nhé.", "words": ["Some", "rice,", "please."]}, {"vi": "Mình có hai chú thỏ.", "words": ["I", "have", "two", "rabbits."]}], "read": [{"q": "Would you like some milk? — Yes, ___.", "opts": ["please", "thank", "no"], "ans": "please"}, {"q": "I have two ___.", "opts": ["rabbits", "rabbit", "a rabbit"], "ans": "rabbits"}, {"q": "Do you have ___ pets?", "opts": ["any", "a", "an"], "ans": "any"}, {"q": "Would you like some bread? — No, ___.", "opts": ["thanks", "please", "yes"], "ans": "thanks"}, {"q": "The ___ says meow.", "opts": ["cat", "dog", "bird"], "ans": "cat"}, {"q": "The bird can ___.", "opts": ["fly", "swim", "bark"], "ans": "fly"}]}, {"id": "U17-20", "name": "Unit 17–20: Toys & Zoo", "vi": "Đồ chơi & Sở thú", "puzzles": [{"e": "🐘", "vi": "Con voi", "miss": "EL_PHANT", "ans": "E", "opts": ["E", "A", "I", "O"], "full": "Elephant"}, {"e": "🤖", "vi": "Rô-bốt", "miss": "R_BOT", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Robot"}, {"e": "🦁", "vi": "Sư tử", "miss": "L_ON", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Lion"}, {"e": "🐒", "vi": "Con khỉ", "miss": "M_NKEY", "ans": "O", "opts": ["O", "A", "E", "U"], "full": "Monkey"}, {"e": "🪁", "vi": "Cánh diều", "miss": "K_TE", "ans": "I", "opts": ["I", "A", "E", "O"], "full": "Kite"}, {"e": "🚂", "vi": "Tàu hỏa", "miss": "TR_IN", "ans": "A", "opts": ["A", "E", "I", "O"], "full": "Train"}], "sentences": [{"vi": "Mình có một chú rô-bốt.", "words": ["I", "have", "a", "robot."]}, {"vi": "Bạn thấy gì ở sở thú?", "words": ["What", "can", "you", "see?"]}, {"vi": "Mình thấy một chú hổ.", "words": ["I", "can", "see", "a", "tiger."]}, {"vi": "Chú khỉ đang leo cây.", "words": ["The", "monkey", "is", "climbing."]}, {"vi": "Chú voi thật to lớn.", "words": ["The", "elephant", "is", "big."]}, {"vi": "Bạn ấy đang thả diều.", "words": ["He", "is", "flying", "a", "kite."]}], "read": [{"q": "The ___ is swinging on the tree.", "opts": ["monkey", "elephant", "fish"], "ans": "monkey"}, {"q": "I have a teddy ___.", "opts": ["bear", "kite", "ball"], "ans": "bear"}, {"q": "What can you ___? — I can see a lion.", "opts": ["see", "do", "have"], "ans": "see"}, {"q": "The giraffe has a long ___.", "opts": ["neck", "ear", "nose"], "ans": "neck"}, {"q": "She is ___ a kite.", "opts": ["flying", "riding", "playing"], "ans": "flying"}, {"q": "The peacock is ___.", "opts": ["dancing", "swimming", "cooking"], "ans": "dancing"}]}];
+    let currentUnitIdx = 0;
+    let voiceMode = 'female';
+    let stars = 0;
+    try { stars = parseInt(localStorage.getItem('sbt_g3_stars') || '0', 10) || 0; } catch(e) {}
+
+    let femaleUsVoice = null, maleUsVoice = null;
+    function isNat(v){ const n=v.name.toLowerCase(); return n.includes('natural')||n.includes('online')||n.includes('neural')||n.includes('google us english'); }
+    function pickVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const vs = window.speechSynthesis.getVoices();
+      const pool = vs.filter(v => v.lang.toLowerCase().startsWith('en-us'));
+      const list = pool.length ? pool : vs.filter(v => v.lang.toLowerCase().startsWith('en'));
+      femaleUsVoice = list.find(v => isNat(v) && /aria|jenny|ava|emma|google/i.test(v.name)) || list.find(isNat) || list[0] || null;
+      maleUsVoice = list.find(v => isNat(v) && /andrew|guy|brian|christopher|eric/i.test(v.name)) || list.find(v => v !== femaleUsVoice) || list[0] || null;
+    }
+    if ('speechSynthesis' in window) { pickVoices(); window.speechSynthesis.onvoiceschanged = pickVoices; }
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 0.9;
+      if (voiceMode === 'male') { if(maleUsVoice) u.voice = maleUsVoice; u.pitch = 0.9; }
+      else { if(femaleUsVoice) u.voice = femaleUsVoice; u.pitch = 1.05; }
+      window.speechSynthesis.speak(u);
+    }
+
+    let actx = null;
+    function chime(ok) {
+      try {
+        if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+        if (actx.state === 'suspended') actx.resume();
+        const play = (f, d, t) => {
+          const o = actx.createOscillator(), g = actx.createGain();
+          o.type = 'sine'; o.frequency.value = f;
+          g.gain.setValueAtTime(0.15, actx.currentTime + t);
+          g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + t + d);
+          o.connect(g); g.connect(actx.destination);
+          o.start(actx.currentTime + t); o.stop(actx.currentTime + t + d);
+        };
+        if (ok) { play(523, 0.12, 0); play(659, 0.12, 0.09); play(784, 0.25, 0.18); }
+        else { play(240, 0.2, 0); }
+      } catch(e) {}
+    }
+
+    function addStar() {
+      stars += 1;
+      document.getElementById('total-stars').textContent = `${stars} ⭐`;
+      try { localStorage.setItem('sbt_g3_stars', String(stars)); } catch(e) {}
+    }
+
+    function renderUnitBar() {
+      const bar = document.getElementById('unit-bar');
+      bar.innerHTML = UNITS.map((u, i) => `
+        <button type="button" data-u="${i}" class="u-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${i===currentUnitIdx ? 'bg-sky-500 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-sky-100'}">
+          ${u.id}
+        </button>
+      `).join('');
+      bar.querySelectorAll('.u-btn').forEach(b => b.addEventListener('click', () => loadUnit(parseInt(b.dataset.u, 10))));
+    }
+
+    let ex1Idx = 0, ex2Idx = 0, ex2Chosen = [], ex2Shuffled = [];
+
+    function loadUnit(idx) {
+      currentUnitIdx = idx;
+      const u = UNITS[idx];
+      document.getElementById('unit-heading').textContent = u.name;
+      document.getElementById('unit-sub').textContent = u.vi;
+      renderUnitBar();
+      ex1Idx = 0; renderEx1();
+      ex2Idx = 0; renderEx2();
+      renderEx3();
+    }
+
+    function switchEx(n) {
+      [1,2,3].forEach(k => {
+        document.getElementById(`ex-${k}`).classList.toggle('hidden', k !== n);
+        document.getElementById(`ex-tab-${k}`).className = k === n
+          ? 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-rose-600 shadow-sm'
+          : 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600';
+      });
+    }
+
+    function renderEx1() {
+      const list = UNITS[currentUnitIdx].puzzles;
+      const p = list[ex1Idx];
+      document.getElementById('ex1-progress').textContent = `Câu ${ex1Idx + 1}/${list.length}`;
+      document.getElementById('ex1-emoji').textContent = p.e;
+      document.getElementById('ex1-vi').textContent = p.vi;
+      document.getElementById('ex1-word').textContent = p.miss;
+      document.getElementById('ex1-fb').textContent = 'Chạm vào chữ cái đúng bên dưới!';
+      document.getElementById('ex1-fb').className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center';
+      const opts = document.getElementById('ex1-opts');
+      opts.innerHTML = p.opts.map(ch => `
+        <button type="button" data-ch="${ch}" class="ex1-opt zoom-card bg-white border-2 border-slate-200 hover:border-emerald-400 rounded-2xl py-4 font-display font-black text-3xl text-slate-900 shadow-sm">${ch}</button>
+      `).join('');
+      opts.querySelectorAll('.ex1-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const fb = document.getElementById('ex1-fb');
+          if (btn.dataset.ch === p.ans) {
+            chime(true); addStar();
+            document.getElementById('ex1-word').textContent = p.full.toUpperCase();
+            speakText(p.full);
+            fb.textContent = `🎉 Tuyệt vời! Đáp án là ${p.full.toUpperCase()}!`;
+            fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-emerald-100 text-emerald-800 flex items-center justify-center';
+            setTimeout(() => { ex1Idx = (ex1Idx + 1) % list.length; renderEx1(); }, 1300);
+          } else {
+            chime(false);
+            fb.textContent = 'Chưa đúng rồi, bé thử chữ khác nhé!';
+            fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-amber-100 text-amber-900 flex items-center justify-center';
+          }
+        });
+      });
+    }
+
+    function renderEx2() {
+      const sents = UNITS[currentUnitIdx].sentences;
+      const item = sents[ex2Idx];
+      document.getElementById('ex2-progress').textContent = `Câu ${ex2Idx + 1}/${sents.length}`;
+      document.getElementById('ex2-vi').textContent = `Nghĩa: "${item.vi}"`;
+      ex2Chosen = [];
+      ex2Shuffled = item.words.map((w, i) => ({ w, id: i })).sort(() => Math.random() - 0.5);
+      document.getElementById('ex2-fb').textContent = 'Chạm các từ bên dưới theo đúng thứ tự!';
+      document.getElementById('ex2-fb').className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center';
+      paintEx2();
+    }
+
+    function paintEx2() {
+      const box = document.getElementById('ex2-answer-box');
+      const pool = document.getElementById('ex2-pool');
+      box.innerHTML = ex2Chosen.length
+        ? ex2Chosen.map((c, idx) => `<button type="button" data-idx="${idx}" class="chosen-w zoom-card px-4 py-2 rounded-xl bg-sky-500 text-white font-display font-extrabold ex-word shadow-sm">${c.w}</button>`).join('')
+        : '<span class="text-sm text-slate-400 font-semibold">Câu bé ghép sẽ hiện ở đây...</span>';
+
+      const usedIds = new Set(ex2Chosen.map(c => c.id));
+      pool.innerHTML = ex2Shuffled.map(item => `
+        <button type="button" data-id="${item.id}" ${usedIds.has(item.id) ? 'disabled' : ''} class="pool-w zoom-card px-4 py-2.5 rounded-2xl border-2 font-display font-extrabold ex-word transition ${usedIds.has(item.id) ? 'bg-slate-100 border-slate-100 text-slate-300' : 'bg-white border-sky-200 hover:border-rose-400 text-slate-900 shadow-sm'}">${item.w}</button>
+      `).join('');
+
+      pool.querySelectorAll('.pool-w:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const obj = ex2Shuffled.find(x => x.id === parseInt(btn.dataset.id, 10));
+          if (obj) { speakText(obj.w); ex2Chosen.push(obj); paintEx2(); }
+        });
+      });
+      box.querySelectorAll('.chosen-w').forEach(btn => {
+        btn.addEventListener('click', () => { ex2Chosen.splice(parseInt(btn.dataset.idx, 10), 1); paintEx2(); });
+      });
+    }
+
+    function renderEx3() {
+      const qs = UNITS[currentUnitIdx].read;
+      const list = document.getElementById('ex3-list');
+      list.innerHTML = qs.map((q, qi) => `
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5">
+          <div class="flex items-start justify-between gap-3 mb-3">
+            <p class="ex-word font-display font-extrabold text-slate-900">${qi + 1}. ${q.q}</p>
+            <button type="button" data-q="${q.q.replace('___', q.ans)}" class="ex3-say shrink-0 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-sky-700">🔊 Nghe</button>
+          </div>
+          <div class="flex flex-wrap gap-2.5">
+            ${q.opts.map(opt => `<button type="button" data-qi="${qi}" data-opt="${opt}" class="ex3-ans zoom-card px-4 py-2.5 rounded-xl bg-white border-2 border-slate-200 hover:border-violet-400 font-display font-extrabold text-base sm:text-lg text-slate-800 shadow-sm">${opt}</button>`).join('')}
+          </div>
+          <p id="ex3-fb-${qi}" class="text-sm font-bold mt-2.5 min-h-[20px]"></p>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.ex3-say').forEach(b => b.addEventListener('click', () => speakText(b.dataset.q)));
+      list.querySelectorAll('.ex3-ans').forEach(b => {
+        b.addEventListener('click', () => {
+          const qi = parseInt(b.dataset.qi, 10);
+          const q = qs[qi];
+          const fb = document.getElementById(`ex3-fb-${qi}`);
+          if (b.dataset.opt === q.ans) {
+            chime(true); addStar();
+            b.className = 'ex3-ans zoom-card px-4 py-2.5 rounded-xl bg-emerald-500 border-2 border-emerald-500 font-display font-extrabold text-base sm:text-lg text-white shadow-sm';
+            fb.textContent = `🎉 Chính xác! Đáp án là "${q.ans}"`;
+            fb.className = 'text-sm font-bold mt-2.5 text-emerald-700';
+            speakText(q.q.replace('___', q.ans));
+          } else {
+            chime(false);
+            fb.textContent = 'Chưa đúng rồi, bé thử chọn từ khác nhé!';
+            fb.className = 'text-sm font-bold mt-2.5 text-amber-700';
+          }
+        });
+      });
+    }
+
+    document.getElementById('total-stars').textContent = `${stars} ⭐`;
+    document.getElementById('ex-tab-1').addEventListener('click', () => switchEx(1));
+    document.getElementById('ex-tab-2').addEventListener('click', () => switchEx(2));
+    document.getElementById('ex-tab-3').addEventListener('click', () => switchEx(3));
+    document.getElementById('ex1-speak').addEventListener('click', () => speakText(UNITS[currentUnitIdx].puzzles[ex1Idx].full));
+    document.getElementById('ex1-next').addEventListener('click', () => { const l=UNITS[currentUnitIdx].puzzles; ex1Idx=(ex1Idx+1)%l.length; renderEx1(); });
+    document.getElementById('ex2-clear').addEventListener('click', () => { ex2Chosen = []; paintEx2(); });
+    document.getElementById('ex2-next').addEventListener('click', () => { const s=UNITS[currentUnitIdx].sentences; ex2Idx=(ex2Idx+1)%s.length; renderEx2(); });
+    document.getElementById('ex2-check').addEventListener('click', () => {
+      const target = UNITS[currentUnitIdx].sentences[ex2Idx].words.join(' ');
+      const yours = ex2Chosen.map(c => c.w).join(' ');
+      const fb = document.getElementById('ex2-fb');
+      if (yours === target) {
+        chime(true); addStar();
+        speakText(target);
+        fb.textContent = `🎉 Chính xác: "${target}"`;
+        fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-emerald-100 text-emerald-800 flex items-center justify-center';
+      } else {
+        chime(false);
+        fb.textContent = 'Thứ tự chưa đúng rồi, bé bấm Xếp lại hoặc chạm vào từ để bỏ ra nhé!';
+        fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-amber-100 text-amber-900 flex items-center justify-center';
+      }
+    });
+
+    const setV = (m) => {
+      voiceMode = m;
+      document.getElementById('v-female').className = m==='female' ? 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-rose-500 text-white shadow-sm' : 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white border border-slate-200 text-slate-700';
+      document.getElementById('v-male').className = m==='male' ? 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-white shadow-sm' : 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white border border-slate-200 text-slate-700';
+    };
+    document.getElementById('v-female').addEventListener('click', () => setV('female'));
+    document.getElementById('v-male').addEventListener('click', () => setV('male'));
+
+    const setSz = (cls, id) => {
+      document.body.classList.remove('font-size-xl', 'font-size-2xl');
+      if (cls) document.body.classList.add(cls);
+      ['sz-md','sz-lg','sz-xl'].forEach(k => {
+        document.getElementById(k).className = k===id ? 'px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-500 text-white shadow-sm' : 'px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700';
+      });
+    };
+    document.getElementById('sz-md').addEventListener('click', () => setSz('', 'sz-md'));
+    document.getElementById('sz-lg').addEventListener('click', () => setSz('font-size-xl', 'sz-lg'));
+    document.getElementById('sz-xl').addEventListener('click', () => setSz('font-size-2xl', 'sz-xl'));
+
+    loadUnit(0);
+  </script>
+</body>
+</html>

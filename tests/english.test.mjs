@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getEnglishLessons } from '../src/lib/english.ts';
+import { cleanEnglishTitle, getEnglishLessons } from '../src/lib/english.ts';
 
 test('English sources produce decoded titles, safe links and stable dates without reading the filesystem', () => {
   const files = {
@@ -54,4 +54,22 @@ test('numbered units follow natural order instead of placing Unit 10 before Unit
   ]));
   const lessons = getEnglishLessons(sources);
   assert.deepEqual(lessons.map(({ title }) => Number(title.match(/Unit (\d+)/)[1])), [1, 2, 10, 16]);
+});
+
+test('display titles drop the bilingual suffix after decoding HTML entities and Unicode', () => {
+  for (const separator of [' - ', ' – ', ' — ', ' | ', ' • ', ': ', ' ']) {
+    for (const suffix of ['Tiếng Anh Mỹ & Tiếng Việt', 'Tiếng Anh Mỹ &amp; Tiếng Việt', 'Tiếng Anh Mỹ và Tiếng Việt']) {
+      assert.equal(cleanEnglishTitle(`Colors${separator}${suffix}`), 'Colors');
+      assert.equal(cleanEnglishTitle(`Colors${separator}${suffix}`.normalize('NFD')), 'Colors');
+    }
+  }
+  const unchanged = 'Tiếng Anh Mỹ & Tiếng Việt - Bài hát';
+  assert.equal(cleanEnglishTitle(unchanged), unchanged, 'Only remove a trailing suffix');
+  const lessons = getEnglishLessons({
+    '/public/english/lop-1/Colors.html': '<title>Colors - Tiếng Anh Mỹ &amp; Tiếng Việt</title>',
+    '/public/english/lop-1/bai-tap/index.html': '<title>Workbook one</title>',
+    '/public/english/lop-3/bai-tap/index.html': '<title>Workbook three</title>',
+  });
+  assert.equal(lessons.length, 1, 'Workbooks must not inflate lesson counts');
+  assert.equal(lessons[0].title, 'Colors');
 });

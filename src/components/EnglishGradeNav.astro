@@ -1,23 +1,25 @@
 ---
 import { ENGLISH_GRADES, type EnglishGrade } from '../lib/english-grades';
 import type { EnglishLesson } from '../lib/english';
+import { ENGLISH_WORKBOOKS } from '../lib/english-workbooks';
 
-interface Props { lessons: EnglishLesson[]; activeGrade?: EnglishGrade }
-const { lessons, activeGrade } = Astro.props;
+interface Props { lessons: EnglishLesson[]; activeGrade?: EnglishGrade; activeSection?: 'lessons' | 'workbooks' }
+const { lessons, activeGrade, activeSection = 'lessons' } = Astro.props;
 const entries = [
-  { url: '/english/', label: 'Tất cả', count: lessons.length, active: !activeGrade },
+  { url: '/english/', label: 'Tất cả', count: lessons.length, countLabel: 'bài học', active: activeSection === 'lessons' && !activeGrade },
   ...ENGLISH_GRADES.map(({ slug, label }) => ({
     url: `/english/${slug}/`, label,
     count: lessons.filter(({ grade }) => grade === slug).length,
-    active: activeGrade === slug,
+    countLabel: 'bài học', active: activeSection === 'lessons' && activeGrade === slug,
   })),
+  { url: '/english/bai-tap/', label: 'Bài tập', count: ENGLISH_WORKBOOKS.length, countLabel: 'bộ bài tập', active: activeSection === 'workbooks' },
 ];
 ---
 
 <nav class="english-grades" aria-label="Chọn lớp học English">
-  {entries.map(({ url, label, count, active }) => (
+  {entries.map(({ url, label, count, countLabel, active }) => (
     <a href={url} aria-current={active ? 'page' : undefined}>
-      {label} <span class="grade-count">({count}<span class="sr-only"> bài học</span>)</span>
+      {label} <span class="grade-count">({count}<span class="sr-only"> {countLabel}</span>)</span>
     </a>
   ))}
 </nav>

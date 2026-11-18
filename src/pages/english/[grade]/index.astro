@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import EnglishGradeNav from '../../../components/EnglishGradeNav.astro';
 import EnglishLessonList from '../../../components/EnglishLessonList.astro';
+import EnglishWorkbookLink from '../../../components/EnglishWorkbookLink.astro';
 import { ENGLISH_GRADES } from '../../../lib/english-grades';
 import { englishLessons } from '../../../lib/english-library';
 
@@ -17,6 +18,7 @@ const lessons = englishLessons.filter((lesson) => lesson.grade === grade.slug);
   <h1 class="page-title">English {grade.label}</h1>
   <p class="topic-note">Cùng học từ vựng, nghe phát âm, hát và chơi bằng tiếng Anh.</p>
   <EnglishGradeNav lessons={englishLessons} activeGrade={grade.slug} />
+  <EnglishWorkbookLink grade={grade.slug} />
 
   {lessons.length ? (
     <section aria-labelledby="english-lessons">

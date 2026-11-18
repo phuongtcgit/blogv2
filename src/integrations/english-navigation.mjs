@@ -2,6 +2,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getEnglishReturnTarget } from '../lib/english-grades.ts';
+import { ENGLISH_WORKBOOKS } from '../lib/english-workbooks.ts';
 
 /** @param {string} [path] */
 export function englishNavigationForPath(path = '') {
@@ -42,7 +43,8 @@ export default function englishNavigationIntegration() {
             const relative = prefix + file.name;
             if (file.isDirectory()) {
               await visit(path, `${relative}/`);
-            } else if (file.isFile() && /\.html?$/i.test(file.name) && !/^index\.html?$/i.test(file.name)) {
+            } else if (file.isFile() && /\.html?$/i.test(file.name)
+              && (!/^index\.html?$/i.test(file.name) || ENGLISH_WORKBOOKS.some(({ path }) => path === relative))) {
               const html = await readFile(path, 'utf8');
               const result = addEnglishNavigation(html, relative);
               if (result !== html) {
@@ -57,7 +59,7 @@ export default function englishNavigationIntegration() {
         } catch (error) {
           if (error.code !== 'ENOENT' || error.path !== directory) throw error;
         }
-        logger.info(`Added return navigation to ${updated} English lessons.`);
+        logger.info(`Added return navigation to ${updated} English pages.`);
       },
     },
   };

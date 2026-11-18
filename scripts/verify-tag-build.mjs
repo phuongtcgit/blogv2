@@ -5,6 +5,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 import { addEnglishNavigation } from '../src/integrations/english-navigation.mjs';
+import { ENGLISH_WORKBOOKS } from '../src/lib/english-workbooks.ts';
 
 // Exercise real Astro builds without editing the author's content or dist/.
 const source = process.cwd();
@@ -59,7 +60,7 @@ function htmlFiles(dir) {
 try {
   const english = join(root, 'public/english');
   mkdirSync(english, { recursive: true });
-  const lesson = '<!doctype html><html lang="en"><head><title>Words &amp; &lt;games&gt;</title></head><body><p>LESSON_BODY</p></body></html>';
+  const lesson = '<!doctype html><html lang="en"><head><title>Words &amp; &lt;games&gt; - Tiếng Anh Mỹ &amp; Tiếng Việt</title></head><body><p>LESSON_BODY</p></body></html>';
   writeFileSync(join(english, '2026-11-17-words & games.html'), lesson);
   writeFileSync(join(english, 'notes.txt'), 'Not a lesson');
   for (const grade of ['lop-1', 'lop-3']) {
@@ -91,6 +92,23 @@ try {
   assert.ok(englishIndex.includes('Words &amp; &lt;games&gt;'), 'Decode and safely escape the lesson title');
   assert.ok(!englishIndex.includes('notes.txt'), 'Only list HTML lessons');
   assert.ok(englishIndex.includes('aria-current="page"'), 'Highlight the English navigation');
+  const workbookHub = readFileSync(join(dist, 'english/bai-tap/index.html'), 'utf8');
+  assert.ok(!workbookHub.includes('data-english-navigation="auto"'), 'Workbook hub uses the blog navigation');
+  assert.match(workbookHub, /href="\/english\/bai-tap\/" aria-current="page"/);
+  for (const workbook of ENGLISH_WORKBOOKS) {
+    assert.ok(workbookHub.includes(`href="${workbook.url}"`), 'Workbook missing from the exercise menu');
+    assert.ok(!englishIndex.includes(`class="post-link" href="${workbook.url}"`), 'Do not list workbooks as lessons');
+    const archive = readFileSync(join(dist, `english/${workbook.grade}/index.html`), 'utf8');
+    assert.ok(archive.includes(`href="${workbook.url}"`), 'Grade page must link directly to its workbook');
+    const original = readFileSync(join(root, 'public/english', workbook.path), 'utf8');
+    const built = readFileSync(join(dist, 'english', workbook.path), 'utf8');
+    assert.equal(built, addEnglishNavigation(original, workbook.path), 'Keep exercise content and scripts while adding navigation');
+    assert.ok(built.includes(`href="/english/${workbook.grade}/"`));
+    assert.equal(addEnglishNavigation(built, workbook.path), built, 'No duplicate workbook return buttons');
+  }
+  for (const [, title] of englishIndex.matchAll(/class="post-link" href="[^"]+">([^<]*)<\/a>/g)) {
+    assert.ok(!title.includes('Tiếng Anh Mỹ'), `Untrimmed display title: ${title}`);
+  }
   for (const [, href] of englishIndex.matchAll(/class="post-link" href="([^"]+)"/g)) {
     const output = join(dist, decodeURIComponent(href));
     assert.ok(existsSync(output), `Broken English lesson link: ${href}`);
@@ -178,12 +196,15 @@ try {
   resetPosts();
   writePost('empty', []);
   writePost('blank', ['', ' \t ']);
-  rmSync(join(english, 'lop-1'), { recursive: true, force: true });
+  for (const file of htmlFiles(join(english, 'lop-1'))) {
+    if (file !== join(english, 'lop-1/bai-tap/index.html')) rmSync(file);
+  }
   const empty = build();
   assert.equal(empty.status, 0, empty.output);
   const emptyGrade = readFileSync(join(dist, 'english/lop-1/index.html'), 'utf8');
   assert.ok(emptyGrade.includes('Bài học lớp 1 sẽ sớm được cập nhật.'));
   assert.ok(!emptyGrade.includes('class="post-link"'), 'Empty grade does not show lessons from another grade');
+  assert.ok(emptyGrade.includes('href="/english/lop-1/bai-tap/"'), 'Workbooks stay available even if a grade has no lessons');
   assert.deepEqual(readdirSync(join(dist, 'tags')), ['index.html']);
   assert.ok(readFileSync(join(dist, 'tags/index.html'), 'utf8').includes('Chưa có chủ đề nào.'));
   assert.ok(readFileSync(join(dist, 'index.html'), 'utf8').includes('Chưa có chủ đề nào.'));

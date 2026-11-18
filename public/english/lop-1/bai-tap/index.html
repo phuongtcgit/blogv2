@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sách Bài Tập Tương Tác - Tiếng Anh Lớp 1 Global Success</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(160deg, #fffbeb 0%, #f0f9ff 55%, #fdf2f8 100%); min-height: 100vh; }
+    .font-display { font-family: 'Nunito', 'Inter', sans-serif; }
+    .zoom-card { transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease; }
+    .zoom-card:hover { transform: scale(1.06); z-index: 10; }
+    .zoom-card.selected { transform: scale(1.1); border-color: #f59e0b; box-shadow: 0 12px 24px rgba(245, 158, 11, 0.35); z-index: 20; }
+    .font-size-xl .ex-word { font-size: 1.75rem !important; line-height: 2.2rem !important; }
+    .font-size-xl .ex-emoji { font-size: 4rem !important; }
+    .font-size-2xl .ex-word { font-size: 2.25rem !important; line-height: 2.7rem !important; }
+    .font-size-2xl .ex-emoji { font-size: 5rem !important; }
+  </style>
+</head>
+<body class="text-slate-800 antialiased font-size-xl">
+  <div class="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+    <header class="bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4 sm:p-5 mb-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center text-2xl shadow-sm shrink-0">📘</div>
+          <div>
+            <h1 class="font-display text-xl sm:text-2xl font-black text-slate-900">Sách Bài Tập Tiếng Anh Lớp 1</h1>
+            <p class="text-xs sm:text-sm text-slate-500">16 Unit • Nghe &amp; Khoanh tròn • Nhìn &amp; Nối từ • Điền chữ cái</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-2">
+          <span class="text-xs font-bold text-amber-800">Tổng sao của bé:</span>
+          <span id="total-stars" class="font-display text-xl font-black text-amber-600">0 ⭐</span>
+        </div>
+      </div>
+
+      <!-- Controls: Voice + Font Size Zoom -->
+      <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-bold text-slate-500 uppercase">Giọng đọc (US):</span>
+          <button id="v-female" type="button" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-rose-500 text-white shadow-sm">👩 Nữ</button>
+          <button id="v-male" type="button" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white border border-slate-200 text-slate-700">👨 Nam</button>
+          <button id="v-human" type="button" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white border border-slate-200 text-slate-700">🎙️ Người thật</button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-bold text-slate-500">🔍 Cỡ chữ:</span>
+          <button id="sz-md" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">Vừa</button>
+          <button id="sz-lg" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-500 text-white shadow-sm">Lớn</button>
+          <button id="sz-xl" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">Siêu lớn</button>
+        </div>
+      </div>
+
+      <!-- Unit Selector -->
+      <div class="mt-4 pt-3 border-t border-slate-100">
+        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Chọn bài học (Unit 1 – 16):</p>
+        <div id="unit-bar" class="flex flex-wrap gap-1.5"></div>
+      </div>
+    </header>
+
+    <!-- Active Unit Header & Exercise Tabs -->
+    <div class="bg-white/95 border border-sky-100 rounded-3xl shadow-sm p-4 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+        <div>
+          <h2 id="unit-heading" class="font-display text-2xl font-black text-slate-900">Unit 1</h2>
+          <p id="unit-sub" class="text-sm text-slate-500 font-semibold">Sân chơi</p>
+        </div>
+        <div class="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl">
+          <button id="ex-tab-1" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-rose-600 shadow-sm">1. Nghe &amp; Chọn</button>
+          <button id="ex-tab-2" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600">2. Nhìn &amp; Nối</button>
+          <button id="ex-tab-3" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600">3. Điền chữ cái</button>
+        </div>
+      </div>
+
+      <!-- EX 1: LISTEN AND CIRCLE -->
+      <div id="ex-1" class="space-y-5">
+        <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 sm:p-5 text-center">
+          <p class="text-xs font-bold uppercase text-sky-700 mb-2">Bài 1: Nghe và chạm vào hình đúng</p>
+          <button id="ex1-play" type="button" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-display font-black text-base sm:text-lg shadow-md transition active:scale-95">
+            🔊 Nghe từ cần tìm
+          </button>
+          <p id="ex1-hint" class="text-sm font-semibold text-slate-500 mt-2">Bấm nút loa rồi chọn 1 trong 4 hình bên dưới nhé!</p>
+        </div>
+        <div id="ex1-grid" class="grid grid-cols-2 gap-4"></div>
+        <div id="ex1-fb" class="min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center"></div>
+      </div>
+
+      <!-- EX 2: LOOK AND MATCH -->
+      <div id="ex-2" class="hidden space-y-5">
+        <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-center">
+          <p class="text-xs font-bold uppercase text-amber-800">Bài 2: Chạm 1 hình bên trái rồi chạm từ tiếng Anh tương ứng bên phải</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4 sm:gap-8">
+          <div id="ex2-left" class="space-y-3"></div>
+          <div id="ex2-right" class="space-y-3"></div>
+        </div>
+        <div id="ex2-fb" class="min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center">Chạm hình rồi chạm chữ để nối!</div>
+      </div>
+
+      <!-- EX 3: COMPLETE THE WORD -->
+      <div id="ex-3" class="hidden space-y-5">
+        <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 text-center">
+          <p class="text-xs font-bold uppercase text-emerald-700 mb-3">Bài 3: Chọn chữ cái còn thiếu</p>
+          <div id="ex3-emoji" class="ex-emoji text-6xl mb-2">⚽</div>
+          <div id="ex3-vi" class="text-base font-bold text-slate-600 mb-2">Quả bóng</div>
+          <div id="ex3-word" class="ex-word font-display text-3xl sm:text-4xl font-black tracking-widest text-slate-900 mb-3">B _ L L</div>
+          <button id="ex3-speak" type="button" class="px-4 py-2 rounded-xl bg-white border border-emerald-200 text-emerald-700 font-bold text-sm shadow-sm">🔊 Nghe gợi ý</button>
+        </div>
+        <div id="ex3-opts" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+        <div id="ex3-fb" class="min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const UNITS = [{"id": 1, "name": "Unit 1: Playground", "vi": "Sân chơi", "words": [{"w": "Ball", "a": "ball", "e": "⚽", "vi": "Quả bóng", "miss": "B_LL", "ans": "A", "opts": ["A", "E", "O", "U"]}, {"w": "Bike", "a": "bike", "e": "🚲", "vi": "Xe đạp", "miss": "B_KE", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Book", "a": "book", "e": "📖", "vi": "Quyển sách", "miss": "BO_K", "ans": "O", "opts": ["O", "A", "I", "U"]}, {"w": "Slide", "a": "slide", "e": "🛝", "vi": "Cầu trượt", "miss": "SL_DE", "ans": "I", "opts": ["I", "E", "A", "O"]}, {"w": "Swing", "a": "swing", "e": "🪁", "vi": "Xích đu", "miss": "SW_NG", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Bench", "a": "bench", "e": "🪑", "vi": "Ghế dài", "miss": "B_NCH", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Bell", "a": "bell", "e": "🔔", "vi": "Cái chuông", "miss": "B_LL", "ans": "E", "opts": ["E", "A", "I", "U"]}, {"w": "Tree", "a": "tree", "e": "🌳", "vi": "Cây xanh", "miss": "TR_E", "ans": "E", "opts": ["E", "A", "I", "O"]}]}, {"id": 2, "name": "Unit 2: Dining Room", "vi": "Phòng ăn", "words": [{"w": "Cake", "a": "cake", "e": "🎂", "vi": "Bánh kem", "miss": "C_KE", "ans": "A", "opts": ["A", "E", "I", "O"]}, {"w": "Car", "a": "car", "e": "🚗", "vi": "Ô tô", "miss": "C_R", "ans": "A", "opts": ["A", "O", "U", "E"]}, {"w": "Cat", "a": "cat", "e": "🐱", "vi": "Con mèo", "miss": "C_T", "ans": "A", "opts": ["A", "E", "I", "U"]}, {"w": "Cup", "a": "cup", "e": "☕", "vi": "Cái cốc", "miss": "C_P", "ans": "U", "opts": ["U", "A", "O", "I"]}, {"w": "Spoon", "a": "spoon", "e": "🥄", "vi": "Cái thìa", "miss": "SP_ON", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Bowl", "a": "bowl", "e": "🥣", "vi": "Cái bát", "miss": "B_WL", "ans": "O", "opts": ["O", "A", "E", "I"]}, {"w": "Cookie", "a": "cookie", "e": "🍪", "vi": "Bánh quy", "miss": "C_OKIE", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Candle", "a": "candle", "e": "🕯️", "vi": "Ngọn nến", "miss": "C_NDLE", "ans": "A", "opts": ["A", "E", "I", "O"]}]}, {"id": 3, "name": "Unit 3: Street Market", "vi": "Ở chợ", "words": [{"w": "Apple", "a": "apple", "e": "🍎", "vi": "Quả táo", "miss": "_PPLE", "ans": "A", "opts": ["A", "E", "O", "I"]}, {"w": "Bag", "a": "bag", "e": "👜", "vi": "Cái túi", "miss": "B_G", "ans": "A", "opts": ["A", "E", "I", "U"]}, {"w": "Can", "a": "can", "e": "🥫", "vi": "Lon nước", "miss": "C_N", "ans": "A", "opts": ["A", "O", "E", "I"]}, {"w": "Hat", "a": "hat", "e": "👒", "vi": "Cái mũ", "miss": "H_T", "ans": "A", "opts": ["A", "O", "U", "E"]}, {"w": "Banana", "a": "banana", "e": "🍌", "vi": "Quả chuối", "miss": "B_NANA", "ans": "A", "opts": ["A", "E", "I", "O"]}, {"w": "Orange", "a": "orange", "e": "🍊", "vi": "Quả cam", "miss": "_RANGE", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Mango", "a": "mango", "e": "🥭", "vi": "Quả xoài", "miss": "M_NGO", "ans": "A", "opts": ["A", "E", "O", "I"]}, {"w": "Pear", "a": "pear", "e": "🍐", "vi": "Quả lê", "miss": "P_AR", "ans": "E", "opts": ["E", "A", "I", "O"]}]}, {"id": 4, "name": "Unit 4: Bedroom", "vi": "Phòng ngủ", "words": [{"w": "Desk", "a": "desk", "e": "🖥️", "vi": "Bàn học", "miss": "D_SK", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Dog", "a": "dog", "e": "🐶", "vi": "Con chó", "miss": "D_G", "ans": "O", "opts": ["O", "A", "U", "I"]}, {"w": "Door", "a": "door", "e": "🚪", "vi": "Cửa ra vào", "miss": "DO_R", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Duck", "a": "duck", "e": "🦆", "vi": "Con vịt", "miss": "D_CK", "ans": "U", "opts": ["U", "A", "O", "I"]}, {"w": "Bed", "a": "bed", "e": "🛏️", "vi": "Cái giường", "miss": "B_D", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Doll", "a": "doll", "e": "🪆", "vi": "Búp bê", "miss": "D_LL", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Lamp", "a": "lamp", "e": "💡", "vi": "Đèn ngủ", "miss": "L_MP", "ans": "A", "opts": ["A", "E", "I", "O"]}, {"w": "Clock", "a": "clock", "e": "⏰", "vi": "Đồng hồ", "miss": "CL_CK", "ans": "O", "opts": ["O", "A", "E", "U"]}]}, {"id": 5, "name": "Unit 5: Fish & Chips", "vi": "Cửa hàng ăn", "words": [{"w": "Fish", "a": "fish", "e": "🐟", "vi": "Con cá", "miss": "F_SH", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Chips", "a": "chips", "e": "🍟", "vi": "Khoai chiên", "miss": "CH_PS", "ans": "I", "opts": ["I", "E", "A", "U"]}, {"w": "Chicken", "a": "chicken", "e": "🍗", "vi": "Thịt gà", "miss": "CH_CKEN", "ans": "I", "opts": ["I", "E", "A", "O"]}, {"w": "Milk", "a": "milk", "e": "🥛", "vi": "Sữa", "miss": "M_LK", "ans": "I", "opts": ["I", "A", "E", "U"]}, {"w": "Pizza", "a": "pizza", "e": "🍕", "vi": "Bánh Pizza", "miss": "P_ZZA", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Rice", "a": "rice", "e": "🍚", "vi": "Cơm", "miss": "R_CE", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Egg", "a": "egg", "e": "🥚", "vi": "Trứng", "miss": "_GG", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Juice", "a": "juice", "e": "🧃", "vi": "Nước ép", "miss": "J_ICE", "ans": "U", "opts": ["U", "A", "E", "O"]}]}, {"id": 6, "name": "Unit 6: Classroom", "vi": "Lớp học", "words": [{"w": "Pen", "a": "pen", "e": "🖊️", "vi": "Bút mực", "miss": "P_N", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Pencil", "a": "pencil", "e": "✏️", "vi": "Bút chì", "miss": "P_NCIL", "ans": "E", "opts": ["E", "A", "I", "U"]}, {"w": "Red", "a": "red", "e": "🔴", "vi": "Màu đỏ", "miss": "R_D", "ans": "E", "opts": ["E", "A", "O", "I"]}, {"w": "Bell", "a": "bell", "e": "🔔", "vi": "Chuông", "miss": "B_LL", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Eraser", "a": "eraser", "e": "🧼", "vi": "Cục tẩy", "miss": "_RASER", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Ruler", "a": "ruler", "e": "📏", "vi": "Thước kẻ", "miss": "R_LER", "ans": "U", "opts": ["U", "A", "E", "O"]}, {"w": "Chair", "a": "chair", "e": "🪑", "vi": "Cái ghế", "miss": "CH_IR", "ans": "A", "opts": ["A", "E", "I", "O"]}, {"w": "Board", "a": "board", "e": "🟩", "vi": "Bảng lớp", "miss": "B_ARD", "ans": "O", "opts": ["O", "A", "E", "U"]}]}, {"id": 7, "name": "Unit 7: Garden", "vi": "Khu vườn", "words": [{"w": "Garden", "a": "garden", "e": "🏡", "vi": "Khu vườn", "miss": "_ARDEN", "ans": "G", "opts": ["G", "C", "B", "D"]}, {"w": "Gate", "a": "gate", "e": "⛩️", "vi": "Cái cổng", "miss": "_ATE", "ans": "G", "opts": ["G", "K", "D", "T"]}, {"w": "Girl", "a": "girl", "e": "👧", "vi": "Bé gái", "miss": "_IRL", "ans": "G", "opts": ["G", "B", "P", "M"]}, {"w": "Goat", "a": "goat", "e": "🐐", "vi": "Con dê", "miss": "_OAT", "ans": "G", "opts": ["G", "B", "C", "D"]}, {"w": "Flower", "a": "flower", "e": "🌸", "vi": "Bông hoa", "miss": "FL_WER", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Grass", "a": "grass", "e": "🌱", "vi": "Bãi cỏ", "miss": "_RASS", "ans": "G", "opts": ["G", "B", "C", "D"]}, {"w": "Bee", "a": "bee", "e": "🐝", "vi": "Con ong", "miss": "B_E", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Frog", "a": "frog", "e": "🐸", "vi": "Con ếch", "miss": "FR_G", "ans": "O", "opts": ["O", "A", "E", "U"]}]}, {"id": 8, "name": "Unit 8: In the Park", "vi": "Công viên", "words": [{"w": "Hair", "a": "hair", "e": "💇‍♀️", "vi": "Mái tóc", "miss": "_AIR", "ans": "H", "opts": ["H", "B", "C", "M"]}, {"w": "Hand", "a": "hand", "e": "✋", "vi": "Bàn tay", "miss": "_AND", "ans": "H", "opts": ["H", "L", "S", "B"]}, {"w": "Head", "a": "head", "e": "🙂", "vi": "Cái đầu", "miss": "_EAD", "ans": "H", "opts": ["H", "R", "B", "D"]}, {"w": "Horse", "a": "horse", "e": "🐴", "vi": "Con ngựa", "miss": "_ORSE", "ans": "H", "opts": ["H", "M", "C", "P"]}, {"w": "Hat", "a": "hat", "e": "🧢", "vi": "Cái mũ", "miss": "_AT", "ans": "H", "opts": ["H", "B", "C", "M"]}, {"w": "Hill", "a": "hill", "e": "⛰️", "vi": "Ngọn đồi", "miss": "_ILL", "ans": "H", "opts": ["H", "B", "M", "P"]}, {"w": "Kite", "a": "kite", "e": "🪁", "vi": "Cánh diều", "miss": "K_TE", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Happy", "a": "happy", "e": "😄", "vi": "Vui vẻ", "miss": "_APPY", "ans": "H", "opts": ["H", "B", "M", "S"]}]}, {"id": 9, "name": "Unit 9: In the Shop", "vi": "Cửa hàng", "words": [{"w": "Clock", "a": "clock", "e": "⏰", "vi": "Đồng hồ", "miss": "CL_CK", "ans": "O", "opts": ["O", "A", "I", "U"]}, {"w": "Lock", "a": "lock", "e": "🔒", "vi": "Ổ khóa", "miss": "L_CK", "ans": "O", "opts": ["O", "A", "E", "I"]}, {"w": "Mop", "a": "mop", "e": "🧹", "vi": "Cây lau", "miss": "M_P", "ans": "O", "opts": ["O", "A", "U", "I"]}, {"w": "Pot", "a": "pot", "e": "🍲", "vi": "Cái nồi", "miss": "P_T", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Box", "a": "box", "e": "📦", "vi": "Cái hộp", "miss": "B_X", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Fox", "a": "fox", "e": "🦊", "vi": "Chú cáo", "miss": "F_X", "ans": "O", "opts": ["O", "A", "I", "U"]}, {"w": "Socks", "a": "socks", "e": "🧦", "vi": "Đôi tất", "miss": "S_CKS", "ans": "O", "opts": ["O", "A", "E", "I"]}, {"w": "Shop", "a": "shop", "e": "🏪", "vi": "Cửa hàng", "miss": "SH_P", "ans": "O", "opts": ["O", "A", "E", "U"]}]}, {"id": 10, "name": "Unit 10: At the Zoo", "vi": "Sở thú", "words": [{"w": "Monkey", "a": "monkey", "e": "🐒", "vi": "Con khỉ", "miss": "_ONKEY", "ans": "M", "opts": ["M", "N", "B", "P"]}, {"w": "Mouse", "a": "mouse", "e": "🐭", "vi": "Con chuột", "miss": "_OUSE", "ans": "M", "opts": ["M", "H", "C", "D"]}, {"w": "Mango", "a": "mango", "e": "🥭", "vi": "Quả xoài", "miss": "_ANGO", "ans": "M", "opts": ["M", "L", "B", "T"]}, {"w": "Mother", "a": "mother", "e": "👩", "vi": "Mẹ", "miss": "_OTHER", "ans": "M", "opts": ["M", "F", "B", "S"]}, {"w": "Lion", "a": "lion", "e": "🦁", "vi": "Sư tử", "miss": "L_ON", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Tiger", "a": "tiger", "e": "🐯", "vi": "Con hổ", "miss": "T_GER", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Bear", "a": "bear", "e": "🐻", "vi": "Con gấu", "miss": "B_AR", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Panda", "a": "panda", "e": "🐼", "vi": "Gấu trúc", "miss": "P_NDA", "ans": "A", "opts": ["A", "E", "I", "O"]}]}, {"id": 11, "name": "Unit 11: Bus Stop", "vi": "Trạm xe buýt", "words": [{"w": "Bus", "a": "bus", "e": "🚌", "vi": "Xe buýt", "miss": "B_S", "ans": "U", "opts": ["U", "A", "O", "I"]}, {"w": "Truck", "a": "truck", "e": "🚚", "vi": "Xe tải", "miss": "TR_CK", "ans": "U", "opts": ["U", "A", "O", "E"]}, {"w": "Sun", "a": "sun", "e": "☀️", "vi": "Mặt trời", "miss": "S_N", "ans": "U", "opts": ["U", "A", "O", "I"]}, {"w": "Running", "a": "running", "e": "🏃", "vi": "Đang chạy", "miss": "R_NNING", "ans": "U", "opts": ["U", "A", "E", "O"]}, {"w": "Taxi", "a": "taxi", "e": "🚕", "vi": "Xe taxi", "miss": "T_XI", "ans": "A", "opts": ["A", "E", "I", "O"]}, {"w": "Train", "a": "train", "e": "🚂", "vi": "Tàu hỏa", "miss": "TR_IN", "ans": "A", "opts": ["A", "E", "I", "O"]}, {"w": "Road", "a": "road", "e": "🛣️", "vi": "Con đường", "miss": "R_AD", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Helmet", "a": "helmet", "e": "⛑️", "vi": "Mũ bảo hiểm", "miss": "H_LMET", "ans": "E", "opts": ["E", "A", "I", "O"]}]}, {"id": 12, "name": "Unit 12: At the Lake", "vi": "Bên hồ", "words": [{"w": "Lake", "a": "lake", "e": "🏞️", "vi": "Hồ nước", "miss": "_AKE", "ans": "L", "opts": ["L", "B", "C", "M"]}, {"w": "Leaf", "a": "leaf", "e": "🍃", "vi": "Chiếc lá", "miss": "_EAF", "ans": "L", "opts": ["L", "T", "B", "D"]}, {"w": "Lemon", "a": "lemon", "e": "🍋", "vi": "Quả chanh", "miss": "_EMON", "ans": "L", "opts": ["L", "M", "N", "R"]}, {"w": "Boat", "a": "boat", "e": "⛵", "vi": "Con thuyền", "miss": "B_AT", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Duck", "a": "duck", "e": "🦆", "vi": "Con vịt", "miss": "D_CK", "ans": "U", "opts": ["U", "A", "E", "O"]}, {"w": "Lotus", "a": "lotus", "e": "🪷", "vi": "Hoa sen", "miss": "_OTUS", "ans": "L", "opts": ["L", "B", "M", "N"]}, {"w": "Bridge", "a": "bridge", "e": "🌉", "vi": "Cây cầu", "miss": "BR_DGE", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Swan", "a": "swan", "e": "🦢", "vi": "Thiên nga", "miss": "SW_N", "ans": "A", "opts": ["A", "E", "I", "O"]}]}, {"id": 13, "name": "Unit 13: Canteen", "vi": "Nhà ăn", "words": [{"w": "Banana", "a": "banana", "e": "🍌", "vi": "Quả chuối", "miss": "BA_ANA", "ans": "N", "opts": ["N", "M", "L", "P"]}, {"w": "Noodles", "a": "noodles", "e": "🍜", "vi": "Mì / Phở", "miss": "_OODLES", "ans": "N", "opts": ["N", "M", "D", "B"]}, {"w": "Nuts", "a": "nut", "e": "🥜", "vi": "Hạt", "miss": "_UTS", "ans": "N", "opts": ["N", "C", "B", "M"]}, {"w": "Napkin", "a": "napkin", "e": "🧻", "vi": "Khăn giấy", "miss": "_APKIN", "ans": "N", "opts": ["N", "M", "P", "B"]}, {"w": "Soup", "a": "soup", "e": "🍲", "vi": "Món súp", "miss": "S_UP", "ans": "O", "opts": ["O", "A", "E", "I"]}, {"w": "Bread", "a": "bread", "e": "🍞", "vi": "Bánh mì", "miss": "BR_AD", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Milk", "a": "milk", "e": "🥛", "vi": "Sữa", "miss": "_ILK", "ans": "M", "opts": ["M", "N", "S", "B"]}, {"w": "Snack", "a": "snack", "e": "🥨", "vi": "Đồ ăn nhẹ", "miss": "SN_CK", "ans": "A", "opts": ["A", "E", "I", "O"]}]}, {"id": 14, "name": "Unit 14: Toy Shop", "vi": "Tiệm đồ chơi", "words": [{"w": "Teddy", "a": "teddy", "e": "🧸", "vi": "Gấu bông", "miss": "_EDDY", "ans": "T", "opts": ["T", "D", "B", "P"]}, {"w": "Tiger", "a": "tiger", "e": "🐯", "vi": "Con hổ", "miss": "_IGER", "ans": "T", "opts": ["T", "L", "B", "C"]}, {"w": "Top", "a": "top", "e": "🪀", "vi": "Con quay", "miss": "_OP", "ans": "T", "opts": ["T", "M", "P", "H"]}, {"w": "Turtle", "a": "turtle", "e": "🐢", "vi": "Con rùa", "miss": "_URTLE", "ans": "T", "opts": ["T", "D", "B", "G"]}, {"w": "Train", "a": "train", "e": "🚂", "vi": "Tàu hỏa", "miss": "_RAIN", "ans": "T", "opts": ["T", "B", "C", "D"]}, {"w": "Robot", "a": "robot", "e": "🤖", "vi": "Rô-bốt", "miss": "R_BOT", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Puzzle", "a": "puzzle", "e": "🧩", "vi": "Xếp hình", "miss": "P_ZZLE", "ans": "U", "opts": ["U", "A", "E", "O"]}, {"w": "Drum", "a": "drum", "e": "🥁", "vi": "Cái trống", "miss": "DR_M", "ans": "U", "opts": ["U", "A", "E", "O"]}]}, {"id": 15, "name": "Unit 15: Football", "vi": "Bóng đá", "words": [{"w": "Football", "a": "football", "e": "⚽", "vi": "Bóng đá", "miss": "_OOTBALL", "ans": "F", "opts": ["F", "B", "P", "V"]}, {"w": "Father", "a": "father", "e": "👨", "vi": "Bố", "miss": "_ATHER", "ans": "F", "opts": ["F", "M", "B", "D"]}, {"w": "Face", "a": "face", "e": "😊", "vi": "Khuôn mặt", "miss": "_ACE", "ans": "F", "opts": ["F", "R", "P", "L"]}, {"w": "Foot", "a": "foot", "e": "🦶", "vi": "Bàn chân", "miss": "_OOT", "ans": "F", "opts": ["F", "B", "H", "G"]}, {"w": "Kick", "a": "kick", "e": "🦵", "vi": "Đá bóng", "miss": "K_CK", "ans": "I", "opts": ["I", "A", "E", "O"]}, {"w": "Goal", "a": "goal", "e": "🥅", "vi": "Bàn thắng", "miss": "G_AL", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Team", "a": "team", "e": "🧑‍🤝‍🧑", "vi": "Đội bóng", "miss": "T_AM", "ans": "E", "opts": ["E", "A", "I", "O"]}, {"w": "Trophy", "a": "trophy", "e": "🏆", "vi": "Cúp vô địch", "miss": "TR_PHY", "ans": "O", "opts": ["O", "A", "E", "U"]}]}, {"id": 16, "name": "Unit 16: At Home", "vi": "Ở nhà", "words": [{"w": "Window", "a": "window", "e": "🪟", "vi": "Cửa sổ", "miss": "_INDOW", "ans": "W", "opts": ["W", "V", "M", "H"]}, {"w": "Water", "a": "water", "e": "💧", "vi": "Nước", "miss": "_ATER", "ans": "W", "opts": ["W", "M", "B", "L"]}, {"w": "Washing", "a": "wash", "e": "🧼", "vi": "Rửa tay", "miss": "_ASHING", "ans": "W", "opts": ["W", "M", "C", "D"]}, {"w": "Wall", "a": "wall", "e": "🧱", "vi": "Bức tường", "miss": "_ALL", "ans": "W", "opts": ["W", "B", "C", "T"]}, {"w": "Home", "a": "home", "e": "🏠", "vi": "Ngôi nhà", "miss": "H_ME", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Sofa", "a": "sofa", "e": "🛋️", "vi": "Ghế sô-pha", "miss": "S_FA", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Broom", "a": "broom", "e": "🧹", "vi": "Cái chổi", "miss": "BR_OM", "ans": "O", "opts": ["O", "A", "E", "U"]}, {"w": "Key", "a": "key", "e": "🔑", "vi": "Chìa khóa", "miss": "K_Y", "ans": "E", "opts": ["E", "A", "I", "O"]}]}];
+    let currentUnitIdx = 0;
+    let currentEx = 1;
+    let voiceMode = 'female';
+    let stars = 0;
+    try { stars = parseInt(localStorage.getItem('sbt_g1_stars') || '0', 10) || 0; } catch(e) {}
+
+    let femaleUsVoice = null, maleUsVoice = null;
+    const humanCache = {};
+    let audioEl = null;
+
+    function isNat(v){ const n=v.name.toLowerCase(); return n.includes('natural')||n.includes('online')||n.includes('neural')||n.includes('google us english'); }
+    function pickVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const vs = window.speechSynthesis.getVoices();
+      const pool = vs.filter(v => v.lang.toLowerCase().startsWith('en-us'));
+      const list = pool.length ? pool : vs.filter(v => v.lang.toLowerCase().startsWith('en'));
+      femaleUsVoice = list.find(v => isNat(v) && /aria|jenny|ava|emma|google/i.test(v.name)) || list.find(isNat) || list[0] || null;
+      maleUsVoice = list.find(v => isNat(v) && /andrew|guy|brian|christopher|eric/i.test(v.name)) || list.find(v => v !== femaleUsVoice) || list[0] || null;
+    }
+    if ('speechSynthesis' in window) { pickVoices(); window.speechSynthesis.onvoiceschanged = pickVoices; }
+
+    function stopSpeech(){ if('speechSynthesis' in window) window.speechSynthesis.cancel(); if(audioEl){audioEl.pause();audioEl=null;} }
+    async function speakWord(word, audioKey) {
+      stopSpeech();
+      if (voiceMode === 'human' && audioKey) {
+        try {
+          if (!(audioKey in humanCache)) {
+            const r = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(audioKey)}`);
+            if (r.ok) {
+              const d = await r.json();
+              let u = '';
+              for (const e of d) { const f = (e.phonetics||[]).find(p=>p.audio&&p.audio.includes('-us.mp3')) || (e.phonetics||[]).find(p=>p.audio&&p.audio.startsWith('http')); if(f){u=f.audio;break;} }
+              humanCache[audioKey] = u || null;
+            } else humanCache[audioKey] = null;
+          }
+          if (humanCache[audioKey]) { audioEl = new Audio(humanCache[audioKey]); await audioEl.play(); return; }
+        } catch(e) {}
+      }
+      if (!('speechSynthesis' in window)) return;
+      const u = new SpeechSynthesisUtterance(word);
+      u.lang = 'en-US'; u.rate = 0.88;
+      if (voiceMode === 'male') { if(maleUsVoice) u.voice = maleUsVoice; u.pitch = 0.9; }
+      else { if(femaleUsVoice) u.voice = femaleUsVoice; u.pitch = 1.05; }
+      window.speechSynthesis.speak(u);
+    }
+
+    let actx = null;
+    function chime(ok) {
+      try {
+        if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+        if (actx.state === 'suspended') actx.resume();
+        const play = (f, d, t) => {
+          const o = actx.createOscillator(), g = actx.createGain();
+          o.type = 'sine'; o.frequency.value = f;
+          g.gain.setValueAtTime(0.15, actx.currentTime + t);
+          g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + t + d);
+          o.connect(g); g.connect(actx.destination);
+          o.start(actx.currentTime + t); o.stop(actx.currentTime + t + d);
+        };
+        if (ok) { play(523, 0.12, 0); play(659, 0.12, 0.09); play(784, 0.25, 0.18); }
+        else { play(240, 0.2, 0); }
+      } catch(e) {}
+    }
+
+    function addStar() {
+      stars += 1;
+      document.getElementById('total-stars').textContent = `${stars} ⭐`;
+      try { localStorage.setItem('sbt_g1_stars', String(stars)); } catch(e) {}
+    }
+
+    // Exercise States
+    let ex1Idx = 0, ex1Order = [];
+    let ex2SelLeft = null, ex2Matched = new Set();
+    let ex3Idx = 0;
+
+    function renderUnitBar() {
+      const bar = document.getElementById('unit-bar');
+      bar.innerHTML = UNITS.map((u, i) => `
+        <button type="button" data-u="${i}" class="u-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${i===currentUnitIdx ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-rose-100'}">
+          U${u.id}
+        </button>
+      `).join('');
+      bar.querySelectorAll('.u-btn').forEach(b => b.addEventListener('click', () => loadUnit(parseInt(b.dataset.u, 10))));
+    }
+
+    function loadUnit(idx) {
+      currentUnitIdx = idx;
+      const u = UNITS[idx];
+      document.getElementById('unit-heading').textContent = u.name;
+      document.getElementById('unit-sub').textContent = u.vi;
+      renderUnitBar();
+      initEx1();
+      initEx2();
+      initEx3();
+    }
+
+    function switchEx(n) {
+      currentEx = n;
+      [1,2,3].forEach(k => {
+        document.getElementById(`ex-${k}`).classList.toggle('hidden', k !== n);
+        document.getElementById(`ex-tab-${k}`).className = k === n
+          ? 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-rose-600 shadow-sm'
+          : 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold text-slate-600';
+      });
+    }
+
+    // EX 1
+    function initEx1() {
+      const u = UNITS[currentUnitIdx];
+      ex1Order = [...u.words].sort(() => Math.random() - 0.5);
+      ex1Idx = 0;
+      renderEx1();
+    }
+    function renderEx1() {
+      const u = UNITS[currentUnitIdx];
+      const target = ex1Order[ex1Idx];
+      document.getElementById('ex1-hint').textContent = `Câu ${ex1Idx + 1}/${ex1Order.length} • Bấm loa để nghe từ cần tìm!`;
+      document.getElementById('ex1-fb').textContent = 'Chạm vào hình đúng bên trên!';
+      document.getElementById('ex1-fb').className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center';
+      const others = u.words.filter(w => w.w !== target.w).sort(() => Math.random() - 0.5).slice(0, 3);
+      const choices = [target, ...others].sort(() => Math.random() - 0.5);
+      const grid = document.getElementById('ex1-grid');
+      grid.innerHTML = choices.map(w => `
+        <button type="button" data-w="${w.w}" class="ex1-opt zoom-card bg-white border-2 border-slate-200 hover:border-sky-400 rounded-3xl p-5 flex flex-col items-center justify-center gap-2 shadow-sm">
+          <span class="ex-emoji text-5xl">${w.e}</span>
+          <span class="ex-word font-display font-extrabold text-lg text-slate-800">${w.vi}</span>
+        </button>
+      `).join('');
+      grid.querySelectorAll('.ex1-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const fb = document.getElementById('ex1-fb');
+          if (btn.dataset.w === target.w) {
+            chime(true); addStar();
+            btn.classList.add('selected', 'bg-emerald-50', 'border-emerald-500');
+            fb.textContent = `🎉 Đúng rồi! ${target.w} (${target.vi})!`;
+            fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-emerald-100 text-emerald-800 flex items-center justify-center';
+            setTimeout(() => { ex1Idx = (ex1Idx + 1) % ex1Order.length; renderEx1(); }, 1200);
+          } else {
+            chime(false);
+            fb.textContent = 'Ối chưa đúng rồi, bé nghe lại loa và thử lại nhé!';
+            fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-amber-100 text-amber-900 flex items-center justify-center';
+          }
+        });
+      });
+    }
+
+    // EX 2
+    function initEx2() {
+      const u = UNITS[currentUnitIdx];
+      ex2SelLeft = null;
+      ex2Matched = new Set();
+      const left = document.getElementById('ex2-left');
+      const right = document.getElementById('ex2-right');
+      const shuffled = [...u.words].sort(() => Math.random() - 0.5);
+
+      left.innerHTML = u.words.map(w => `
+        <button type="button" data-w="${w.w}" data-a="${w.a}" class="ex2-l zoom-card w-full bg-white border-2 border-sky-200 rounded-2xl p-4 flex items-center justify-center gap-3 shadow-sm">
+          <span class="ex-emoji text-4xl">${w.e}</span>
+          <span class="text-sm font-bold text-slate-500">${w.vi}</span>
+        </button>
+      `).join('');
+
+      right.innerHTML = shuffled.map(w => `
+        <button type="button" data-w="${w.w}" data-a="${w.a}" class="ex2-r zoom-card w-full bg-white border-2 border-rose-200 rounded-2xl p-4 flex items-center justify-center shadow-sm">
+          <span class="ex-word font-display font-black text-xl text-slate-900">${w.w}</span>
+        </button>
+      `).join('');
+
+      left.querySelectorAll('.ex2-l').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (ex2Matched.has(btn.dataset.w)) return;
+          speakWord(btn.dataset.w, btn.dataset.a);
+          left.querySelectorAll('.ex2-l').forEach(x => x.classList.remove('selected'));
+          btn.classList.add('selected');
+          ex2SelLeft = btn.dataset.w;
+        });
+      });
+
+      right.querySelectorAll('.ex2-r').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (ex2Matched.has(btn.dataset.w)) return;
+          speakWord(btn.dataset.w, btn.dataset.a);
+          const fb = document.getElementById('ex2-fb');
+          if (!ex2SelLeft) { fb.textContent = 'Bé hãy chạm vào 1 hình bên trái trước nhé!'; return; }
+          if (btn.dataset.w === ex2SelLeft) {
+            chime(true); addStar();
+            ex2Matched.add(btn.dataset.w);
+            const lBtn = left.querySelector(`[data-w="${ex2SelLeft}"]`);
+            lBtn.classList.remove('selected'); lBtn.classList.add('bg-emerald-50', 'border-emerald-400', 'opacity-70');
+            btn.classList.add('bg-emerald-50', 'border-emerald-400', 'opacity-70');
+            ex2SelLeft = null;
+            fb.textContent = ex2Matched.size === u.words.length ? '🎉 Tuyệt vời! Bé nối đúng hết cả bài rồi!' : '🎉 Chuẩn luôn! Nối tiếp hình khác nhé!';
+            fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-emerald-100 text-emerald-800 flex items-center justify-center';
+          } else {
+            chime(false);
+            fb.textContent = 'Chưa khớp rồi, bé thử chọn lại nhé!';
+            fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-amber-100 text-amber-900 flex items-center justify-center';
+          }
+        });
+      });
+    }
+
+    // EX 3
+    function initEx3() { ex3Idx = 0; renderEx3(); }
+    function renderEx3() {
+      const u = UNITS[currentUnitIdx];
+      const item = u.words[ex3Idx];
+      document.getElementById('ex3-emoji').textContent = item.e;
+      document.getElementById('ex3-vi').textContent = `${item.vi} (${ex3Idx + 1}/${u.words.length})`;
+      document.getElementById('ex3-word').textContent = item.miss;
+      document.getElementById('ex3-fb').textContent = 'Chạm vào chữ cái đúng bên dưới!';
+      document.getElementById('ex3-fb').className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-slate-50 text-slate-500 flex items-center justify-center';
+      const opts = document.getElementById('ex3-opts');
+      opts.innerHTML = item.opts.map(ch => `
+        <button type="button" data-ch="${ch}" class="ex3-opt zoom-card bg-white border-2 border-slate-200 hover:border-emerald-400 rounded-2xl py-4 font-display font-black text-3xl text-slate-900 shadow-sm">${ch}</button>
+      `).join('');
+      opts.querySelectorAll('.ex3-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const fb = document.getElementById('ex3-fb');
+          if (btn.dataset.ch === item.ans) {
+            chime(true); addStar();
+            document.getElementById('ex3-word').textContent = item.w.toUpperCase();
+            speakWord(item.w, item.a);
+            fb.textContent = `🎉 Giỏi quá! Đáp án là ${item.w.toUpperCase()}!`;
+            fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-emerald-100 text-emerald-800 flex items-center justify-center';
+            setTimeout(() => { ex3Idx = (ex3Idx + 1) % u.words.length; renderEx3(); }, 1300);
+          } else {
+            chime(false);
+            fb.textContent = 'Chưa đúng chữ cái rồi, bé thử chữ khác nhé!';
+            fb.className = 'min-h-[48px] rounded-2xl p-3 text-center font-display font-bold text-base bg-amber-100 text-amber-900 flex items-center justify-center';
+          }
+        });
+      });
+    }
+
+    // Event Listeners
+    document.getElementById('total-stars').textContent = `${stars} ⭐`;
+    document.getElementById('ex-tab-1').addEventListener('click', () => switchEx(1));
+    document.getElementById('ex-tab-2').addEventListener('click', () => switchEx(2));
+    document.getElementById('ex-tab-3').addEventListener('click', () => switchEx(3));
+    document.getElementById('ex1-play').addEventListener('click', () => { const t = ex1Order[ex1Idx]; if(t) speakWord(t.w, t.a); });
+    document.getElementById('ex3-speak').addEventListener('click', () => { const t = UNITS[currentUnitIdx].words[ex3Idx]; if(t) speakWord(t.w, t.a); });
+
+    const setV = (m) => {
+      voiceMode = m;
+      document.getElementById('v-female').className = m==='female' ? 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-rose-500 text-white shadow-sm' : 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white border border-slate-200 text-slate-700';
+      document.getElementById('v-male').className = m==='male' ? 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-white shadow-sm' : 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white border border-slate-200 text-slate-700';
+      document.getElementById('v-human').className = m==='human' ? 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-500 text-white shadow-sm' : 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white border border-slate-200 text-slate-700';
+    };
+    document.getElementById('v-female').addEventListener('click', () => setV('female'));
+    document.getElementById('v-male').addEventListener('click', () => setV('male'));
+    document.getElementById('v-human').addEventListener('click', () => setV('human'));
+
+    const setSz = (cls, id) => {
+      document.body.classList.remove('font-size-xl', 'font-size-2xl');
+      if (cls) document.body.classList.add(cls);
+      ['sz-md','sz-lg','sz-xl'].forEach(k => {
+        document.getElementById(k).className = k===id ? 'px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-500 text-white shadow-sm' : 'px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700';
+      });
+    };
+    document.getElementById('sz-md').addEventListener('click', () => setSz('', 'sz-md'));
+    document.getElementById('sz-lg').addEventListener('click', () => setSz('font-size-xl', 'sz-lg'));
+    document.getElementById('sz-xl').addEventListener('click', () => setSz('font-size-2xl', 'sz-xl'));
+
+    loadUnit(0);
+  </script>
+</body>
+</html>

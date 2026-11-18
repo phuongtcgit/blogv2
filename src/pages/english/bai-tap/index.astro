@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import EnglishGradeNav from '../../../components/EnglishGradeNav.astro';
+import { englishLessons } from '../../../lib/english-library';
+import { ENGLISH_WORKBOOKS } from '../../../lib/english-workbooks';
+---
+
+<BaseLayout title="Bài tập Tiếng Anh" description="Bài tập tiếng Anh tương tác cho Lớp 1 và Lớp 3: nghe, chọn đáp án, điền từ và sắp xếp câu.">
+  <h1 class="page-title">Bài tập Tiếng Anh</h1>
+  <p class="topic-note">Chọn lớp để bắt đầu luyện tập. Bé có thể đổi Unit ngay trong bộ bài tập.</p>
+  <EnglishGradeNav lessons={englishLessons} activeSection="workbooks" />
+
+  <ul class="post-list">
+    {ENGLISH_WORKBOOKS.map((workbook) => (
+      <li>
+        <a class="post-link" href={workbook.url}>{workbook.title}</a>
+        <p class="post-excerpt">{workbook.description}</p>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
